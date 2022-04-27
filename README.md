@@ -1,2 +1,2 @@
-# Fabulous Project (AMOS SS 20xx)
+# Fabulous Project (AMOS SS 2022)
 Something something something
