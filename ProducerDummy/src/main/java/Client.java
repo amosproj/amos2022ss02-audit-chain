@@ -1,7 +1,6 @@
 import DataGeneration.FileDataReader;
 import Messages.AbstractMessage;
-import Messages.JsonMeesage;
-import Persistence.FilePersistenceStrategy;
+import Messages.JsonMessage;
 import Persistence.NullObjectPersistenceStrategy;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
@@ -9,6 +8,7 @@ import com.rabbitmq.client.Channel;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
 
 public class Client extends AbstractClient {
     private int sequence_number = 0;
@@ -53,20 +53,20 @@ public class Client extends AbstractClient {
     public void start() throws IOException, TimeoutException, InterruptedException {
         System.out.println("Starting to send Messages.Message to AMQP Host");
         // Here you can declare another Message Type
-        JsonMeesage message;
+        JsonMessage message;
         try (Connection connection = this.factory.newConnection();
              Channel channel = connection.createChannel()) {
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
             //before we send new messages we send the last message which was stored in file
             if (this.message != null) {
-                message = new JsonMeesage(this.sequence_number, this.message);
+                message = new JsonMessage(this.sequence_number, this.message);
                 channel.basicPublish("", QUEUE_NAME, null, message.serializeMessage());
             }
             // TODO more config
 
             for (String line = this.dataGenerator.getData(); line != null; line = this.dataGenerator.getData()) {
                 System.out.println("The following Messages.Message will be send:\n" + line);
-                message = new JsonMeesage(this.sequence_number, line);
+                message = new JsonMessage(this.sequence_number, line);
                 channel.basicPublish("", QUEUE_NAME, null, message.serializeMessage());
                 this.persistenceStrategy.StoreMessage(this.sequence_number, line);
                 this.sequence_number++;

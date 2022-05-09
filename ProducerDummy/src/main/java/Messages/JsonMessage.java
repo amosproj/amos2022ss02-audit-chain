@@ -4,12 +4,12 @@ import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
 
-public class JsonMeesage extends AbstractMessage {
+public class JsonMessage extends AbstractMessage {
 
     public JSONObject json_message;
 
 
-    public JsonMeesage(int sequence_number, String message) {
+    public JsonMessage(int sequence_number, String message) {
         super(sequence_number,message);
         this.formatMessage();
     }
