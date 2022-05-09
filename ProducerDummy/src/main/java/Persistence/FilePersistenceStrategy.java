@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 
 
 /***
- * This is one Implementation which is supposed to guarantee us that we never lose our current state of the Sequence Number
+ * This is one Implementation which is supposed to guarantee us that we never lose our current state of the Sequence Number.
  * TODO Bad Implemtation: Use JSON as Format with Key/Values Pairs.
  */
 
@@ -20,6 +20,13 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
     private Path filepath;
     private FileWriter fileWriter;
 
+    /**
+     * Constructor for the FilePersistenceStrategy.
+     * Set filepath to the path of the file using path and fileName variables and
+     * call {@link #CreatePersistenceMechanism() CreatePersistenceMechanism()}.
+     *
+     * @throws IOException if the filepath is not valid
+     */
     public FilePersistenceStrategy() throws IOException {
         this.filepath = Paths.get(System.getProperty("user.dir"), FilePersistenceStrategy.path, FilePersistenceStrategy.fileName);
         this.CreatePersistenceMechanism();
@@ -41,6 +48,9 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
 
     }
 
+    /**
+     * Create a File as a persistence mechanism.
+     */
     @Override
     public void CreatePersistenceMechanism() {
         // Create the File for the last Messages.Message
@@ -60,6 +70,12 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
 
     }
 
+    /**
+     * Read from the file the sequence number and the message, returning them as a new Message object. If there are no
+     * values in the file or the file is missing therefore we never did send a Messages.Message to the Broker
+     *
+     * @return a new Message object with the sequence number and message
+     */
     @Override
     public AbstractMessage ReadLastMessage() {
 
@@ -83,6 +99,9 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
         }
     }
 
+    /**
+     * @return filepath as string
+     */
     public String getFilePath() {
         return this.filepath.toString();
     }
