@@ -11,11 +11,15 @@ public class FileDataReader implements DataGenerator {
     public static final String path = "\\ProducerDummy\\src\\main\\household_power_consumption.txt";
     public BufferedReader br;
 
+    /**
+     * Prepare the object file to be read and set a (buffered) reader to it
+     * */
     public FileDataReader() throws FileNotFoundException {
         File file = new File(System.getProperty("user.dir") + FileDataReader.path);
         FileReader fr = new FileReader(file);
         this.br = new BufferedReader(fr);
     }
+
 
     @Override
     // get Data
