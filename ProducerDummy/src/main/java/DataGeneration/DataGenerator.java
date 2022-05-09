@@ -3,12 +3,12 @@ package DataGeneration;
 import java.io.IOException;
 
 /***
- * Data Generator interface
+ * Data Generator interface.
  */
 public interface DataGenerator {
 
     /**
-     * Read the next line from the file and return it as a String
+     * Read the next line from the file and return it as a String.
      *
      * @return the line read
      * */
