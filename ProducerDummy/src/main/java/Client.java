@@ -9,13 +9,17 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-
+/** Client implementation */
 public class Client extends AbstractClient {
     private int sequence_number = 0;
     private String message = null;
     private final static int SECOND_DELAY_BETWEEN_MESSAGES = 5;
 
-
+    /**
+     * Constructor for Client.
+     *
+     * @throws IOException  if an I/O error occurs
+     */
     public Client() throws IOException {
         super();
         this.dataGenerator = new FileDataReader();
@@ -24,6 +28,9 @@ public class Client extends AbstractClient {
     }
 
 
+    /**
+     * Recover the last message which was stored in file and set it to the message variable as a string
+     */
     public void RecoverLastMessage() {
         // get the Last Messages.Message
         AbstractMessage message = this.persistenceStrategy.ReadLastMessage();
@@ -44,11 +51,11 @@ public class Client extends AbstractClient {
 
 
     /***
-     * Start Sending Messages to the RabbitMQ Server
+     * Start Sending Messages as JSON to the RabbitMQ Server.
      * TODO sending Messages is still bad and just a minimal example make it better
-     * @throws IOException
-     * @throws TimeoutException
-     * @throws InterruptedException
+     * @throws IOException if an I/O error occurs
+     * @throws TimeoutException if the timeout expires
+     * @throws InterruptedException if the thread is interrupted
      */
     public void start() throws IOException, TimeoutException, InterruptedException {
         System.out.println("Starting to send Messages.Message to AMQP Host");
