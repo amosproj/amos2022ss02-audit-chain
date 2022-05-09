@@ -8,12 +8,22 @@ public class JsonMessage extends AbstractMessage {
 
     public JSONObject json_message;
 
-
+    /**
+     * Constructor for JsonMessage
+     * recall formatMessage() to format the message
+     *
+     * @param sequence_number sequence number of the messages
+     * @param message message as a string
+     */
     public JsonMessage(int sequence_number, String message) {
         super(sequence_number,message);
         this.formatMessage();
     }
 
+    /**
+     * {@inheritDoc}
+     * As a JsonMessage, the message is formatted as a JSONObject
+     */
     @Override
     public void formatMessage() {
         JSONObject json_message = new JSONObject();
@@ -23,11 +33,15 @@ public class JsonMessage extends AbstractMessage {
         return;
     }
 
-
+    /**
+     * @return the JSONObject of the message
+     */
     public JSONObject getMessage() {
         return this.json_message;
     }
 
+
+    @Override
     public byte[] serializeMessage(){
         return this.getMessage_string().toString().getBytes(StandardCharsets.UTF_8);
     }
