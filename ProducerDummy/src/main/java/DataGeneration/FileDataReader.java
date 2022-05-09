@@ -4,7 +4,7 @@ import java.io.*;
 
 
 /***
- * This is one Implementation which reads Data from a File to construct a Messages.Message
+ * This is one Implementation which reads Data from a File to construct a Messages.Message.
  */
 public class FileDataReader implements DataGenerator {
 
@@ -12,7 +12,9 @@ public class FileDataReader implements DataGenerator {
     public BufferedReader br;
 
     /**
-     * Prepare the object file to be read and set a (buffered) reader to it
+     * Prepare the object file to be read and set a (buffered) reader to it.
+     *
+     * @throws FileNotFoundException if no file with the path specified is found
      * */
     public FileDataReader() throws FileNotFoundException {
         File file = new File(System.getProperty("user.dir") + FileDataReader.path);
