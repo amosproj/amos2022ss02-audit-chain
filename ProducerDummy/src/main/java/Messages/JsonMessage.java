@@ -4,15 +4,17 @@ import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
 
+/** Message of type JSON */
 public class JsonMessage extends AbstractMessage {
 
     public JSONObject json_message;
 
     /**
-     * Constructor for JsonMessage
-     * recall formatMessage() to format the message
+     * Constructor for JsonMessage.
+     * call {@link #formatMessage() formatMessage()} to format the message
      *
-     * @param sequence_number sequence number of the messages
+     * @param sequence_number sequence number of the messages. Used to keep the cardinality of the messages in the order
+     *                        they are sent from the client
      * @param message message as a string
      */
     public JsonMessage(int sequence_number, String message) {
