@@ -14,12 +14,12 @@ public interface PersistenceStrategy {
     public void StoreMessage(int sequenceNumber, String message);
 
     /**
-     * Create a the persistence mechanism, e.g create the File or the Database.
+     * Create a persistence mechanism, e.g create the File or the Database.
      */
     public void CreatePersistenceMechanism();
 
     /**
-     * @return last AbstractMessage read from the persistence mechanism
+     * @return last AbstractMessage written in the persistence mechanism
      */
     public AbstractMessage ReadLastMessage();
 

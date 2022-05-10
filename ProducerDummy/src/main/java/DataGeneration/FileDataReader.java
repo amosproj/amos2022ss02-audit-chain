@@ -8,6 +8,7 @@ import java.io.*;
  */
 public class FileDataReader implements DataGenerator {
 
+    /** path of the file were the data are stored */
     public static final String path = "\\ProducerDummy\\src\\main\\household_power_consumption.txt";
     public BufferedReader br;
 

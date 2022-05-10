@@ -23,7 +23,7 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
     /**
      * Constructor for the FilePersistenceStrategy.
      * Set filepath to the path of the file using path and fileName variables and
-     * call {@link #CreatePersistenceMechanism() CreatePersistenceMechanism()}.
+     * call {@link #CreatePersistenceMechanism()}.
      *
      * @throws IOException if the filepath is not valid
      */
@@ -32,7 +32,12 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
         this.CreatePersistenceMechanism();
     }
 
-
+    /***
+     * Store just the last message into a file, overriding the previous one.
+     *
+     * @param sequenceNumber the sequence number of the message
+     * @param message message to be stored as a string
+     */
     @Override
     public void StoreMessage(int sequenceNumber, String message) {
         try {
@@ -71,8 +76,8 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
     }
 
     /**
-     * Read from the file the sequence number and the message, returning them as a new Message object. If there are no
-     * values in the file or the file is missing therefore we never did send a Messages.Message to the Broker
+     * Read from the file the last sequence number and the last message, returning them as a new Message object. If there are no
+     * values in the file or the file is missing it means that we never did send a Messages.Message to the Broker
      *
      * @return a new Message object with the sequence number and message
      */

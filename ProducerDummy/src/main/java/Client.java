@@ -11,6 +11,8 @@ import java.util.concurrent.TimeoutException;
 
 /** Client implementation */
 public class Client extends AbstractClient {
+
+    /** Sequence number kept by the client to order the message it sends */
     private int sequence_number = 0;
     private String message = null;
     private final static int SECOND_DELAY_BETWEEN_MESSAGES = 5;
@@ -29,7 +31,8 @@ public class Client extends AbstractClient {
 
 
     /**
-     * Recover the last message which was stored in file and set it to the message variable as a string
+     * Recover the last message stored in the persistence mechanism and use its sequence number to set the
+     * DataGenerator again to the point it was before "the interruption"
      */
     public void RecoverLastMessage() {
         // get the Last Messages.Message

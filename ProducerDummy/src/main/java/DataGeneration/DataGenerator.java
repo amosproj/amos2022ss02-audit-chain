@@ -16,7 +16,7 @@ public interface DataGenerator {
 
     /**
      * Read the line after a number of lines skipped and return it as a String.
-     * Used in recovery mode, to recover the last line read and read a new one.
+     * Used in recovery mode, to recover the last line read.
      *
      * @param sequence_number number of lines to be skipped
      *

@@ -45,7 +45,7 @@ public class AbstractClient {
     }
 
     /**
-     * Initializes the connection factory. It can be used then to send messages to a server
+     * Initializes the connection factory. It can be used then to send messages to a server RabbitMQ
      */
     public void initFactory() {
         this.factory.setHost(this.HOST);

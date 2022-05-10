@@ -4,7 +4,7 @@ import Messages.AbstractMessage;
 import Messages.JsonMessage;
 
 /***
- * This Implemenation should be used for Debug purpose because you don´t want to write every message into your Hdd.
+ * This Implementation should be used for Debug purpose because you don´t want to write every message into your Hdd.
  */
 
 public class NullObjectPersistenceStrategy implements PersistenceStrategy {

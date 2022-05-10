@@ -5,6 +5,7 @@ package Messages;
  */
 public abstract class AbstractMessage {
 
+    /** Used to keep the cardinality of the messages in the order they are sent from the client. */
     int sequence_number;
     String message_string;
 
@@ -12,7 +13,7 @@ public abstract class AbstractMessage {
      * Constructor for AbstractMessage.
      *
      * @param sequence_number sequence number of the messages. Used to keep the cardinality of the messages in the order
-     *                       they are sent from the client
+     *                       they are sent from the client.
      * @param message_string message as a string
      */
     public AbstractMessage(int sequence_number, String message_string) {

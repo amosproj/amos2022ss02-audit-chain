@@ -11,7 +11,7 @@ public class JsonMessage extends AbstractMessage {
 
     /**
      * Constructor for JsonMessage.
-     * call {@link #formatMessage() formatMessage()} to format the message
+     * call {@link #formatMessage()} to format the message
      *
      * @param sequence_number sequence number of the messages. Used to keep the cardinality of the messages in the order
      *                        they are sent from the client
