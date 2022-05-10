@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 
+/** Abstract class for Clients*/
 public class AbstractClient {
 
     protected DataGenerator dataGenerator;
@@ -24,6 +25,12 @@ public class AbstractClient {
     protected String PASSWORD;
     protected ConnectionFactory factory = new ConnectionFactory();
 
+    /**
+     * Constructor for AbstractClient. Initializes the filepath, the file reader and set information for the
+     * connection factory. Call {@link #initFactory()} to initialize the connection factory.
+     *
+     * @throws IOException if the file cannot be read
+     */
     public AbstractClient() throws IOException {
         this.config_path = Paths.get(System.getProperty("user.dir"), this.filepath, this.filename);
         Properties p = new Properties();
@@ -37,7 +44,9 @@ public class AbstractClient {
         this.initFactory();
     }
 
-
+    /**
+     * Initializes the connection factory. It can be used then to send messages to a server RabbitMQ
+     */
     public void initFactory() {
         this.factory.setHost(this.HOST);
         this.factory.setUsername(this.USER);

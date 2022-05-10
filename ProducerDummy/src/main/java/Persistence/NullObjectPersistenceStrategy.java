@@ -1,11 +1,10 @@
 package Persistence;
 
 import Messages.AbstractMessage;
-import Messages.JsonMeesage;
+import Messages.JsonMessage;
 
 /***
- * This Implemenation should be used for Debug purpose because you don´t want to write every message into your Hdd
- *
+ * This Implementation should be used for Debug purpose because you don´t want to write every message into your Hdd.
  */
 
 public class NullObjectPersistenceStrategy implements PersistenceStrategy {
@@ -23,6 +22,6 @@ public class NullObjectPersistenceStrategy implements PersistenceStrategy {
 
     @Override
     public AbstractMessage ReadLastMessage() {
-        return new JsonMeesage(0, "DEBUG");
+        return new JsonMessage(0, "DEBUG");
     }
 }

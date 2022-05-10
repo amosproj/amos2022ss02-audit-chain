@@ -1,7 +1,6 @@
 import DataGeneration.FileDataReader;
 import Messages.AbstractMessage;
-import Messages.JsonMeesage;
-import Persistence.FilePersistenceStrategy;
+import Messages.JsonMessage;
 import Persistence.NullObjectPersistenceStrategy;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
@@ -10,12 +9,19 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+/** Client implementation */
 public class Client extends AbstractClient {
+
+    /** Sequence number kept by the client to order the message it sends */
     private int sequence_number = 0;
     private String message = null;
     private final static int SECOND_DELAY_BETWEEN_MESSAGES = 5;
 
-
+    /**
+     * Constructor for Client.
+     *
+     * @throws IOException  if an I/O error occurs
+     */
     public Client() throws IOException {
         super();
         this.dataGenerator = new FileDataReader();
@@ -24,6 +30,10 @@ public class Client extends AbstractClient {
     }
 
 
+    /**
+     * Recover the last message stored in the persistence mechanism and use its sequence number to set the
+     * DataGenerator again to the point it was before "the interruption"
+     */
     public void RecoverLastMessage() {
         // get the Last Messages.Message
         AbstractMessage message = this.persistenceStrategy.ReadLastMessage();
@@ -44,29 +54,29 @@ public class Client extends AbstractClient {
 
 
     /***
-     * Start Sending Messages to the RabbitMQ Server
+     * Start Sending Messages as JSON to the RabbitMQ Server.
      * TODO sending Messages is still bad and just a minimal example make it better
-     * @throws IOException
-     * @throws TimeoutException
-     * @throws InterruptedException
+     * @throws IOException if an I/O error occurs
+     * @throws TimeoutException if the timeout expires
+     * @throws InterruptedException if the thread is interrupted
      */
     public void start() throws IOException, TimeoutException, InterruptedException {
         System.out.println("Starting to send Messages.Message to AMQP Host");
         // Here you can declare another Message Type
-        JsonMeesage message;
+        JsonMessage message;
         try (Connection connection = this.factory.newConnection();
              Channel channel = connection.createChannel()) {
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
             //before we send new messages we send the last message which was stored in file
             if (this.message != null) {
-                message = new JsonMeesage(this.sequence_number, this.message);
+                message = new JsonMessage(this.sequence_number, this.message);
                 channel.basicPublish("", QUEUE_NAME, null, message.serializeMessage());
             }
             // TODO more config
 
             for (String line = this.dataGenerator.getData(); line != null; line = this.dataGenerator.getData()) {
                 System.out.println("The following Messages.Message will be send:\n" + line);
-                message = new JsonMeesage(this.sequence_number, line);
+                message = new JsonMessage(this.sequence_number, line);
                 channel.basicPublish("", QUEUE_NAME, null, message.serializeMessage());
                 this.persistenceStrategy.StoreMessage(this.sequence_number, line);
                 this.sequence_number++;
