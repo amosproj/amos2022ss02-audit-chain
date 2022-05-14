@@ -20,6 +20,11 @@ public class ConsumerClient extends AbstractClient {
         super();
     }
 
+    /***
+     * Start receiving Messages from the RabbitMQ Server.
+     * @throws IOException if an I/O error occurs
+     * @throws TimeoutException if the timeout expires
+     */
     public void start() throws IOException, TimeoutException {
         System.out.println("Starting to receive Messages.");
         Connection connection = this.factory.newConnection();
