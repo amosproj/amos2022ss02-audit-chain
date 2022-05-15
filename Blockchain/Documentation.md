@@ -33,6 +33,19 @@ hash of the previous block so to put it in the header of the new block. Hash met
 - Peer. A peer is a node that is connected to the blockchain network. They host ledgers and smart contracts (IT protocols 
 which create an agreement between two parties). These two are used to encapsulate information inside the blockchain.   
 
+###### Benefits of Blockchain:
+Duplicate record keeping and third-party validations waste a lot of time in operations. Fraud and cyberattacks can compromise record-keeping systems. Data verification might be slowed by lack of openness. Transaction volumes have exploded since the introduction of IoT. All of this slows operations, lowers profits, and signals the need for a better solution. Here comes blockchain.
+
+- Greater assurance: 
+As a member of a members-only network, you can trust that you will receive accurate and timely data from blockchain, and that your confidential blockchain records will be shared only with network members to whom you have specifically authorized access.
+
+- Greater safety:
+All network participants must agree on data accuracy, and all confirmed transactions are immutable because they are permanently recorded. A transaction cannot be deleted by anyone, including the system administrator. 
+
+- Enhanced efficiencies:
+Time-consuming record reconciliations are eliminated with a distributed ledger shared across network participants. A collection of rules called a smart contract can be placed on the blockchain and implemented automatically to speed up transactions.
+
+
 
 ## Frameworks
 
