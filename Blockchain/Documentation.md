@@ -21,6 +21,8 @@ A blockchain is a distributed database shared among computer network nodes. A bl
 
 The way data is structured differs significantly between a traditional database and a blockchain. A blockchain is a digital ledger that stores data in groupings called blocks. When a block is full, it is closed and linked to the preceding block, producing a data chain known as the blockchain. All additional information added after that newly added block is compiled into a newly formed block, which is subsequently added to the chain once it is complete.
 
+A database organizes data into tables, whereas a blockchain organizes data into chunks (blocks) that are strung together, as the name suggests. When implemented in a decentralized manner, this data structure creates an irreversible data chronology. When a block is filled, it becomes permanent and part of the chronology. When each block is added to the chain, it is given a specific time stamp.
+
 The Blockchain can also be seen as a vertical stack, where the top of the stack is the most recent block and the bottom is the genesis block.
 
 A blockchain makes also use of other components:
