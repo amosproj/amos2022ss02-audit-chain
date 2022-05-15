@@ -5,7 +5,6 @@ This document is meant to give a first insight overview in the blockchain part o
 ## Table of Contents
 [Introduction](#Introduction)  
 [Implementation](#Implementation)  
-[Interactions](#Interactions)  
 [Code](#Code)  
 
 
@@ -49,7 +48,20 @@ Time-consuming record reconciliations are eliminated with a distributed ledger s
 
 ## Implementation
 
-## Interactions
+The implementation of a blockchain can be done in several ways depending also on the needs of the project. What could be
+interesting as a framework is [Hyperledger](https://github.com/hyperledger/fabric-sdk-java), which is explained below, but in the end there are some considerations, because
+it could also be that no framework is needed.
+
+Hyperledger is a set of libraries and tools that can be used to develop blockchain applications.
+It is under the Linux Foundation and it allows (in contrast with public blockchains) to have features like scalability 
+abd privacy. As a matter of fact, with Hyperledger only the parties directly involved in the transaction know about it.
+
+As said before, it is not really clear if such a framework could be the right answer to a project like this. By 
+reading the requirements it seems that only the Blockchain as a simple data structure must be implemented therefore a
+possibility could be to write it manually from scratch. In the [Code](#Code) there is a brief example, but the main idea
+of the developing should be:
+
+//todo: finish writing about
 
 ## Code
 
