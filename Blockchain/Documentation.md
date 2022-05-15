@@ -3,14 +3,13 @@
 This document is meant to give a first insight overview in the blockchain part of the project.
 
 ## Table of Contents
-[Blockchain Explanation](#Blockchain Explanation)  
-[Frameworks](#Frameworks)  
+[Introduction](#Introduction)  
+[Implementation](#Implementation)  
 [Interactions](#Interactions)  
-[Implementation Roadmap](#Implementation Roadmap)  
 [Code](#Code)  
 
 
-## Blockchain Explanation
+## Introduction
 A Blockchain is a data structure and it is characterized by being an immutable, ordered, "back-linked list" of blocks of 
 blocks of transactions. It is not only a simple back linked list, in fact each block contains a hash of the previous block. 
 This hash is used to link the blocks together and allows the properties of immutability to be maintained. It is not 
@@ -25,6 +24,7 @@ A database organizes data into tables, whereas a blockchain organizes data into 
 
 The Blockchain can also be seen as a vertical stack, where the top of the stack is the most recent block and the bottom is the genesis block.
 
+### Blockchain Components:
 A blockchain makes also use of other components:
 - Miner. Miners add a new block made of transactions to the blockchain. It requires a lot of computation to calculate the
 hash of the previous block so to put it in the header of the new block. Hash method use is SHA256.  
@@ -33,7 +33,7 @@ hash of the previous block so to put it in the header of the new block. Hash met
 - Peer. A peer is a node that is connected to the blockchain network. They host ledgers and smart contracts (IT protocols 
 which create an agreement between two parties). These two are used to encapsulate information inside the blockchain.   
 
-###### Benefits of Blockchain:
+### Benefits of Blockchain:
 Duplicate record keeping and third-party validations waste a lot of time in operations. Fraud and cyberattacks can compromise record-keeping systems. Data verification might be slowed by lack of openness. Transaction volumes have exploded since the introduction of IoT. All of this slows operations, lowers profits, and signals the need for a better solution. Here comes blockchain.
 
 - Greater assurance: 
@@ -47,11 +47,9 @@ Time-consuming record reconciliations are eliminated with a distributed ledger s
 
 
 
-## Frameworks
+## Implementation
 
 ## Interactions
-
-## Implementation Roadmap
 
 ## Code
 
