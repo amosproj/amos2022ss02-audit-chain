@@ -23,6 +23,12 @@ The way data is structured differs significantly between a traditional database 
 
 A database organizes data into tables, whereas a blockchain organizes data into chunks (blocks) that are strung together, as the name suggests. When implemented in a decentralized manner, this data structure creates an irreversible data chronology. When a block is filled, it becomes permanent and part of the chronology. When each block is added to the chain, it is given a specific time stamp.
 
+To run and manage the network in production, we have to create the first block of our own with all the characteristics of the chain. To do that we need to involve laying the foundation for the receiving information.
+It is at this stage that encrypted token (known as cryptocurrency) would be used to activate the power required to make sure that the persistence of the communication of the nodes remains intact. 
+
+After running and managing the network, we need to activate an application on the blockchain network. This is a ready-to-use application server. Each of your applications would have to be hosted on the main blockchain in this case. It is suggested that you initialize hybrid solutions, which are apps that are both on-chain and off-chain entities, on the cloud server.
+
+
 The Blockchain can also be seen as a vertical stack, where the top of the stack is the most recent block and the bottom is the genesis block.
 
 ### Blockchain Components:
@@ -94,7 +100,17 @@ MultiChain, OpenChain and Hyperledger could be solutions. MultiChain and OpenCha
 Therefore Hyperledger Fabric could be one of the frameworks solution (also because one of the only for java), but still it 
 may be not needed such a framework full of tools and libraries for the project.
 
+At this point we have to mention there are a few additional crucial aspects to consider while implementing blockchain, and they are the following:
 
+-Firstly, we have to ensure that our blockchain implementation actually works and functions exactly the way you want it to, we must put in our best effort. We'd have to thoroughly test our system and designs in a controlled setting to accomplish this. After that, we can take it to a real-world competitive context for more testing. 
+Testing our blockchain implementation is vital since you might uncover a variable we hadn't considered before, which could alter the results of our blockchain implementation activity. Additionally, we should conduct additional study to get the finest blockchain implementation example.
+
+-Then, we have to remember that there will always be setbacks, particularly in the early stages of blockchain implementation. Rather than succumbing to failure,we must address the issues and attempt a variety of various approaches. 
+In these situations, using the trial-and-error method would be advantageous. So we have to be sure we have tried all other options, and we'll eventually find the solution that will propel your company forward on the blockchain.
+
+- Moreover, we have to stay focus to the plans and continue to provide the customers with exactly what we promised, even when making changes to our blockchain protocol. Blockchain has many different features, and it's easy to get carried away. Getting sidetracked will have an impact on your overall goal.Distracted behavior can have disastrous repercussions.
+
+- Finally, we should make plans for the future after following the successful implementation of our blockchain protocol. We can start working on some things that may need to be improved. Basically, we'd have to assess the blockchain network to ensure that it remains relevant for our company's future growth. Change is the one constant in life, as we all know. The blockchain sector will continue to evolve and improve over time, and we must also engage in continual improvement, no matter how modest.
 ## Code
 
 ![UMLScheme](https://i.imgur.com/EMF71Nf.png)
