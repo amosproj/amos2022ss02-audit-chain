@@ -102,10 +102,10 @@ may be not needed such a framework full of tools and libraries for the project.
 
 At this point we have to mention there are a few additional crucial aspects to consider while implementing blockchain, and they are the following:
 
--Firstly, we have to ensure that our blockchain implementation actually works and functions exactly the way you want it to, we must put in our best effort. We'd have to thoroughly test our system and designs in a controlled setting to accomplish this. After that, we can take it to a real-world competitive context for more testing. 
+- Firstly, we have to ensure that our blockchain implementation actually works and functions exactly the way you want it to, we must put in our best effort. We'd have to thoroughly test our system and designs in a controlled setting to accomplish this. After that, we can take it to a real-world competitive context for more testing. 
 Testing our blockchain implementation is vital since you might uncover a variable we hadn't considered before, which could alter the results of our blockchain implementation activity. Additionally, we should conduct additional study to get the finest blockchain implementation example.
 
--Then, we have to remember that there will always be setbacks, particularly in the early stages of blockchain implementation. Rather than succumbing to failure,we must address the issues and attempt a variety of various approaches. 
+- Then, we have to remember that there will always be setbacks, particularly in the early stages of blockchain implementation. Rather than succumbing to failure,we must address the issues and attempt a variety of various approaches. 
 In these situations, using the trial-and-error method would be advantageous. So we have to be sure we have tried all other options, and we'll eventually find the solution that will propel your company forward on the blockchain.
 
 - Moreover, we have to stay focus to the plans and continue to provide the customers with exactly what we promised, even when making changes to our blockchain protocol. Blockchain has many different features, and it's easy to get carried away. Getting sidetracked will have an impact on your overall goal.Distracted behavior can have disastrous repercussions.
