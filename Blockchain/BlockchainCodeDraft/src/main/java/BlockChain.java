@@ -8,7 +8,12 @@ public class BlockChain /*implements List<Block>*/ {
         this.blockchain = new ArrayList<>();
     }
 
-
+    /**
+     * Add a new block to the chain
+     *
+     * @param content content of the block
+     * @param prefix number of 0's in the beginning of the hash
+     */
     public void addABlock(String content, int prefix) {
 
         String prefixString = new String(new char[prefix]).replace('\0', '0');
