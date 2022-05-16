@@ -15,7 +15,7 @@ This hash is used to link the blocks together and allows the properties of immut
 possible to edit the blockchain by adding or removing blocks in the middle or changing them, because this would cause 
 a change in the hash of the block. This change will be propagated to the next block since its hash would also change, and so on. 
 
-//schemes on imgur
+![Blockchain](https://i.imgur.com/EXfPl3H.png)
 
 A blockchain is a distributed database shared among computer network nodes. A blockchain, like a database, saves information electronically in digital format. Blockchains are best recognized for preserving a secure and decentralized record of transactions in cryptocurrency systems like Bitcoin. A blockchain's novelty is that it ensures the authenticity and security of a data record while also generating confidence without the requirement for a trusted third party. 
 
