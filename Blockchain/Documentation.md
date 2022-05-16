@@ -98,3 +98,5 @@ may be not needed such a framework full of tools and libraries for the project.
 ## Code
 
 //scheme UML on imgur 
+
+Example of a possible code implementation of the blockchain [here](/BlockchainCodeDraft/src/main/java/BlockChain.java).  
