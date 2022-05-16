@@ -15,6 +15,8 @@ This hash is used to link the blocks together and allows the properties of immut
 possible to edit the blockchain by adding or removing blocks in the middle or changing them, because this would cause 
 a change in the hash of the block. This change will be propagated to the next block since its hash would also change, and so on. 
 
+//schemes on imgur
+
 A blockchain is a distributed database shared among computer network nodes. A blockchain, like a database, saves information electronically in digital format. Blockchains are best recognized for preserving a secure and decentralized record of transactions in cryptocurrency systems like Bitcoin. A blockchain's novelty is that it ensures the authenticity and security of a data record while also generating confidence without the requirement for a trusted third party. 
 
 The way data is structured differs significantly between a traditional database and a blockchain. A blockchain is a digital ledger that stores data in groupings called blocks. When a block is full, it is closed and linked to the preceding block, producing a data chain known as the blockchain. All additional information added after that newly added block is compiled into a newly formed block, which is subsequently added to the chain once it is complete.
@@ -48,37 +50,51 @@ Time-consuming record reconciliations are eliminated with a distributed ledger s
 
 ## Implementation
 
-The implementation of private and permissioned blockchains was considered using a number of available implementations. Here we have some examples and we try to describe the relevant implementations.
+The implementation of a blockchain can be done in several ways depending also on the needs of the project. 
+Here there are some possibilities but in the end there are also some considerations, because
+it could also be that frameworks, libraries and in general relying on something else is not needed.
 
-- ### Bitcoin: 
-Bitcoin and its client Bitcoin CoreFootnote  are designed to handle financial transactions. The Bitcoin network can include small amounts of meta data in each block, but due to its limited space, low throughput, and high delay, it is unsuitable for storing any significant amount of meta data. In contrast, the consensus algorithm of Bitcoin only deals with double-spending of Bitcoins, not photovoltaic power. In these kinds of cases, this algorithm could be modified, but Bitcoin is not well-suited to this use case due to its design. 
+- ##### Bitcoin:
+   Bitcoin and its client Bitcoin CoreFootnote  are designed to handle financial transactions. The Bitcoin network can 
+include small amounts of meta data in each block, but due to its limited space, low throughput, and high delay, it is 
+unsuitable for storing any significant amount of meta data. In contrast, the consensus algorithm of Bitcoin only deals
+with double-spending of Bitcoins, not photovoltaic power. In these kinds of cases, this algorithm could be modified, 
+but Bitcoin is not well-suited to this use case due to its design. 
 
-- ### MultiChain: 
-MultiChain is a private and permissioned blockchain implementation and like Bitcoin, is primarily focused on financial transactions. So in this case, the consensus algorithm would have to be modified significantly. Although this is likely easier than it is for Bitcoin, MultiChain’s currently supported platforms are a major limitation for our use case. However, MultiChain is only supported on 64-bit systems and has several related software dependencies
+- ##### MultiChain:   
+   [MultiChain](https://www.multichain.com/) is a private and permissioned blockchain implementation and like Bitcoin,
+is primarily focused on financial transactions. So in this case, the consensus algorithm would have to be modified 
+significantly. Although this is likely easier than it is for Bitcoin, MultiChain’s currently supported platforms 
+are a major limitation for our use case. However, MultiChain is only supported on 64-bit systems and has several 
+related software dependencies. 
 
-- ### OpenChain: 
-Unlike public blockchains, OpenChain is a private blockchain designed to minimize energy consumption, network communication, and block rate. As a result, it is built on a client-server model, rather than on a peer-to-peer network, and uses proof of authority rather than proof of work as a consensus algorithm. A centralized solution such as the proof of authority consensus algorithm in OpenChain cannot be used because the objective is to build a decentralized and trust-less system. Validating transactions through a designated authority would contradict the desired security and trust properties. All blockchains that use Proof of Authority (PoA) to achieve consensus, such as Corda, are the same. 
+- ##### OpenChain:
+  Unlike public blockchains, [OpenChain](https://www.openchainproject.org/) is a private blockchain designed to 
+minimize energy consumption, network communication, and block rate. As a result, it is built on a client-server 
+model, rather than on a peer-to-peer network, and uses proof of authority rather than proof of work as a 
+consensus algorithm. A centralized solution such as the proof of authority consensus algorithm in
+OpenChain cannot be used because the objective is to build a decentralized and trust-less system. 
+Validating transactions through a designated authority would contradict the desired security and 
+trust properties. All blockchains that use Proof of Authority (PoA) to achieve consensus, such as
+Corda, are the same.
 
-- ### Hyperledger:
+- ##### Hyperledger Fabric:
+  [Hyperledger Fabric](https://github.com/hyperledger/fabric-sdk-java) is a set of libraries and tools that can be used to develop blockchain applications.
+It is under Hyperledger which has been developed by the Linux Foundation (but Fabric was created by IBM) and it allows (in contrast with public blockchains) to have features like scalability 
+and privacy. As a matter of fact, with Hyperledger only the parties directly involved in the transaction know about it.
+It is a Framework built for JAVA.
 
-
-
-
-The implementation of a blockchain can be done in several ways depending also on the needs of the project. What could be
-interesting as a framework is [Hyperledger](https://github.com/hyperledger/fabric-sdk-java), which is explained below, but in the end there are some considerations, because
-it could also be that no framework is needed.
-
-Hyperledger is a set of libraries and tools that can be used to develop blockchain applications.
-It is under the Linux Foundation and it allows (in contrast with public blockchains) to have features like scalability 
-abd privacy. As a matter of fact, with Hyperledger only the parties directly involved in the transaction know about it.
-
-As said before, it is not really clear if such a framework could be the right answer to a project like this. By 
+Nevertheless, it is not really clear if these could be the right answers to a project like this. By 
 reading the requirements it seems that only the Blockchain as a simple data structure must be implemented therefore a
 possibility could be to write it manually from scratch. In the [Code](#Code) there is a brief example, but the main idea
-of the developing should be:
+of the developing could be: develop a block class, a blockchain class and a class for managing the hashing. 
 
-//todo: finish writing about
+About other possible implementations, it seems that public blockchains are not what the project is looking for. So clearly,
+MultiChain, OpenChain and Hyperledger could be solutions. MultiChain and OpenChain seem to be really focused on a financial aspect.
+Therefore Hyperledger Fabric could be one of the frameworks solution (also because one of the only for java), but still it 
+may be not needed such a framework full of tools and libraries for the project.
+
 
 ## Code
 
-
+//scheme UML on imgur 
