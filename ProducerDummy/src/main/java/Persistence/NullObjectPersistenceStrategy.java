@@ -10,6 +10,9 @@ import Messages.JsonMessage;
 public class NullObjectPersistenceStrategy implements PersistenceStrategy {
 
 
+    public NullObjectPersistenceStrategy(String filepath,String fileName){
+        return;
+    }
     @Override
     public void StoreMessage(int sequenceNumber, String message) {
         return;

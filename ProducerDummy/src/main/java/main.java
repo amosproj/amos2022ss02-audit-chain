@@ -21,7 +21,7 @@ public class main {
         String PASSWORD = p.getProperty("PASSWORD");
         String queue_name = "FAKE";
 
-        Client client = new Client(HOST, PORT, USER, PASSWORD,queue_name);
+        AggregateClient client = new AggregateClient(HOST, PORT, USER, PASSWORD,queue_name);
         client.start();
         return;
     }

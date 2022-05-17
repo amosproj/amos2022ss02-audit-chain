@@ -22,6 +22,11 @@ public class JsonMessage extends AbstractMessage {
         this.formatMessage();
     }
 
+    public JsonMessage() {
+        super();
+    }
+
+
     /**
      * {@inheritDoc}
      * As a JsonMessage, the message is formatted as a JSONObject
@@ -30,6 +35,7 @@ public class JsonMessage extends AbstractMessage {
     public void formatMessage() {
         JSONObject json_message = new JSONObject();
         json_message.put("Sequence_Number",this.sequence_number);
+
         json_message.put("Messages.Message",this.message_string);
         this.json_message = json_message;
         return;

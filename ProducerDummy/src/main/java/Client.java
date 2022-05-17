@@ -4,6 +4,7 @@ import Messages.AbstractMessage;
 import Messages.JsonMessage;
 import Persistence.NullObjectPersistenceStrategy;
 import Persistence.PersistenceStrategy;
+import Persistence.AggregateMessages;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
 
@@ -15,9 +16,12 @@ import java.util.concurrent.TimeoutException;
  * Client implementation
  */
 public class Client extends AbstractClient {
+    private static final String path = "\\ProducerDummy\\src\\main\\";
+
 
     private final DataGenerator dataGenerator;
     private final PersistenceStrategy persistenceStrategy;
+    private final PersistenceStrategy aggregateMessages;
     /**
      * Sequence number kept by the client to order the message it sends
      */
@@ -33,7 +37,8 @@ public class Client extends AbstractClient {
     public Client(String host, int port, String username, String password, String queue_name) throws IOException {
         super(host, port, username, password, queue_name);
         this.dataGenerator = new FileDataReader();
-        this.persistenceStrategy = new NullObjectPersistenceStrategy();
+        this.persistenceStrategy = new NullObjectPersistenceStrategy(path,"last_message.txt");
+        this.aggregateMessages = new AggregateMessages(path,"messages.txt");
         this.RecoverLastMessage();
     }
 
@@ -79,13 +84,11 @@ public class Client extends AbstractClient {
                 message = new JsonMessage(this.sequence_number, this.message);
                 channel.basicPublish("", QUEUE_NAME, null, message.serializeMessage());
             }
-            // TODO more config
-
             for (String line = this.dataGenerator.getData(); line != null; line = this.dataGenerator.getData()) {
                 System.out.println("The following Messages.Message will be send:\n" + line);
+                this.persistenceStrategy.StoreMessage(this.sequence_number, line);
                 message = new JsonMessage(this.sequence_number, line);
                 channel.basicPublish("", QUEUE_NAME, null, message.serializeMessage());
-                this.persistenceStrategy.StoreMessage(this.sequence_number, line);
                 this.sequence_number++;
                 TimeUnit.SECONDS.sleep(SECOND_DELAY_BETWEEN_MESSAGES);
             }

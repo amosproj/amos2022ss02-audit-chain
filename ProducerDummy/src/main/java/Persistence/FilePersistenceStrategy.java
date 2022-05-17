@@ -16,9 +16,9 @@ import java.nio.file.Paths;
 public class FilePersistenceStrategy implements PersistenceStrategy {
 
     private static final String path = "\\ProducerDummy\\src\\main\\";
-    private static final String fileName = "last_message.txt";
-    private Path filepath;
-    private FileWriter fileWriter;
+    protected static final String fileName = "last_message.txt";
+    protected Path filepath;
+    protected FileWriter fileWriter;
 
     /**
      * Constructor for the FilePersistenceStrategy.
@@ -27,8 +27,8 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
      *
      * @throws IOException if the filepath is not valid
      */
-    public FilePersistenceStrategy() throws IOException {
-        this.filepath = Paths.get(System.getProperty("user.dir"), FilePersistenceStrategy.path, FilePersistenceStrategy.fileName);
+    public FilePersistenceStrategy(String path,String fileName) throws IOException {
+        this.filepath = Paths.get(System.getProperty("user.dir"), path, fileName);
         this.CreatePersistenceMechanism();
     }
 
@@ -87,7 +87,6 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
         File file = new File(this.filepath.toString());
 
         try {
-            // TODO bad solution Also Messages.Message must be well defined e.g insert JSON {id: Sequence Number,String: Messages.Message}
             String next_line = null;
             BufferedReader br = new BufferedReader(new FileReader(file));
             String sequence_number = br.readLine();

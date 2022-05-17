@@ -21,6 +21,9 @@ public abstract class AbstractMessage {
         this.message_string = message_string;
     }
 
+    public AbstractMessage() {
+    }
+
     /**
      * Prepare the message packet depending on the implementation of the Message.
      */
