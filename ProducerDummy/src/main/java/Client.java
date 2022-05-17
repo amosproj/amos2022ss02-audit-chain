@@ -1,7 +1,9 @@
+import DataGeneration.DataGenerator;
 import DataGeneration.FileDataReader;
 import Messages.AbstractMessage;
 import Messages.JsonMessage;
 import Persistence.NullObjectPersistenceStrategy;
+import Persistence.PersistenceStrategy;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
 
@@ -9,10 +11,16 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-/** Client implementation */
+/**
+ * Client implementation
+ */
 public class Client extends AbstractClient {
 
-    /** Sequence number kept by the client to order the message it sends */
+    private final DataGenerator dataGenerator;
+    private final PersistenceStrategy persistenceStrategy;
+    /**
+     * Sequence number kept by the client to order the message it sends
+     */
     private int sequence_number = 0;
     private String message = null;
     private final static int SECOND_DELAY_BETWEEN_MESSAGES = 5;
@@ -20,10 +28,10 @@ public class Client extends AbstractClient {
     /**
      * Constructor for Client.
      *
-     * @throws IOException  if an I/O error occurs
+     * @throws IOException if an I/O error occurs
      */
-    public Client() throws IOException {
-        super();
+    public Client(String host, int port, String username, String password, String queue_name) throws IOException {
+        super(host, port, username, password, queue_name);
         this.dataGenerator = new FileDataReader();
         this.persistenceStrategy = new NullObjectPersistenceStrategy();
         this.RecoverLastMessage();
@@ -48,7 +56,6 @@ public class Client extends AbstractClient {
         // set buffered reader of data-generator to the current line
         // maybe this.sequence_number - 1 ?
         this.dataGenerator.getData(this.sequence_number);
-
 
     }
 
