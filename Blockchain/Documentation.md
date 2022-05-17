@@ -9,15 +9,14 @@ This document is meant to give a first insight overview in the blockchain part o
 
 
 ## Introduction
-A Blockchain is a data structure and it is characterized by being an immutable, ordered, "back-linked list" of blocks of 
-blocks of transactions. It is not only a simple back linked list, in fact each block contains a hash of the previous block. 
+A Blockchain is a data structure and it is characterized by being an immutable, ordered, "back-linked list" of blocks of transactions. It is not only a simple back linked list, in fact each block contains a hash of the previous block. 
 This hash is used to link the blocks together and allows the properties of immutability to be maintained. It is not 
 possible to edit the blockchain by adding or removing blocks in the middle or changing them, because this would cause 
 a change in the hash of the block. This change will be propagated to the next block since its hash would also change, and so on. 
 
 ![Blockchain](https://i.imgur.com/EXfPl3H.png)
 
-A blockchain is a distributed database shared among computer network nodes. A blockchain, like a database, saves information electronically in digital format. Blockchains are best recognized for preserving a secure and decentralized record of transactions in cryptocurrency systems like Bitcoin. A blockchain's novelty is that it ensures the authenticity and security of a data record while also generating confidence without the requirement for a trusted third party. 
+A blockchain can also be a distributed database shared among computer network nodes. A blockchain, like a database, saves information electronically in digital format. Blockchains are best recognized for preserving a secure and decentralized record of transactions in cryptocurrency systems like Bitcoin. A blockchain's novelty is that it ensures the authenticity and security of a data record while also generating confidence without the requirement for a trusted third party. 
 
 The way data is structured differs significantly between a traditional database and a blockchain. A blockchain is a digital ledger that stores data in groupings called blocks. When a block is full, it is closed and linked to the preceding block, producing a data chain known as the blockchain. All additional information added after that newly added block is compiled into a newly formed block, which is subsequently added to the chain once it is complete.
 
