@@ -114,4 +114,4 @@ In these situations, using the trial-and-error method would be advantageous. So 
 
 ![UMLScheme](https://i.imgur.com/EMF71Nf.png)
 
-Example of a possible code implementation of the blockchain [here](/Blockchain/BlockchainCodeDraft/src/main/java/BlockChain.java).  
+Example of a possible code implementation of the blockchain [here](/BlockChain.java).  
