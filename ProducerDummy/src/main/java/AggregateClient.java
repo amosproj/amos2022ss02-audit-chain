@@ -43,9 +43,9 @@ public class AggregateClient extends AbstractClient {
             try (Connection connection = this.factory.newConnection();
                  Channel channel = connection.createChannel()) {
                  channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-    
-            channel.confirmSelect();
-            long start = System.nanoTime();
+                 channel.confirmSelect();
+                 //RabbitMQ extension confirmSelect() to implement reliable publishing
+                 long start = System.nanoTime();
     
                 for (String line = this.dataGenerator.getData(); line != null; line = this.dataGenerator.getData()) {
                     this.persistenceStrategy.StoreMessage(this.sequence_number,line);
@@ -57,10 +57,11 @@ public class AggregateClient extends AbstractClient {
                         byte[] bytes = message.serializeMessage();
                         channel.basicPublish("", this.QUEUE_NAME, null, message.serializeMessage());
     
-            channel.waitForConfirmsOrDie(5_000);
-            //IOEXCPETION if a message get lost missing                    
-    
-    this.sequence_number +=1;
+                        channel.waitForConfirmsOrDie(5_000);
+                        //wait for its confirmation with the Channel#waitForConfirmsOrDie(long) method
+                        //IOEXCPETION is thrown if a message is lost
+
+                        this.sequence_number +=1;
                         this.persistenceStrategy.cleanFile();
                         TimeUnit.SECONDS.sleep(5);
     
