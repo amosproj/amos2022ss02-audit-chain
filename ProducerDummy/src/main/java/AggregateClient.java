@@ -52,7 +52,7 @@ public class AggregateClient extends AbstractClient {
                     message = (AggregateJsonMessage) m;
                     byte[] bytes = message.serializeMessage();
                     channel.basicPublish("", this.QUEUE_NAME, null, message.serializeMessage());
-                    this.sequence_number +=1;
+                    //this.sequence_number +=1; <-- why numerate the packages?
                     this.persistenceStrategy.cleanFile();
                     TimeUnit.SECONDS.sleep(5);
 
