@@ -63,7 +63,7 @@ public class AggregateClient extends AbstractClient {
                     }
                 }
             long end = System.nanoTime();
-            System.out.format("Messages until the position " + (this.sequence_number + 1)  + " are sent correctly and "
+            System.out.format("Messages until the position " + (this.sequence_number)  + " are sent correctly and "
                     + "received by the Queue in " + Duration.ofNanos(end - start).toMillis());
            }
       return;
