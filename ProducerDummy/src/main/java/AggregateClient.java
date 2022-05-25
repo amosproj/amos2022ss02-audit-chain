@@ -18,10 +18,10 @@ import java.util.concurrent.TimeoutException;
 public class AggregateClient extends AbstractClient {
 
     private final AggregateMessageFilePersistence persistenceStrategy;
-    private int sequence_number = START_NUMBER;
 
     private static final String path = "\\ProducerDummy\\src\\main\\";
     private final DataGenerator dataGenerator;
+    private int sequence_number = 0;
 
     /**
      * Constructor for Client.
@@ -36,67 +36,67 @@ public class AggregateClient extends AbstractClient {
     public AggregateClient(String host, int port, String username, String password, String queue_name) throws IOException {
         super(host, port, username, password, queue_name);
         this.dataGenerator = new FileDataReader();
-        this.persistenceStrategy = new AggregateMessageFilePersistence(path, "messages.txt");
-        this.recoverLastState();
+        this.persistenceStrategy = new AggregateMessageFilePersistence(path,"messages.txt");
     }
 
-
-    public void recoverLastState(){
-        try {
-            this.sequence_number = this.persistenceStrategy.ReadLastMessage().getSequence_number() +1;
-        }catch (ArrayIndexOutOfBoundsException e){
-            return;
-        }
-        this.dataGenerator.getData(this.sequence_number);
-    }
 
     public void start() throws IOException, TimeoutException, InterruptedException {
-        System.out.println("Starting to send Messages.Message to AMQP Host");
 
+        System.out.println("Starting to send Messages.Message to AMQP Host");
         try (Connection connection = this.factory.newConnection();
              Channel channel = connection.createChannel()) {
-            channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-            channel.confirmSelect();
+             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+             channel.confirmSelect();
+             long start = System.nanoTime();
 
-            long start = System.nanoTime();
             for (String line = this.dataGenerator.getData(); line != null; line = this.dataGenerator.getData()) {
 
                 this.persistenceStrategy.StoreMessage(new JsonMessage(this.sequence_number, line));
-
-                if (this.persistenceStrategy.isReadyToSend()) {
-                    AggregateMessage message = (AggregateMessage) this.persistenceStrategy.ReadLastMessage();
-                    channel.basicPublish("", this.QUEUE_NAME, null, serialize(message));
-                    //channel.waitForConfirmsOrDie(5_000);
-                    //wait for its confirmation with the Channel#waitForConfirmsOrDie(long) method
-                    //IOEXCPETION is thrown if a message is lost
+                if(this.persistenceStrategy.isReadyToSend()){
+                    getAcknowledgment(channel, line, serialize(this.persistenceStrategy.ReadLastMessage()));
+                    this.sequence_number +=1;
                     this.persistenceStrategy.cleanFile();
                     TimeUnit.SECONDS.sleep(5);
-
-                } else {
+                }else{
                     System.out.println("Append Message: " + line);
                 }
-                this.sequence_number += 1;
             }
-
             long end = System.nanoTime();
-            System.out.format("Messages until the position " + (+1) + " are sent correctly and "
+            System.out.format("Messages until the position " + (this.sequence_number)  + " are sent correctly and "
                     + "received by the Queue in " + Duration.ofNanos(end - start).toMillis());
-
         }
         return;
     }
 
-
-    public static byte[] serialize(Object object) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        try {
-            ObjectOutputStream os = new ObjectOutputStream(out);
-            os.writeObject(object);
-            return out.toByteArray();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    
+    
+    
+    
+    
+    public void getAcknowledgment(Channel channel, String line, byte[] serialized_message) {
+        //we try for 5 times for aknowledgment and if we get it, we publish the message
+        for (int i = 0; i <= 5; i++) {
+            try {
+                channel.basicPublish("", this.QUEUE_NAME, null, serialized_message);
+                channel.waitForConfirmsOrDie(5_000);
+                break;
+                //IOEXCPETION if a message get lost missing                    
+            } catch (InterruptedException | TimeoutException | IOException e) {
+                getAcknowledgment(channel, line, serialized_message);
+            }
         }
-
     }
 
-}
+
+        public static byte[] serialize(Object object){
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            try {
+                ObjectOutputStream os = new ObjectOutputStream(out);
+                os.writeObject(object);
+                return out.toByteArray();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+    }
