@@ -2,57 +2,69 @@ package Messages;
 
 import org.json.JSONObject;
 
-import java.nio.charset.StandardCharsets;
-
-/** Message of type JSON */
-public class JsonMessage extends AbstractMessage {
-
-    public JSONObject json_message;
-
-    /**
-     * Constructor for JsonMessage.
-     * call {@link #formatMessage()} to format the message
-     *
-     * @param sequence_number sequence number of the messages. Used to keep the cardinality of the messages in the order
-     *                        they are sent from the client
-     * @param message message as a string
-     */
-    public JsonMessage(int sequence_number, String message) {
-        super(sequence_number,message);
-        this.formatMessage();
-    }
-
-    public JsonMessage() {
-        super();
+public class JsonMessage implements Message {
+    String json_message;
+    public static String MESSAGE_KEY = "Message";
+    public static String SEQUENCE_KEY = "Sequence_Number";
+    public JsonMessage(int sequence_number, String json_message) {
+        this.formatMessage(sequence_number, json_message);
     }
 
 
-    /**
-     * {@inheritDoc}
-     * As a JsonMessage, the message is formatted as a JSONObject
-     */
+
     @Override
-    public void formatMessage() {
-        JSONObject json_message = new JSONObject();
-        json_message.put("Sequence_Number",this.sequence_number);
-
-        json_message.put("Messages.Message",this.message_string);
-        this.json_message = json_message;
+    public void formatMessage(int sequence_number, String message) {
+        this.setMessage(message);
+        this.setSequence_number(sequence_number);
         return;
     }
 
-    /**
-     * @return the JSONObject of the message
-     */
-    public JSONObject getMessage() {
-        return this.json_message;
+    @Override
+    public int getSequence_number() {
+        return new JSONObject(this.json_message).getInt(SEQUENCE_KEY);
     }
-
 
     @Override
-    public byte[] serializeMessage(){
-        return this.getMessage_string().toString().getBytes(StandardCharsets.UTF_8);
+    public void setSequence_number(int sequence_number) {
+        JSONObject object = new JSONObject();
+        if(this.json_message != null) {
+            object = new JSONObject(this.json_message);
+        }
+        object.put(SEQUENCE_KEY,sequence_number);
+        this.json_message = object.toString();
+
     }
+
+    @Override
+    public String getMessage() {
+        return new JSONObject(this.json_message).getString(MESSAGE_KEY);
+    }
+
+    @Override
+    public void setMessage(String json_message) {
+        JSONObject object = new JSONObject();
+        if(this.json_message != null){
+             object = new JSONObject(this.json_message);
+        }
+        object.put(MESSAGE_KEY, json_message);
+        this.json_message = object.toString();
+
+    }
+
+    @Override
+    public Message getMessageObject() {
+        return (JsonMessage) this;
+    }
+
+    public SimpleMessage toSimpleMessage(){
+        return new SimpleMessage(this.getSequence_number(),this.getMessage());
+    }
+    public String toString(){
+        return Integer.toString(this.getSequence_number()) + this.getMessage();
+    }
+
+
+
 
 
 }

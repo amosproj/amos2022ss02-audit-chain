@@ -1,16 +1,18 @@
 package Persistence;
 
-import Messages.AbstractMessage;
-import Messages.AggregateJsonMessage;
+import Messages.AggregateMessage;
 import Messages.JsonMessage;
 import Messages.Message;
-import Persistence.FilePersistenceStrategy;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.util.Vector;
 
-public class AggregateMessages extends FilePersistenceStrategy {
+
+/***
+ * This is one Implementation which is supposed to guarantee us that we never lose our current state of the Sequence Number.
+ */
+
+public class AggregateMessageFilePersistence extends FilePersistenceStrategy {
 
     private static final String fileName = "messages.txt";
     private static int SIZE = 1024;
@@ -21,33 +23,21 @@ public class AggregateMessages extends FilePersistenceStrategy {
      * Set filepath to the path of the file using path and fileName variables and
      * call {@link #CreatePersistenceMechanism()}.
      *
+     * @param path
+     * @param fileName
      * @throws IOException if the filepath is not valid
      */
-    public AggregateMessages(String path, String fileName) throws IOException {
+    public AggregateMessageFilePersistence(String path, String fileName) throws IOException {
         super(path, fileName);
     }
 
 
-    @Override
-    public void StoreMessage(int sequenceNumber, String message) {
-        try {
-            this.fileWriter = new FileWriter(filepath.toString(), true);
-            this.fileWriter.write(sequenceNumber + "\r\n");
-            this.fileWriter.write(message + "\r\n");
-            this.fileWriter.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
-
-    }
 
     @Override
-    public AbstractMessage ReadLastMessage() {
+    public Message ReadLastMessage() {
 
-        Vector<Integer> sequence_numbers = new Vector<>();
-        Vector<String> messages = new Vector<>();
-        AggregateJsonMessage merged_messages = new AggregateJsonMessage();
+        AggregateMessage messages = new AggregateMessage();
 
         File file = new File(this.filepath.toString());
         try {
@@ -55,7 +45,7 @@ public class AggregateMessages extends FilePersistenceStrategy {
             for (String line = br.readLine(); line != null; line = br.readLine()) {
                 int number = Integer.parseInt(line);
                 String message = br.readLine();
-                merged_messages.addMessage(number, message);
+                messages.addMessage(new JsonMessage(number,message));
             }
             br.close();
 
@@ -63,11 +53,13 @@ public class AggregateMessages extends FilePersistenceStrategy {
             // there are no values in the file or the file is missing therefore we never did send a Messages.Message to the Broker
             return null;
         }
-        merged_messages.formatMessage();
 
-
-        return merged_messages;
+        return messages;
     }
+
+
+
+
 
     public void cleanFile(){
         try {
@@ -88,6 +80,5 @@ public class AggregateMessages extends FilePersistenceStrategy {
             return true;
         }
     }
-
 
 }

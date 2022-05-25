@@ -1,14 +1,16 @@
 import DataGeneration.DataGenerator;
 import DataGeneration.FileDataReader;
-import Messages.AbstractMessage;
 import Messages.JsonMessage;
+import Messages.Message;
+import Persistence.FilePersistenceStrategy;
 import Persistence.NullObjectPersistenceStrategy;
 import Persistence.PersistenceStrategy;
-import Persistence.AggregateMessages;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -21,12 +23,12 @@ public class Client extends AbstractClient {
 
     private final DataGenerator dataGenerator;
     private final PersistenceStrategy persistenceStrategy;
-    private final PersistenceStrategy aggregateMessages;
     /**
      * Sequence number kept by the client to order the message it sends
      */
-    private int sequence_number = 0;
-    private String message = null;
+
+    Message message = null;
+
     private final static int SECOND_DELAY_BETWEEN_MESSAGES = 5;
 
     /**
@@ -37,8 +39,7 @@ public class Client extends AbstractClient {
     public Client(String host, int port, String username, String password, String queue_name) throws IOException {
         super(host, port, username, password, queue_name);
         this.dataGenerator = new FileDataReader();
-        this.persistenceStrategy = new NullObjectPersistenceStrategy(path,"last_message.txt");
-        this.aggregateMessages = new AggregateMessages(path,"messages.txt");
+        this.persistenceStrategy = new FilePersistenceStrategy(path,"last_message.txt");
         this.RecoverLastMessage();
     }
 
@@ -48,20 +49,10 @@ public class Client extends AbstractClient {
      * DataGenerator again to the point it was before "the interruption"
      */
     public void RecoverLastMessage() {
-        // get the Last Messages.Message
-        AbstractMessage message = this.persistenceStrategy.ReadLastMessage();
-        // If Messages.Message is null we can assume the file is empty. Use value of dataGenerator
-        if (message == null) {
-            this.sequence_number = 0;
-            this.message = null;
-            return;
+        Message lastMessage = this.persistenceStrategy.ReadLastMessage();
+        if(lastMessage != null) {
+            this.message = new JsonMessage(lastMessage.getSequence_number(), lastMessage.getMessage());
         }
-        this.sequence_number = message.getSequenceNumber();
-        this.message = message.getMessage_string();
-        // set buffered reader of data-generator to the current line
-        // maybe this.sequence_number - 1 ?
-        this.dataGenerator.getData(this.sequence_number);
-
     }
 
 
@@ -73,26 +64,46 @@ public class Client extends AbstractClient {
      * @throws InterruptedException if the thread is interrupted
      */
     public void start() throws IOException, TimeoutException, InterruptedException {
+
         System.out.println("Starting to send Messages.Message to AMQP Host");
-        // Here you can declare another Message Type
-        JsonMessage message;
         try (Connection connection = this.factory.newConnection();
              Channel channel = connection.createChannel()) {
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-            //before we send new messages we send the last message which was stored in file
-            if (this.message != null) {
-                message = new JsonMessage(this.sequence_number, this.message);
-                channel.basicPublish("", QUEUE_NAME, null, message.serializeMessage());
+            //if the sequence_number is not equal 0 it means there was a message which was not send
+            if (this.message != null){
+                channel.basicPublish("", QUEUE_NAME, null, serialize(this.message));
+                incrementMessageCounter();
+            }else{
+                //init for the first Message to send
+                this.message = new JsonMessage(0,"");
             }
             for (String line = this.dataGenerator.getData(); line != null; line = this.dataGenerator.getData()) {
                 System.out.println("The following Messages.Message will be send:\n" + line);
-                this.persistenceStrategy.StoreMessage(this.sequence_number, line);
-                message = new JsonMessage(this.sequence_number, line);
-                channel.basicPublish("", QUEUE_NAME, null, message.serializeMessage());
-                this.sequence_number++;
+                this.message = new JsonMessage(this.message.getSequence_number(),line);
+                this.persistenceStrategy.StoreMessage(this.message);
+                channel.basicPublish("", QUEUE_NAME, null, serialize(message));
+                incrementMessageCounter();
                 TimeUnit.SECONDS.sleep(SECOND_DELAY_BETWEEN_MESSAGES);
             }
         }
+    }
+
+    public void incrementMessageCounter(){
+        this.message.setSequence_number(this.message.getSequence_number()+1);
+    }
+
+
+
+    public static byte[] serialize(Object object) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            ObjectOutputStream os = new ObjectOutputStream(out);
+            os.writeObject(object);
+            return out.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 }

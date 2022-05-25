@@ -1,28 +1,18 @@
 package Messages;
 
-import java.nio.charset.StandardCharsets;
+import java.io.Serializable;
 
-/** Message of generic type, without any structure */
-public class Message extends AbstractMessage {
+public interface Message extends Serializable {
 
-    /**
-     * Constructor for Message.
-     *
-     * @param sequence_number sequence number of the messages. Used to keep the cardinality of the messages in the order
-     *                        they are sent from the client
-     * @param message message as a string
-     */
-    public Message(int sequence_number, String message) {
-        super(sequence_number, message);
-    }
+        public Message getMessageObject();
+        public void formatMessage(int sequence_number, String message);
 
-    @Override
-    public void formatMessage() {
-        return;
-    }
+        public int getSequence_number();
+        public void setSequence_number(int sequence_number);
 
-    @Override
-    public byte[] serializeMessage() {
-        return (Integer.toString(this.sequence_number) + this.message_string).getBytes(StandardCharsets.UTF_8);
-    }
+        public String getMessage();
+        public void setMessage(String json_message);
+
+
+
 }

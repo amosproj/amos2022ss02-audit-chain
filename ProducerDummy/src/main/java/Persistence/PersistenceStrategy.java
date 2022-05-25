@@ -1,6 +1,7 @@
 package Persistence;
 
-import Messages.AbstractMessage;
+
+import Messages.Message;
 
 /** Interface for the persistence strategy mechanisms */
 public interface PersistenceStrategy {
@@ -11,7 +12,7 @@ public interface PersistenceStrategy {
      * @param sequenceNumber the sequence number of the message
      * @param message message to be stored as a string
      */
-    public void StoreMessage(int sequenceNumber, String message);
+    public void StoreMessage(Message message);
 
     /**
      * Create a persistence mechanism, e.g create the File or the Database.
@@ -21,7 +22,8 @@ public interface PersistenceStrategy {
     /**
      * @return last AbstractMessage written in the persistence mechanism
      */
-    public AbstractMessage ReadLastMessage();
+
+    public Message ReadLastMessage();
 
 }
 
