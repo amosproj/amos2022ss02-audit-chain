@@ -1,6 +1,6 @@
-import Messages.Hmac_JsonMessage;
-import Messages.Hmac_SimpleMessage;
-import Messages.JsonMessage;
+import Messages.*;
+import Persistence.AggregateMessageFilePersistence;
+import Persistence.FilePersistenceStrategy;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -28,26 +28,17 @@ public class main {
 
         String hmacSHA256Algorithm = "HmacSHA256";
         String key = "0123456789";
+        String path = "\\ProducerDummy\\src\\main\\";
 
 
-        Hmac_JsonMessage message = new Hmac_JsonMessage(1,"HelloWorld",hmacSHA256Algorithm,key);
-        Hmac_JsonMessage message2 = new Hmac_JsonMessage(1,"HelloWorl",hmacSHA256Algorithm,key);
-
-        if(message.verifyMAC(hmacSHA256Algorithm,message,key)){
-            System.out.println("Hash is the Same!");
-        }
-        if(message.verifyMAC(hmacSHA256Algorithm,message2,key)){
-            System.out.println("Hash is the Same!");
-        }else{
-            System.out.println("Hash is not the Same!");
-        }
+        FilePersistenceStrategy filePersistenceStrategy = new AggregateMessageFilePersistence(path,"messages.txt");
 
 
 
 
+        AbstractClient client = new Client(HOST,PORT,USER,PASSWORD,queue_name);
 
-        //Client client = new Client(HOST,PORT,USER,PASSWORD,queue_name);
-        //client.start();
+        client.start();
 
 
 

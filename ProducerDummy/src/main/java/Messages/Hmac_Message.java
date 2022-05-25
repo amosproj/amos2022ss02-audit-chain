@@ -3,7 +3,7 @@ package Messages;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-public interface Hmac {
+public interface Hmac_Message extends Message {
 
 
 

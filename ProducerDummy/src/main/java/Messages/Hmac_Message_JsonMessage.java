@@ -6,12 +6,12 @@ import org.json.JSONObject;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-public class Hmac_JsonMessage extends JsonMessage implements Hmac {
+public class Hmac_Message_JsonMessage extends JsonMessage implements Hmac_Message {
     public static String HMAC_KEY = "HMAC";
 
 
 
-    public Hmac_JsonMessage(int sequence_number, String message,String algorithm,String key) throws NoSuchAlgorithmException, InvalidKeyException {
+    public Hmac_Message_JsonMessage(int sequence_number, String message, String algorithm, String key) throws NoSuchAlgorithmException, InvalidKeyException {
         super(sequence_number, message);
         this.setHmac(this.calculateMac(algorithm,this,key));
     }

@@ -18,6 +18,7 @@ public class AggregateMessageFilePersistence extends FilePersistenceStrategy {
     private static int SIZE = 1024;
 
 
+
     /**
      * Constructor for the FilePersistenceStrategy.
      * Set filepath to the path of the file using path and fileName variables and
@@ -34,8 +35,24 @@ public class AggregateMessageFilePersistence extends FilePersistenceStrategy {
 
 
 
+
+    public void StoreMessage(Message message) {
+        try {
+            this.fileWriter = new FileWriter(filepath.toString(), true);
+            this.fileWriter.write(message.getSequence_number() + "\r\n");
+            this.fileWriter.write(message.getMessage() + "\r\n");
+            this.fileWriter.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+
+
     @Override
     public Message ReadLastMessage() {
+        //TODO right now even if there are no Messages an empty Message will be returned, it should return NULL tho
 
         AggregateMessage messages = new AggregateMessage();
 

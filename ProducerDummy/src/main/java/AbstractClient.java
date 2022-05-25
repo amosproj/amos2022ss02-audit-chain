@@ -1,6 +1,7 @@
 //TODO Refactor Name to Client and Client to DummyClient
 
 import DataGeneration.DataGenerator;
+import Messages.Message;
 import Persistence.PersistenceStrategy;
 import com.rabbitmq.client.ConnectionFactory;
 
@@ -9,12 +10,13 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Abstract class for Clients
  */
 public class AbstractClient {
-
+    static int START_NUMBER = 0;
 
     protected String HOST;
     protected int PORT;
@@ -46,6 +48,11 @@ public class AbstractClient {
         this.factory.setUsername(this.USER);
         this.factory.setPassword(this.PASSWORD);
         this.factory.setPort(this.PORT);
+    }
+
+
+    public void start() throws IOException, TimeoutException, InterruptedException {
+
     }
 
 

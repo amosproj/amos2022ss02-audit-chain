@@ -6,11 +6,11 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 
-public class Hmac_SimpleMessage extends SimpleMessage implements Hmac {
+public class Hmac_Message_SimpleMessage extends SimpleMessage implements Hmac_Message {
 
     private String hmac;
 
-    public Hmac_SimpleMessage(int sequence_number, String message,String algorithm,String key) throws NoSuchAlgorithmException, InvalidKeyException {
+    public Hmac_Message_SimpleMessage(int sequence_number, String message, String algorithm, String key) throws NoSuchAlgorithmException, InvalidKeyException {
         super(sequence_number, message);
         this.setHmac(this.calculateMac(algorithm,this,key));
     }

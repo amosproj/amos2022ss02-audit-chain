@@ -3,7 +3,6 @@ import DataGeneration.FileDataReader;
 import Messages.JsonMessage;
 import Messages.Message;
 import Persistence.FilePersistenceStrategy;
-import Persistence.NullObjectPersistenceStrategy;
 import Persistence.PersistenceStrategy;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
@@ -27,7 +26,7 @@ public class Client extends AbstractClient {
      * Sequence number kept by the client to order the message it sends
      */
 
-    Message message = null;
+    private int sequence_number = START_NUMBER;
 
     private final static int SECOND_DELAY_BETWEEN_MESSAGES = 5;
 
@@ -40,7 +39,8 @@ public class Client extends AbstractClient {
         super(host, port, username, password, queue_name);
         this.dataGenerator = new FileDataReader();
         this.persistenceStrategy = new FilePersistenceStrategy(path,"last_message.txt");
-        this.RecoverLastMessage();
+        this.recoverLastState();
+        this.recoverLastMessage();
     }
 
 
@@ -48,12 +48,21 @@ public class Client extends AbstractClient {
      * Recover the last message stored in the persistence mechanism and use its sequence number to set the
      * DataGenerator again to the point it was before "the interruption"
      */
-    public void RecoverLastMessage() {
+    public void recoverLastState(){
         Message lastMessage = this.persistenceStrategy.ReadLastMessage();
         if(lastMessage != null) {
-            this.message = new JsonMessage(lastMessage.getSequence_number(), lastMessage.getMessage());
+            this.sequence_number = lastMessage.getSequence_number();
         }
     }
+
+    public Message recoverLastMessage(){
+        Message lastMessage = this.persistenceStrategy.ReadLastMessage();
+        if(lastMessage != null) {
+            return lastMessage;
+        }
+        return null;
+    }
+
 
 
     /***
@@ -69,27 +78,23 @@ public class Client extends AbstractClient {
         try (Connection connection = this.factory.newConnection();
              Channel channel = connection.createChannel()) {
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-            //if the sequence_number is not equal 0 it means there was a message which was not send
-            if (this.message != null){
-                channel.basicPublish("", QUEUE_NAME, null, serialize(this.message));
-                incrementMessageCounter();
-            }else{
-                //init for the first Message to send
-                this.message = new JsonMessage(0,"");
+            // Recover last Message which was stored in file and maybe was not send
+            Message message = this.recoverLastMessage();
+            if(message != null){
+                channel.basicPublish("", QUEUE_NAME, null, serialize(message));
+                this.sequence_number +=1;
             }
+
             for (String line = this.dataGenerator.getData(); line != null; line = this.dataGenerator.getData()) {
                 System.out.println("The following Messages.Message will be send:\n" + line);
-                this.message = new JsonMessage(this.message.getSequence_number(),line);
-                this.persistenceStrategy.StoreMessage(this.message);
+
+                message = new JsonMessage(this.sequence_number,line);
+                this.persistenceStrategy.StoreMessage(message);
                 channel.basicPublish("", QUEUE_NAME, null, serialize(message));
-                incrementMessageCounter();
+                this.sequence_number +=1;
                 TimeUnit.SECONDS.sleep(SECOND_DELAY_BETWEEN_MESSAGES);
             }
         }
-    }
-
-    public void incrementMessageCounter(){
-        this.message.setSequence_number(this.message.getSequence_number()+1);
     }
 
 
