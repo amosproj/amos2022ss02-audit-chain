@@ -37,6 +37,7 @@ public class AggregateClient extends AbstractClient {
     }
 
     public void start() throws IOException, TimeoutException, InterruptedException {
+      
             System.out.println("Starting to send Messages.Message to AMQP Host");
             // Here you can declare another Message Type
             AggregateJsonMessage message = null;
