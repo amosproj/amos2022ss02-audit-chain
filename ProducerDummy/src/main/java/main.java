@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
+import java.util.Vector;
 import java.util.concurrent.TimeoutException;
 
 public class main {
@@ -33,11 +34,10 @@ public class main {
 
         FilePersistenceStrategy filePersistenceStrategy = new AggregateMessageFilePersistence(path,"messages.txt");
 
+        Vector<String> messages = new Vector<>();
 
 
-
-        AbstractClient client = new Client(HOST,PORT,USER,PASSWORD,queue_name);
-
+        AbstractClient client = new AggregateClient(HOST,PORT,USER,PASSWORD,queue_name);
         client.start();
 
 
