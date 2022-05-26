@@ -1,4 +1,5 @@
-import Messages.*;
+import Client.AbstractClient;
+import Client.AggregateClient;
 import Persistence.AggregateMessageFilePersistence;
 import Persistence.FilePersistenceStrategy;
 
@@ -14,8 +15,9 @@ import java.util.concurrent.TimeoutException;
 public class main {
 
     public static void main(String[] args) throws IOException, TimeoutException, InterruptedException, ClassNotFoundException, NoSuchAlgorithmException, InvalidKeyException {
-        String filepath = "\\ProducerDummy\\src\\main";
+        String filepath = Paths.get("ProducerDummy", "src","main").toString();
         String filename = "config.properties";
+
         Path config_path = Paths.get(System.getProperty("user.dir"), filepath, filename);
         Properties p = new Properties();
         FileReader reader = new FileReader(config_path.toString());
@@ -29,12 +31,8 @@ public class main {
 
         String hmacSHA256Algorithm = "HmacSHA256";
         String key = "0123456789";
-        String path = "\\ProducerDummy\\src\\main\\";
 
 
-        FilePersistenceStrategy filePersistenceStrategy = new AggregateMessageFilePersistence(path,"messages.txt");
-
-        Vector<String> messages = new Vector<>();
 
 
         AbstractClient client = new AggregateClient(HOST,PORT,USER,PASSWORD,queue_name);

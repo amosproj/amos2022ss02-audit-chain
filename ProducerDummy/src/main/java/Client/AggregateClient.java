@@ -1,3 +1,5 @@
+package Client;
+
 import DataGeneration.DataGenerator;
 import DataGeneration.FileDataReader;
 import Messages.JsonMessage;
@@ -9,8 +11,8 @@ import com.rabbitmq.client.Connection;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
-import java.time.Duration;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -18,13 +20,14 @@ public class AggregateClient extends AbstractClient {
 
     private final AggregateMessageFilePersistence persistenceStrategy;
 
-    private static final String path = "\\ProducerDummy\\src\\main\\";
+    //TODO Parameterize and not as static
+    private static final String path = Paths.get("ProducerDummy", "src","main").toString();
     private final DataGenerator dataGenerator;
     private int sequence_number = 0;
 
 
     /**
-     * Constructor for Client.
+     * Constructor for Client.Client.
      *
      * @param host
      * @param port
@@ -51,7 +54,7 @@ public class AggregateClient extends AbstractClient {
     }
 
 
-    public void start() throws IOException, TimeoutException, InterruptedException {
+    public void start() throws IOException, TimeoutException {
 
         System.out.println("Starting to send Messages.Message to AMQP Host");
         try (Connection connection = this.factory.newConnection();
@@ -68,7 +71,12 @@ public class AggregateClient extends AbstractClient {
                     this.sequence_number += 1;
                     this.persistenceStrategy.cleanFile();
                     System.out.format(String.format("Message from event Number %d until %d were sent",start_event,this.sequence_number));
-                    TimeUnit.SECONDS.sleep(5);
+                    //at least for now we just catch it ...
+                    try{
+                        TimeUnit.SECONDS.sleep(5);
+                    }catch (InterruptedException e){
+                        System.out.println("Thread was interrupted");
+                    }
                     start_event = this.sequence_number;
 
                 } else {
@@ -95,6 +103,8 @@ public class AggregateClient extends AbstractClient {
             }
         }
     }
+
+
 
 
     public static byte[] serialize(Object object) {

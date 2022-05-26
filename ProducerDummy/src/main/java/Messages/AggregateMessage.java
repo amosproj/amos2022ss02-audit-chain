@@ -61,4 +61,8 @@ public class AggregateMessage implements Message {
         return messages.size();
     }
 
+    public Vector<Message> getMessages(){
+        return this.messages;
+    }
+
 }

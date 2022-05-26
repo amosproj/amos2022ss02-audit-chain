@@ -1,4 +1,4 @@
-//TODO Refactor Name to Client and Client to DummyClient
+package Client;//TODO Refactor Name to Client.Client and Client.Client to DummyClient
 
 import DataGeneration.DataGenerator;
 import Messages.Message;
@@ -26,7 +26,7 @@ public class AbstractClient {
     protected ConnectionFactory factory = new ConnectionFactory();
 
     /**
-     * Constructor for AbstractClient. Initializes the filepath, the file reader and set information for the
+     * Constructor for Client.AbstractClient. Initializes the filepath, the file reader and set information for the
      * connection factory. Call {@link #initFactory()} to initialize the connection factory.
      *
      * @throws IOException if the file cannot be read
@@ -51,7 +51,7 @@ public class AbstractClient {
     }
 
 
-    public void start() throws IOException, TimeoutException, InterruptedException {
+    public void start() throws IOException, TimeoutException {
 
     }
 

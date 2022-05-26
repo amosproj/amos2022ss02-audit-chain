@@ -1,3 +1,5 @@
+package Client;
+
 import DataGeneration.DataGenerator;
 import DataGeneration.FileDataReader;
 import Messages.JsonMessage;
@@ -14,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 /**
- * Client implementation
+ * Client.Client implementation
  */
 public class Client extends AbstractClient {
     private static final String path = "\\ProducerDummy\\src\\main\\";
@@ -31,7 +33,7 @@ public class Client extends AbstractClient {
     private final static int SECOND_DELAY_BETWEEN_MESSAGES = 5;
 
     /**
-     * Constructor for Client.
+     * Constructor for Client.Client.
      *
      * @throws IOException if an I/O error occurs
      */
@@ -72,7 +74,7 @@ public class Client extends AbstractClient {
      * @throws TimeoutException if the timeout expires
      * @throws InterruptedException if the thread is interrupted
      */
-    public void start() throws IOException, TimeoutException, InterruptedException {
+    public void start() throws IOException, TimeoutException {
 
         System.out.println("Starting to send Messages.Message to AMQP Host");
         try (Connection connection = this.factory.newConnection();
@@ -92,7 +94,11 @@ public class Client extends AbstractClient {
                 this.persistenceStrategy.StoreMessage(message);
                 channel.basicPublish("", QUEUE_NAME, null, serialize(message));
                 this.sequence_number +=1;
-                TimeUnit.SECONDS.sleep(SECOND_DELAY_BETWEEN_MESSAGES);
+                try {
+                    TimeUnit.SECONDS.sleep(SECOND_DELAY_BETWEEN_MESSAGES);
+                } catch (InterruptedException e) {
+                    System.out.println("Thread was interrupted");
+                }
             }
         }
     }

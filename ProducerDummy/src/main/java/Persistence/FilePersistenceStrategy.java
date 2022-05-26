@@ -14,8 +14,6 @@ import java.nio.file.Paths;
 
 public class FilePersistenceStrategy implements PersistenceStrategy {
 
-    private static final String path = "\\ProducerDummy\\src\\main\\";
-    protected static final String fileName = "last_message.txt";
     protected Path filepath;
     protected FileWriter fileWriter;
 
