@@ -1,15 +1,23 @@
-import java.io.FileReader;
-import java.io.IOException;
+import Client.AbstractClient;
+import Client.AggregateClient;
+import Persistence.AggregateMessageFilePersistence;
+import Persistence.FilePersistenceStrategy;
+
+import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
+import java.util.Vector;
 import java.util.concurrent.TimeoutException;
 
 public class main {
 
-    public static void main(String[] args) throws IOException, TimeoutException, InterruptedException {
-        String filepath = "\\ProducerDummy\\src\\main";
+    public static void main(String[] args) throws IOException, TimeoutException, InterruptedException, ClassNotFoundException, NoSuchAlgorithmException, InvalidKeyException {
+        String filepath = Paths.get("ProducerDummy", "src","main").toString();
         String filename = "config.properties";
+
         Path config_path = Paths.get(System.getProperty("user.dir"), filepath, filename);
         Properties p = new Properties();
         FileReader reader = new FileReader(config_path.toString());
@@ -21,9 +29,33 @@ public class main {
         String PASSWORD = p.getProperty("PASSWORD");
         String queue_name = "FAKE";
 
-        AggregateClient client = new AggregateClient(HOST, PORT, USER, PASSWORD,queue_name);
+        String hmacSHA256Algorithm = "HmacSHA256";
+        String key = "0123456789";
+
+
+
+
+        AbstractClient client = new AggregateClient(HOST,PORT,USER,PASSWORD,queue_name);
         client.start();
+
+
+
+
         return;
     }
+
+    public static byte[] serialize(Object object) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            ObjectOutputStream os = new ObjectOutputStream(out);
+            os.writeObject(object);
+            return out.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+
 
 }

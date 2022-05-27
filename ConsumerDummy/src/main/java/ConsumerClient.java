@@ -1,3 +1,4 @@
+import Client.AbstractClient;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.DeliverCallback;
@@ -11,13 +12,13 @@ import java.util.concurrent.TimeoutException;
  */
 public class ConsumerClient extends AbstractClient {
     /**
-     * Constructor for AbstractClient. Initializes the filepath, the file reader and set information for the
+     * Constructor for Client.AbstractClient. Initializes the filepath, the file reader and set information for the
      * connection factory. Call {@link #initFactory()} to initialize the connection factory.
      *
      * @throws IOException if the file cannot be read
      */
-    public ConsumerClient() throws IOException {
-        super();
+    public ConsumerClient(String host, int port, String username, String password, String queue_name) throws IOException {
+        super(host, port, username, password, queue_name);
     }
 
     /***
