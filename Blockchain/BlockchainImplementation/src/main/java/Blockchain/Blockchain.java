@@ -2,6 +2,7 @@ package Blockchain;
 
 import Blockchain.Blocks.Block;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,13 +19,13 @@ public class Blockchain implements BlockchainInterface {
 
 
     @Override
-    public void addABlock(String sequence_number, String message) {
+    public void addABlock(File data) {
         Block block;
 
         if (this.blockchain.size() == 0)
-            block = new Block("0", sequence_number, message, prefix); //GENESYS BLOCK
+            block = new Block("0",  prefix, data); //GENESYS BLOCK
         else
-            block = new Block(this.getLastBlockHash(), sequence_number, message, prefix);
+            block = new Block(this.getLastBlockHash(), prefix, data);
 
         this.lastBlockHash = block.getHashBlock();
 
@@ -54,8 +55,7 @@ public class Blockchain implements BlockchainInterface {
 
         printBlockchain(getBlockFromHash(current.getPreviousHashBlock()));
 
-        System.out.println(" <- ( " + current.getHashBlock() + " | " + current.getSequenceNumber() + " | " +
-                current.getMessage() + " )");
+        System.out.println(" <- ( " + current.getHashBlock() + " | " + current.getHashBlock() + " )");
 
     }
 }
