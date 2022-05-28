@@ -1,16 +1,19 @@
 package Blockchain.Blocks;
 
 import Blockchain.Hashing.Hasher;
+import Blockchain.Messages.AggregateMessage;
+import Blockchain.Messages.Message;
+import Blockchain.Persistence.AggregateMessageFilePersistence;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 
-public class Block implements BlockInterface {
+
+public class Block {
 
     private final String previousHashBlock; /** contains the hash of the previous block */
     private String hashBlock; /** contains the hash of the current block */
@@ -18,9 +21,11 @@ public class Block implements BlockInterface {
     private Map<String, SubBlock> data;
     private int nonce; /** arbitrary number to be used in cryptography */
 
-    public Block(String previousHashBlock, int prefix, File data) {
+    public Block(String previousHashBlock, int prefix, String path, String fileName) throws IOException {
         this.previousHashBlock = previousHashBlock;
-        extractDataFromFile(data);
+
+        extractDataFromFile(path, fileName);
+
         this.timestamp = new Date().getTime();
         this.hashBlock = calcHash();
         mineBlock(prefix);
@@ -33,6 +38,26 @@ public class Block implements BlockInterface {
 //        this.hashBlock = calcHash();
 //        mineBlock(prefix);
 //    }
+
+    private void extractDataFromFile (String path, String fileName) throws IOException {
+        AggregateMessageFilePersistence persistence = new AggregateMessageFilePersistence(path, fileName);
+
+        data = new HashMap<>();
+
+        AggregateMessage result = (AggregateMessage) persistence.ReadLastMessage();
+        Vector<Message> msgs = result.getMessages();
+
+        String previousHash = "0";
+
+        for (Message msg : msgs) {
+            SubBlock newSubBlock = new SubBlock(previousHash, msg.getSequence_number(), msg.getMessage());
+            previousHash = newSubBlock.getHashBlock();
+
+            data.put(previousHash, newSubBlock);
+        }
+
+
+    }
 
     private String getDataHash () {
         String result = "";
@@ -78,12 +103,10 @@ public class Block implements BlockInterface {
     /**
      * @return hash of the current block saved in the block
      */
-    @Override
     public String getHashBlock () {
         return hashBlock;
     }
 
-    @Override
     public String getPreviousHashBlock () { return previousHashBlock; }
 
     public Map<String, SubBlock> getData () { return data; }
