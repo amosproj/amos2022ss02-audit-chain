@@ -19,17 +19,23 @@ public class Blockchain implements BlockchainInterface {
 
 
     @Override
-    public void addABlock(File data) {
+    public void addABlock(String path, String filename) {
         Block block;
 
-        if (this.blockchain.size() == 0)
-            block = new Block("0",  prefix, data); //GENESYS BLOCK
-        else
-            block = new Block(this.getLastBlockHash(), prefix, data);
+        try {
+            if (this.blockchain.size() == 0)
+                block = new Block("0", prefix, path, filename); //GENESYS BLOCK
+            else
+                block = new Block(this.getLastBlockHash(), prefix, path, filename);
 
-        this.lastBlockHash = block.getHashBlock();
+            this.lastBlockHash = block.getHashBlock();
 
-        blockchain.put(lastBlockHash, block);
+            blockchain.put(lastBlockHash, block);
+        } catch (Exception e) {
+            System.out.println("Error occurred while trying to add a block"); //to be removed or changed
+        }
+
+
     }
 
     @Override

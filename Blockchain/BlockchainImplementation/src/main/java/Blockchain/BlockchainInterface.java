@@ -6,7 +6,7 @@ import java.io.File;
 
 public interface BlockchainInterface {
 
-    public void addABlock(File transactions);
+    public void addABlock(String path, String filename);
 
     public String getLastBlockHash();
 
