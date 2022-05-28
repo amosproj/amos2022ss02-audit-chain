@@ -51,7 +51,7 @@ public class ConsumerClientBlockchain extends AbstractClient {
             String msg = (String) jsonJavaRootObject.get("message");
             String sqz = (String) jsonJavaRootObject.get("sequence_number");
 
-            blockchain.addABlock(sqz, msg);
+           // blockchain.addABlock(sqz, msg);
 
             //blockchain.printBlockchain();
         };
