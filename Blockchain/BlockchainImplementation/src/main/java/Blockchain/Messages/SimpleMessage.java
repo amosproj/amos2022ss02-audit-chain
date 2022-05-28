@@ -1,4 +1,4 @@
-package Messages;
+package Blockchain.Messages;
 
 public class SimpleMessage implements Message {
 

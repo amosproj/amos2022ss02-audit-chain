@@ -1,7 +1,7 @@
-package Persistence;
+package Blockchain.Persistence;
 
 
-import Messages.Message;
+import Blockchain.Messages.Message;
 
 /** Interface for the persistence strategy mechanisms */
 public interface PersistenceStrategy {

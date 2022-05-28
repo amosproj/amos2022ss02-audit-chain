@@ -1,4 +1,4 @@
-package Messages;
+package Blockchain.Messages;
 
 import java.io.Serializable;
 

@@ -1,4 +1,4 @@
-package Messages;
+package Blockchain.Messages;
 
 import org.apache.commons.codec.digest.HmacUtils;
 import org.json.JSONObject;

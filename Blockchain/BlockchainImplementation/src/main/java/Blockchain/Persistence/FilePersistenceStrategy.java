@@ -1,7 +1,7 @@
-package Persistence;
+package Blockchain.Persistence;
 
-import Messages.JsonMessage;
-import Messages.Message;
+import Blockchain.Messages.JsonMessage;
+import Blockchain.Messages.Message;
 
 import java.io.*;
 import java.nio.file.Path;
