@@ -1,8 +1,8 @@
-package Blockchain.Persistence;
+package Comunication.Persistence;
 
-import Blockchain.Messages.AggregateMessage;
-import Blockchain.Messages.JsonMessage;
-import Blockchain.Messages.Message;
+import Comunication.Messages.AggregateMessage;
+import Comunication.Messages.JsonMessage;
+import Comunication.Messages.Message;
 
 import java.io.*;
 import java.nio.file.Files;

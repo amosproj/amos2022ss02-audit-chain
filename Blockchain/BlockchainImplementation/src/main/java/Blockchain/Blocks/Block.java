@@ -1,9 +1,9 @@
 package Blockchain.Blocks;
 
 import Blockchain.Hashing.Hasher;
-import Blockchain.Messages.AggregateMessage;
-import Blockchain.Messages.Message;
-import Blockchain.Persistence.AggregateMessageFilePersistence;
+import Comunication.Messages.AggregateMessage;
+import Comunication.Messages.Message;
+import Comunication.Persistence.AggregateMessageFilePersistence;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,6 +1,5 @@
-package Blockchain.Messages;
+package Comunication.Messages;
 
-import Blockchain.Messages.SimpleMessage;
 import org.json.JSONObject;
 
 public class JsonMessage implements Message {

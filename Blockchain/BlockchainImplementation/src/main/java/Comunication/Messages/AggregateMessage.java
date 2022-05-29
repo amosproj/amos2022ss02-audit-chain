@@ -1,4 +1,4 @@
-package Blockchain.Messages;
+package Comunication.Messages;
 
 import java.util.Vector;
 

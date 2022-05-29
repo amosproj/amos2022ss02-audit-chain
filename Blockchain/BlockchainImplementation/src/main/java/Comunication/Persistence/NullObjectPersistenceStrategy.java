@@ -1,9 +1,8 @@
-package Blockchain.Persistence;
+package Comunication.Persistence;
 
 
-import Blockchain.Messages.Message;
-import Blockchain.Messages.Message;
-import Blockchain.Messages.SimpleMessage;
+import Comunication.Messages.Message;
+import Comunication.Messages.SimpleMessage;
 
 /***
  * This Implementation should be used for Debug purpose because you don´t want to write every message into your Hdd.
