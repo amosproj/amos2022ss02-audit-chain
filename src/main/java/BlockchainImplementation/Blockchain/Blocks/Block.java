@@ -13,50 +13,37 @@ import java.util.Map;
 import java.util.Vector;
 
 
-public class Block {
+public class Block<T,R> {
 
     private final String previousHashBlock; /** contains the hash of the previous block */
     private String hashBlock; /** contains the hash of the current block */
     private final long timestamp; /** contains the date and time of when the block was created */
     private Map<String, SubBlock> data;
     private int nonce; /** arbitrary number to be used in cryptography */
+    private String lastSubBlockHash; /** contains the hash of the last sub block */
 
-    public Block(String previousHashBlock, int prefix, String path, String fileName) throws IOException {
+    public Block(String previousHashBlock, int prefix, T[] seq_number, R[] transactions) throws IOException {
         this.previousHashBlock = previousHashBlock;
 
-        extractDataFromFile(path, fileName);
+        putData(seq_number, transactions);
 
         this.timestamp = new Date().getTime();
         this.hashBlock = calcHash();
         mineBlock(prefix);
     }
 
-//    public Block(String previousHashBlock, int prefix, String JSON) {
-//        this.previousHashBlock = previousHashBlock;
-//        this.data = extractDataFromFile(data);
-//        this.timestamp = new Date().getTime();
-//        this.hashBlock = calcHash();
-//        mineBlock(prefix);
-//    }
 
-    private void extractDataFromFile (String path, String fileName) throws IOException {
-        AggregateMessageFilePersistence persistence = new AggregateMessageFilePersistence(path, fileName);
+    private void putData(T[] seq_number, R[] transactions) {
 
         data = new HashMap<>();
-
-        AggregateMessage result = (AggregateMessage) persistence.ReadLastMessage();
-        Vector<Message> msgs = result.getMessages();
-
         String previousHash = "0";
 
-        for (Message msg : msgs) {
-            SubBlock newSubBlock = new SubBlock(previousHash, msg.getSequence_number(), msg.getMessage());
+        for (int i = 0; i < seq_number.length; i++) {
+            SubBlock newSubBlock = new SubBlock(previousHash, seq_number[i], transactions[i]);
             previousHash = newSubBlock.getHashBlock();
 
             data.put(previousHash, newSubBlock);
         }
-
-
     }
 
     private String getDataHash () {
@@ -94,12 +81,6 @@ public class Block {
         return hashBlock;
     }
 
-    private void extractDataFromFile(File file)  {
-        data = new HashMap<>();
-
-       // BufferedReader reader = new BufferedReader(new FileReader(file));
-    }
-
     /**
      * @return hash of the current block saved in the block
      */
@@ -114,5 +95,14 @@ public class Block {
     public long getTimestamp () { return timestamp; }
 
 
+    public String toString() {
 
+        String result = "[ ";
+
+//        for (String key : data.keySet()) {
+//            result += data.get(key).toString() + " ";
+//        }
+
+        return result + " ]";
+    }
 }
