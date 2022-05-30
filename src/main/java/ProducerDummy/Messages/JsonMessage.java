@@ -45,7 +45,7 @@ public class JsonMessage implements Message {
     public void setMessage(String json_message) {
         JSONObject object = new JSONObject();
         if(this.json_message != null){
-             object = new JSONObject(this.json_message);
+            object = new JSONObject(this.json_message);
         }
         object.put(MESSAGE_KEY, json_message);
         this.json_message = object.toString();

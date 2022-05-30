@@ -1,6 +1,10 @@
 package BlockchainImplementation.ConsumerDummyBlockchain;
 
 import BlockchainImplementation.Blockchain.Blockchain;
+import ConsumerDummy.AggregateConsumerClient;
+import ProducerDummy.Client.AbstractClient;
+import ProducerDummy.Messages.AggregateMessage;
+import ProducerDummy.Messages.Message;
 import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -12,11 +16,14 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.Vector;
 import java.util.concurrent.TimeoutException;
+
+import static ConsumerDummy.AggregateConsumerClient.deserializeMessage;
 
 public class ConsumerClientBlockchain extends AbstractClient {
 
-    private Blockchain blockchain = new Blockchain(1);
+    private Blockchain<Integer, String> blockchain;
 
     /**
      * Constructor for AbstractClient. Initializes the filepath, the file reader and set information for the
@@ -25,7 +32,11 @@ public class ConsumerClientBlockchain extends AbstractClient {
      * @throws IOException if the file cannot be read
      */
     public ConsumerClientBlockchain() throws IOException {
-        super();
+
+        super("localhost",5672,"guest","guest","ConsumerDummyBlockchain");
+
+        this.blockchain = new Blockchain<>(1);
+
     }
 
     /***
@@ -42,19 +53,31 @@ public class ConsumerClientBlockchain extends AbstractClient {
         System.out.println(" [*] Waiting for messages.");
 
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-            String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
-            System.out.println(" [x] Received '" + message + "'");
+            AggregateMessage message;
 
-            Map jsonJavaRootObject = new Gson().fromJson(message, Map.class);
+            try{
+                message = (AggregateMessage) AggregateConsumerClient.deserializeMessage(delivery.getBody());
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
 
-            //is it message and sequence_number the name on the JSON??
-            String msg = (String) jsonJavaRootObject.get("message");
-            String sqz = (String) jsonJavaRootObject.get("sequence_number");
+            Vector<Message> messages = message.getMessages();
 
-           // blockchain.addABlock(sqz, msg);
+            Integer[] seq_numbers = new Integer[messages.size()];
+            String[] transactions = new String[messages.size()];
+            int iterator = 0;
+
+            for (Message m : messages) {
+                seq_numbers[iterator] = m.getSequence_number();
+                transactions[iterator] = m.getMessage();
+                iterator++;
+            }
+
+            blockchain.addABlock(seq_numbers, transactions);
 
             //blockchain.printBlockchain();
         };
+
         channel.basicConsume(QUEUE_NAME, true, deliverCallback, consumerTag -> { });
     }
 }

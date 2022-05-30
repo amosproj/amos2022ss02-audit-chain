@@ -34,7 +34,7 @@ public class Hmac_Message_SimpleMessage extends SimpleMessage implements Hmac_Me
         }
         return false;
     }
-@Override
+    @Override
     public String calculateMac(String algorithm,Message message ,String key) throws NoSuchAlgorithmException, InvalidKeyException {
         String data = message.toString();
         return new HmacUtils(algorithm,key).hmacHex(data);

@@ -4,25 +4,25 @@ import BlockchainImplementation.Blockchain.Hashing.Hasher;
 
 import java.util.Date;
 
-public class SubBlock {
+public class SubBlock<T,R> {
 
     private final String previousHashBlock; /** contains the hash of the previous block */
     private String hashBlock; /** contains the hash of the current block */
     private final long timestamp; /** contains the date and time of when the block was created */
-    private final int sequence_number; /** contains the sequence number of the message */
-    private final String message; /** content of the current block */
+    private final T meta_data; /** contains the sequence number of the message */
+    private final R content; /** content of the current block */
 
-    public SubBlock(String previousHashBlock, int sequence_number, String message) {
+    public SubBlock(String previousHashBlock, T sequence_number, R message) {
         this.previousHashBlock = previousHashBlock;
-        this.sequence_number = sequence_number;
-        this.message = message;
+        this.meta_data = sequence_number;
+        this.content = message;
         this.timestamp = new Date().getTime();
         this.hashBlock = calcHash();
     }
 
 
     private String calcHash() {
-        return Hasher.hashSHA256(previousHashBlock, Long.toString(timestamp), Integer.toString(sequence_number), message);
+        return Hasher.hashSHA256(previousHashBlock, Long.toString(timestamp), meta_data.toString(), content.toString());
     }
 
     public String getHashBlock () {
@@ -31,9 +31,9 @@ public class SubBlock {
 
     public String getPreviousHashBlock () { return previousHashBlock; }
 
-    public int getSequenceNumber () { return sequence_number; }
+    public T getMeta_Data () { return meta_data; }
 
-    public String getMessage () { return message; }
+    public R getContent() { return content; }
 
     public long getTimestamp () { return timestamp; }
 

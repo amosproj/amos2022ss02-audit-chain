@@ -6,7 +6,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Blockchain implements BlockchainInterface {
+public class Blockchain<T,R> implements BlockchainInterface<T,R> {
 
     private Map<String, Block> blockchain;
     private int prefix;
@@ -17,16 +17,15 @@ public class Blockchain implements BlockchainInterface {
         this.blockchain = new HashMap<>();
     }
 
-
     @Override
-    public void addABlock(String path, String filename) {
+    public void addABlock(T[] meta_data, R[] content) {
         Block block;
 
         try {
             if (this.blockchain.size() == 0)
-                block = new Block("0", prefix, path, filename); //GENESYS BLOCK
+                block = new Block("0", prefix, meta_data, content); //GENESYS BLOCK
             else
-                block = new Block(this.getLastBlockHash(), prefix, path, filename);
+                block = new Block(this.getLastBlockHash(), prefix, meta_data, content);
 
             this.lastBlockHash = block.getHashBlock();
 
@@ -37,6 +36,7 @@ public class Blockchain implements BlockchainInterface {
 
 
     }
+
 
     @Override
     public String getLastBlockHash() {
@@ -61,7 +61,7 @@ public class Blockchain implements BlockchainInterface {
 
         printBlockchain(getBlockFromHash(current.getPreviousHashBlock()));
 
-        System.out.println(" <- ( " + current.getHashBlock() + " | " + current.getHashBlock() + " )");
+        System.out.println(" <- ( " + current.getHashBlock() + " | " + current.toString() + " )");
 
     }
 }

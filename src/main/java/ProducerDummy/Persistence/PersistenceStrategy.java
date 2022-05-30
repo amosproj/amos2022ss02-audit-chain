@@ -26,4 +26,3 @@ public interface PersistenceStrategy {
     public Message ReadLastMessage();
 
 }
-
