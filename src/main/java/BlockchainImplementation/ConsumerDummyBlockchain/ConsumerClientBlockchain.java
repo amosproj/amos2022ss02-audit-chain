@@ -23,7 +23,7 @@ import static ConsumerDummy.AggregateConsumerClient.deserializeMessage;
 
 public class ConsumerClientBlockchain extends AbstractClient {
 
-    private Blockchain blockchain = new Blockchain(1);
+    private Blockchain<Integer, String> blockchain;
 
     /**
      * Constructor for AbstractClient. Initializes the filepath, the file reader and set information for the
@@ -32,7 +32,11 @@ public class ConsumerClientBlockchain extends AbstractClient {
      * @throws IOException if the file cannot be read
      */
     public ConsumerClientBlockchain() throws IOException {
+
         super("localhost",5672,"guest","guest","ConsumerDummyBlockchain");
+
+        this.blockchain = new Blockchain<>(1);
+
     }
 
     /***
@@ -59,7 +63,7 @@ public class ConsumerClientBlockchain extends AbstractClient {
 
             Vector<Message> messages = message.getMessages();
 
-            int[] seq_numbers = new int[messages.size()];
+            Integer[] seq_numbers = new Integer[messages.size()];
             String[] transactions = new String[messages.size()];
             int iterator = 0;
 
