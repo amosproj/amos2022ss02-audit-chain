@@ -4,9 +4,9 @@ import BlockchainImplementation.Blockchain.Blocks.Block;
 
 import java.io.File;
 
-public interface BlockchainInterface {
+public interface BlockchainInterface<T,R> {
 
-    public void addABlock(String path, String filename);
+    public void addABlock(T[] meta_data, R[] content);
 
     public String getLastBlockHash();
 
