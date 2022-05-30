@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_16">
+    <output url="file://$MODULE_DIR$/ConsumerDummy/target/classes" />
+    <output-test url="file://$MODULE_DIR$/ConsumerDummy/target/test-classes" />
+    <content url="file://$MODULE_DIR$/ConsumerDummy">
+      <sourceFolder url="file://$MODULE_DIR$/ConsumerDummy/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ConsumerDummy/src/main/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/ConsumerDummy/src/test/java" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/ConsumerDummy/target" />
+    </content>
+    <orderEntry type="jdk" jdkName="16" jdkType="JavaSDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: com.rabbitmq:amqp-client:5.14.2" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.32" level="project" />
+    <orderEntry type="library" name="Maven: org.json:json:20220320" level="project" />
+    <orderEntry type="module" module-name="ProducerDummy" />
+    <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.15" level="project" />
+  </component>
+</module>
