@@ -1,7 +1,6 @@
 package BlockchainImplementation.DataGeneratorBlockchain;
 
 
-import BlockchainImplementation.DataGeneratorBlockchain.DataGeneration.FileDataReader;
 
 import java.io.FileNotFoundException;
 

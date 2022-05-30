@@ -1,6 +1,7 @@
 package BlockchainImplementation.ConsumerDummyBlockchain;
 
 import BlockchainImplementation.Blockchain.Blockchain;
+import ProducerDummy.Client.AbstractClient;
 import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -25,7 +26,7 @@ public class ConsumerClientBlockchain extends AbstractClient {
      * @throws IOException if the file cannot be read
      */
     public ConsumerClientBlockchain() throws IOException {
-        super();
+        super("localhost",5672,"guest","guest","ConsumerDummyBlockchain");
     }
 
     /***
