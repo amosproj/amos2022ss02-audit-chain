@@ -8,6 +8,16 @@ Generate JAVADOC (then you can find it at /target/site/apidocs/index.html).
 mvn javadoc:javadoc
 ```
 
+To Run the classes:
+
+```
+mvn exec:java@ProducerDummy
+
+mvn exec:java@ConsumerDummy
+
+mvn exec:java@Blockchain
+```
+
 link to docker for installation + command
 build and run
 producer dummy

@@ -1,6 +1,6 @@
 package BlockchainImplementation.ConsumerDummyBlockchain;
 
-import Blockchain.Blockchain;
+import BlockchainImplementation.Blockchain.Blockchain;
 import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
