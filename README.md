@@ -1,4 +1,47 @@
 # Audit Chain (AMOS SS 2022)
+Welcome to the Audit Chain Repository. This project is a middleware based on blockchain data structures to guarantee the unchanged, compliant, in sequence, fault tolerant and buffered data flow between any kind of producers and consumers.
+
+# Build and Run
+
+### Clone the repository from from GitHub: 
+- Clone via HTTPS:
+	```
+	git clone https://github.com/amosproj/amos2022ss02-audit-chain.git
+	```
+
+ - Clone via SSH:
+    ```
+    git clone git@github.com:amosproj/amos2022ss02-audit-chain.git
+    ```
+ - Or download the latest release and unzip the package from git.
+
+	**Open the project in your favorite IDE. We use IntellJ for demos**
+ - Get the middleware i.e rabbitmq running:
+   ```
+   docker compose up
+    ```
+
+- To run the producer-dummy module
+  ```
+  mvn clean compile exec:java@ProducerDummy
+  ```
+- To run the consumer-dummy module
+  ```
+  mvn clean compile exec:java@ConsumerDummy
+  ```
+- To run the blockchain module
+  ```
+      mvn clean compile exec:java@BlockChain
+  ```
+
+
+- Generate JAVADOC (then you can find it at /target/site/apidocs/index.html).
+
+  ```
+  mvn javadoc:javadoc
+  ```
+
+# Audit Chain (AMOS SS 2022)
 link to docker for installation + command
 build and run
 producer dummy
