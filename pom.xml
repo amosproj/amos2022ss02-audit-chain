@@ -12,7 +12,7 @@
   <modules>
       <module>ProducerDummy</module>
       <module>ConsumerDummy</module>
-      <module>BlockChain</module>
+      <module>BlockchainImplementation</module>
   </modules>
 
   <properties>

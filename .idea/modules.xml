@@ -3,6 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AuditChain.iml" filepath="$PROJECT_DIR$/AuditChain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BlockchainImplementation/BlockchainImplementation.iml" filepath="$PROJECT_DIR$/BlockchainImplementation/BlockchainImplementation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ConsumerDummy/ConsumerDummy.iml" filepath="$PROJECT_DIR$/ConsumerDummy/ConsumerDummy.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ProducerDummy/ProducerDummy.iml" filepath="$PROJECT_DIR$/ProducerDummy/ProducerDummy.iml" />
     </modules>
   </component>
 </project>

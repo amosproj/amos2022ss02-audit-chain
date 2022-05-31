@@ -6,11 +6,16 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="AuditChain" />
+        <module name="BlockchainImplementation" />
+        <module name="ProducerDummy" />
+        <module name="ConsumerDummy" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="AuditChain" target="8" />
+      <module name="AuditChain" target="16" />
+      <module name="BlockchainImplementation" target="16" />
+      <module name="ConsumerDummy" target="16" />
+      <module name="ProducerDummy" target="16" />
     </bytecodeTargetLevel>
   </component>
 </project>
