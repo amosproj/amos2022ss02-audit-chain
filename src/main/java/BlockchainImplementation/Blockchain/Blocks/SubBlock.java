@@ -4,6 +4,14 @@ import BlockchainImplementation.Blockchain.Hashing.Hasher;
 
 import java.util.Date;
 
+/**
+ * A SubBlock is the smallest unit of a Block, it contains the clear information and points to its previous hashed SubBlock.
+ *
+ * @param <T> The type of the meta_data (it could be everything, e.g. sequence number) of the information contained
+ *           in the SubBlock.
+ * @param <R> The type of the information contained in the SubBlock.
+ */
+
 public class SubBlock<T,R> {
 
     private final String previousHashBlock; /** contains the hash of the previous block */
@@ -11,6 +19,7 @@ public class SubBlock<T,R> {
     private final long timestamp; /** contains the date and time of when the block was created */
     private final T meta_data; /** contains the sequence number of the message */
     private final R content; /** content of the current block */
+
 
     public SubBlock(String previousHashBlock, T sequence_number, R message) {
         this.previousHashBlock = previousHashBlock;
@@ -21,6 +30,11 @@ public class SubBlock<T,R> {
     }
 
 
+    /**
+     * Calculates the hash of the current SubBlock just putting all its a properties together
+     *
+     * @return the hash of the current SubBlock
+     */
     private String calcHash() {
         return Hasher.hashSHA256(previousHashBlock, Long.toString(timestamp), meta_data.toString(), content.toString());
     }

@@ -6,17 +6,30 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Data structure that represents the blockchain. It contains a hashmap of Blocks in which transactions and their
+ * meta_data are stored.
+ *
+ * @param <T> the type of the meta_data of the transactions
+ * @param <R> the type of the content of the transactions
+ */
 public class Blockchain<T,R> implements BlockchainInterface<T,R> {
 
-    private Map<String, Block> blockchain;
-    private int prefix;
-    private String lastBlockHash;
+    private Map<String, Block> blockchain; /** Map of blocks and their hash */
+    private int prefix; /** The prefix of the possible hashes of the blockchain, so that its domain is restricted */
+    private String lastBlockHash; /** The hash of the last block of the blockchain */
 
     public Blockchain(int prefix) {
         this.prefix = prefix;
         this.blockchain = new HashMap<>();
     }
 
+    /**
+     * Adds a block to the blockchain. If it is the first, it will be he genesys block and will point to "0".
+     *
+     * @param meta_data the meta_data of the transactions in the block
+     * @param content the content of the transactions in the block
+     */
     @Override
     public void addABlock(T[] meta_data, R[] content) {
         Block block;
