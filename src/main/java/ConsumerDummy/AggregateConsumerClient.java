@@ -22,7 +22,7 @@ public class AggregateConsumerClient extends AbstractClient {
     private AggregateMessageFilePersistence persistenceStrategy;
 
     //TODO Parameterize
-    private static final String path = Paths.get("ConsumerDummy", "src", "main").toString();
+    private static final String path = Paths.get("src", "main", "java","ProducerDummy").toString();
 
 
     /**
