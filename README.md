@@ -1,33 +1,41 @@
 # Audit Chain (AMOS SS 2022)
-**Welcome** to the *Audit Chain Repository*. This project is a middleware based on blockchain data structures to guarantee the unchanged, compliant, in sequence, fault tolerant and buffered data flow between any kind of producers and consumers. 
+**Welcome** to the *Audit Chain Repository*. This project is a middleware based on blockchain data structures to guarantee the unchanged, compliant, in sequence, fault tolerant and buffered data flow between any kind of producers and consumers. <br />
+<br />
 ## AMOS Project
-The project is created as a work as part of a student project, carried out by Prof. Riehle at the Friedrich-Alexander University of Erlangen-Nuremberg.
+The project is created as a work as part of a student project, carried out by Prof. Riehle at the Friedrich-Alexander University of Erlangen-Nuremberg.<br />
+<br />
 ## General
 First of all, the project is developed following a dependency structure, typical of the audit chain module. 
 
 The main idea is that events of any kind, like IoT, file systems and measurement loggers should be transmitted securely via the network. 
 There is a central event queue, which records these events and uses them for further steps that would involve third parties, so consumers. 
 There is a central event queue, which records events and uses them for further actions. Consumers can approach the queue, in order to get the events and work with them accordingly. Events are recorded serially and the central event queue is transmitted via the network queue. In order to define terms, we could define three main characters: 
-*the producer*: who is the creator and sender of the events
-*the queue*: the middle ground where events are stored and safely shared
-*the consumer*: who takes events from the queue in order to perform further actions with them (that are not of interest in our application). 
+- *the producer*: who is the creator and sender of the events
+- *the queue*: the middle ground where events are stored and safely shared
+- *the consumer*: who takes events from the queue in order to perform further actions with them (that are not of interest in our application). 
 A sample of the interaction described above could be the following: 
 
 In our case, producer dummy (which would be represented by the FS-Filter and the IoT digital thermometer in the picture)  would create the events that are then stored in the central queue and from this one, our consumer dummy (so the data scanner and the audit protocol), would use them for further processing, like, also storing. 
 Listed, are the next steps that we are further developing: 
-Offers the possibility for producers and consumers to register consumers
-Uses the events from the queue to trigger further actions based on them. 
+- Offers the possibility for producers and consumers to register consumers
+- Uses the events from the queue to trigger further actions based on them. <br />
+<br />
 
-We have used the component diagram to show different parts of our code solution. Our code is basically composed of 3 major components: 
-**Producer dummy** (client): which operates through the dependencies among its 3 sub-components database, data generator, and persistence mechanism (storage buffer). 
+![code_arch _UML drawio](https://user-images.githubusercontent.com/104498986/171241927-939c92c1-a191-40fc-bdf9-b2a692686c40.png)
+
+
+**We have used the component diagram to show different parts of our code solution. Our code is basically composed of 3 major components:**
+- **Producer dummy** (client): which operates through the dependencies among its 3 sub-components database, data generator, and persistence mechanism (storage buffer). 
 When the producer dummy is triggered, the data generator catches data events (message) from the database and then forwards it to the client session and persistence mechanism. The persistence mechanism is a contingent component that stores the last data event and gets triggered in case of any failure.
-**Rabbit MQ** (Event Queue): After the producer dummy successfully generates an event, it goes to rabbit MQ (event queue). Rabbit MQ is a 3rd party program that we are using as a component for queuing events. 
-**Consumer dummy**: Lastly, after rabbit MQ queues events successfully, the data event moves to the consumer dummy. 
-The folder structure is as follows:
-**/producer dummy/**: Generate JAVADOC
-**/consumer dummy/**: is a program which "communicates" with the rabbitmq (Middleware) in order to receive messages 
-**/middleware/**: lies between an operating system and the applications running on it
-**/blockchain/**: data structure chosen for the message chain: work in progress.
+- **Rabbit MQ** (Event Queue): After the producer dummy successfully generates an event, it goes to rabbit MQ (event queue). Rabbit MQ is a 3rd party program that we are using as a component for queuing events. 
+- **Consumer dummy**: Lastly, after rabbit MQ queues events successfully, the data event moves to the consumer dummy. 
+
+**The folder structure is as follows:**
+- **/producer dummy/**: Generate JAVADOC
+- **/consumer dummy/**: is a program which "communicates" with the rabbitmq (Middleware) in order to receive messages 
+- **/middleware/**: lies between an operating system and the applications running on it
+- **/blockchain/**: data structure chosen for the message chain: work in progress.<br />
+ <br />
  
 # Technology Stack:
 In the following list you can see the projects underlying technology stack. To be more accurate, it displays the programming language chosen, front- and back-end frameworks, software applications and the chosen version control system.
