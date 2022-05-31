@@ -25,7 +25,7 @@ Welcome to the Audit Chain Repository. This project is a middleware based on blo
    ```
    docker compose up
     ```
-
+   https://user-images.githubusercontent.com/104498986/171229907-b865ec51-0488-4892-b9a9-155b550f6f70.mp4
 - To run the producer-dummy module
   ```
   mvn clean compile exec:java@ProducerDummy
