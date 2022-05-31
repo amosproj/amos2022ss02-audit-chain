@@ -13,7 +13,7 @@ public class Hmac_Message_JsonMessage extends JsonMessage implements Hmac_Messag
 
     public Hmac_Message_JsonMessage(int sequence_number, String message, String algorithm, String key) throws NoSuchAlgorithmException, InvalidKeyException {
         super(sequence_number, message);
-        this.setHmac(this.calculateMac(algorithm,this,key));
+        this.setHmac(this.calculateMac(algorithm,key));
     }
 
     public Hmac_Message_JsonMessage(int sequence_number, String message, String hmac) {
@@ -37,17 +37,16 @@ public class Hmac_Message_JsonMessage extends JsonMessage implements Hmac_Messag
     }
 
     @Override
-    public boolean verifyMAC(String algorithm, Message message, String key) throws InvalidKeyException, NoSuchAlgorithmException {
-        String calculated_hmac = this.calculateMac(algorithm,message,key);
-        String message_hmac = this.getHmac();
-        if(calculated_hmac.equals(message_hmac)){
+    public boolean verifyMAC(String algorithm, String key) {
+        String calculated_hmac = this.calculateMac(algorithm,key);
+        if(calculated_hmac.equals(this.getHmac())){
             return true;
         }
         return false;
     }
     @Override
-    public String calculateMac(String algorithm,Message message ,String key) throws NoSuchAlgorithmException, InvalidKeyException {
-        String data = message.toString();
+    public String calculateMac(String algorithm ,String key) {
+        String data = this.toString();
         return new HmacUtils(algorithm,key).hmacHex(data);
     }
 }

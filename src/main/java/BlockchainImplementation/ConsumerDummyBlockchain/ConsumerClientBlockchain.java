@@ -4,6 +4,7 @@ import BlockchainImplementation.Blockchain.Blockchain;
 import ConsumerDummy.AggregateConsumerClient;
 import ProducerDummy.Client.AbstractClient;
 import ProducerDummy.Messages.AggregateMessage;
+import ProducerDummy.Messages.Hmac_Message;
 import ProducerDummy.Messages.Message;
 import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
@@ -24,6 +25,9 @@ import static ConsumerDummy.AggregateConsumerClient.deserializeMessage;
 public class ConsumerClientBlockchain extends AbstractClient {
 
     private Blockchain<Integer, String> blockchain;
+    private static String KEY = "0123456";
+    private static String ALGORITHM = "HmacSHA256";
+
 
     /**
      * Constructor for AbstractClient. Initializes the filepath, the file reader and set information for the
@@ -33,7 +37,7 @@ public class ConsumerClientBlockchain extends AbstractClient {
      */
     public ConsumerClientBlockchain() throws IOException {
 
-        super("localhost",5672,"guest","guest","ConsumerDummyBlockchain");
+        super("localhost", 5672, "guest", "guest", "ConsumerDummyBlockchain");
 
         this.blockchain = new Blockchain<>(1);
 
@@ -55,7 +59,7 @@ public class ConsumerClientBlockchain extends AbstractClient {
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
             AggregateMessage message;
 
-            try{
+            try {
                 message = (AggregateMessage) AggregateConsumerClient.deserializeMessage(delivery.getBody());
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
@@ -68,6 +72,9 @@ public class ConsumerClientBlockchain extends AbstractClient {
             int iterator = 0;
 
             for (Message m : messages) {
+                // if you use instanceOf you could accept both Messages and HmacMessages
+                m = (Hmac_Message) m;
+
                 seq_numbers[iterator] = m.getSequence_number();
                 transactions[iterator] = m.getMessage();
                 iterator++;
@@ -78,7 +85,8 @@ public class ConsumerClientBlockchain extends AbstractClient {
             //blockchain.printBlockchain();
         };
 
-        channel.basicConsume(QUEUE_NAME, true, deliverCallback, consumerTag -> { });
+        channel.basicConsume(QUEUE_NAME, true, deliverCallback, consumerTag -> {
+        });
     }
 }
 
