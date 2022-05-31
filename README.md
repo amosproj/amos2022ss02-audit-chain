@@ -57,6 +57,10 @@ An open source message broker software.
 	git clone https://github.com/amosproj/amos2022ss02-audit-chain.git
 	```
 
+
+	https://user-images.githubusercontent.com/104498986/171228250-fe4c4e2e-93b7-4c99-be40-1b1585ffadc2.mp4
+
+
  - Clone via SSH:
     ```
     git clone git@github.com:amosproj/amos2022ss02-audit-chain.git
@@ -68,7 +72,7 @@ An open source message broker software.
    ```
    docker compose up
     ```
-
+   https://user-images.githubusercontent.com/104498986/171229907-b865ec51-0488-4892-b9a9-155b550f6f70.mp4
 - To run the producer-dummy module
   ```
   mvn clean compile exec:java@ProducerDummy
@@ -77,14 +81,14 @@ An open source message broker software.
   ```
   mvn clean compile exec:java@ConsumerDummy
   ```
+  https://user-images.githubusercontent.com/104498986/171228527-b9953e5c-cffa-414a-bd9a-7ca58bb34c0b.mp4
 - To run the blockchain module
   ```
       mvn clean compile exec:java@BlockChain
   ```
 
-
 - Generate JAVADOC (then you can find it at /target/site/apidocs/index.html).
 
   ```
   mvn javadoc:javadoc
-  ```
+
