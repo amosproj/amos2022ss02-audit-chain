@@ -1,13 +1,12 @@
+package Client;
 
 import Messages.AggregateMessage;
 import Messages.JsonMessage;
 import Messages.Message;
 import Persistence.AggregateMessageFilePersistence;
-import Persistence.PersistenceStrategy;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.DeliverCallback;
-import Client.AbstractClient;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -19,7 +18,7 @@ import java.util.concurrent.TimeoutException;
 public class AggregateConsumerClient extends AbstractClient {
 
     static int sequence_number = 0;
-    private AggregateMessageFilePersistence persistenceStrategy;
+    private final AggregateMessageFilePersistence persistenceStrategy;
 
     //TODO Parameterize
     private static final String path = Paths.get("ConsumerDummy", "src", "main").toString();
@@ -47,18 +46,17 @@ public class AggregateConsumerClient extends AbstractClient {
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
             AggregateMessage message;
             try {
-                message = (AggregateMessage) deserializeMessage(delivery.getBody());
+                message = (AggregateMessage) deserializeMessage(delivery.getBody()); // cast deserialized bytestream to AggregateMessage
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
 
-            Vector<Message> messages = message.getMessages();
-            for (int i = 0; i < message.getMessageSize(); i++) {
+            Vector<Message> messages = message.getMessages(); // get all the messages out of the AggregateMessage
+            for (int i = 0; i < message.getMessageSize(); i++) { //add each message out of messages to persistence storage
                 Message single_message = messages.get(i);
-                this.persistenceStrategy.StoreMessage(new JsonMessage(single_message.getSequence_number(), single_message.getMessage()));
+                this.persistenceStrategy.StoreMessage(new JsonMessage(single_message.getSequence_number(), single_message.getMessage())); //add massage to the file
                 System.out.println(String.format("Received event %d with the content: %s", single_message.getSequence_number(), single_message.getMessage()));
             }
-
         };
 
         channel.basicConsume(QUEUE_NAME, true, deliverCallback, consumerTag -> {

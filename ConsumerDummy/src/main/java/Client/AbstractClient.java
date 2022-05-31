@@ -1,15 +1,10 @@
 package Client;//TODO Refactor Name to Client.Client and Client.Client to DummyClient
 
-import DataGeneration.DataGenerator;
-import Messages.Message;
-import Persistence.PersistenceStrategy;
+
 import com.rabbitmq.client.ConnectionFactory;
 
-import java.io.FileReader;
+
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Properties;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -17,7 +12,6 @@ import java.util.concurrent.TimeoutException;
  */
 public class AbstractClient {
     static int START_NUMBER = 0;
-
     protected String HOST;
     protected int PORT;
     protected String USER;

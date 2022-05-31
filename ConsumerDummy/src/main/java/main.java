@@ -1,4 +1,5 @@
 import Client.AbstractClient;
+import Client.AggregateConsumerClient;
 
 import java.io.FileReader;
 import java.io.IOException;
