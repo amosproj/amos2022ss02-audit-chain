@@ -17,7 +17,7 @@ import java.util.concurrent.TimeoutException;
 public class main {
 
     public static void main(String[] args) throws IOException, TimeoutException, InterruptedException, ClassNotFoundException, NoSuchAlgorithmException, InvalidKeyException {
-        String filepath = Paths.get("ProducerDummy", "src", "main").toString();
+        String filepath = Paths.get("src", "main", "java","ProducerDummy").toString();
         String filename = "config.properties";
 
         Path config_path = Paths.get(System.getProperty("user.dir"), filepath, filename);

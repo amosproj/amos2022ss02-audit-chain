@@ -16,6 +16,13 @@ public class Hmac_Message_JsonMessage extends JsonMessage implements Hmac_Messag
         this.setHmac(this.calculateMac(algorithm,this,key));
     }
 
+    public Hmac_Message_JsonMessage(int sequence_number, String message, String hmac) {
+        super(sequence_number, message);
+        this.setHmac(hmac);
+    }
+
+
+
     public void setHmac(String hmac){
         JSONObject object = new JSONObject();
         if(this.json_message != null){

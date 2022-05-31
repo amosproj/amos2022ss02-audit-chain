@@ -1,6 +1,10 @@
 package ProducerDummy.DataGeneration;
 
+import ProducerDummy.Persistence.AggregateHmacMessageFilePersistence;
+
 import java.io.*;
+
+import java.nio.file.Paths;
 
 
 /***
@@ -9,7 +13,11 @@ import java.io.*;
 public class FileDataReader implements DataGenerator {
 
     /** path of the file were the data are stored */
-    public static final String path = "\\ProducerDummy\\src\\main\\household_power_consumption.txt";
+
+    private static final String path = Paths.get("src", "main", "java","ProducerDummy").toString();
+    private static final String file_name = "household_power_consumption.txt";
+
+
     public BufferedReader br;
 
     /**
@@ -18,7 +26,8 @@ public class FileDataReader implements DataGenerator {
      * @throws FileNotFoundException if no file with the path specified is found
      * */
     public FileDataReader() throws FileNotFoundException {
-        File file = new File(System.getProperty("user.dir") + FileDataReader.path);
+        String file_path = Paths.get(System.getProperty("user.dir"),FileDataReader.path,FileDataReader.file_name).toString();
+        File file = new File(file_path);
         FileReader fr = new FileReader(file);
         this.br = new BufferedReader(fr);
     }

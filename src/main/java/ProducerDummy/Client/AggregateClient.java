@@ -3,8 +3,10 @@ package ProducerDummy.Client;
 
 import ProducerDummy.DataGeneration.DataGenerator;
 import ProducerDummy.DataGeneration.FileDataReader;
+import ProducerDummy.Messages.Hmac_Message_JsonMessage;
 import ProducerDummy.Messages.JsonMessage;
 import ProducerDummy.Messages.Message;
+import ProducerDummy.Persistence.AggregateHmacMessageFilePersistence;
 import ProducerDummy.Persistence.AggregateMessageFilePersistence;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -13,17 +15,24 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class AggregateClient extends AbstractClient {
 
-    private final AggregateMessageFilePersistence persistenceStrategy;
+    private final AggregateHmacMessageFilePersistence persistenceStrategy;
 
     //TODO Parameterize and not as static
-    private static final String path = Paths.get("ProducerDummy", "src","main").toString();
+
+    private static final String path = Paths.get("src", "main", "java","ProducerDummy").toString();
+
     private final DataGenerator dataGenerator;
     private int sequence_number = 0;
+    //TODO only for test purpose
+    private static String KEY = "0123456";
+    private static String ALGORITHM = "HmacSHA256";
 
 
     /**
@@ -39,7 +48,7 @@ public class AggregateClient extends AbstractClient {
     public AggregateClient(String host, int port, String username, String password, String queue_name) throws IOException {
         super(host, port, username, password, queue_name);
         this.dataGenerator = new FileDataReader();
-        this.persistenceStrategy = new AggregateMessageFilePersistence(path, "messages.txt");
+        this.persistenceStrategy = new AggregateHmacMessageFilePersistence(path, "messages.txt");
         this.recoverLastState();
 
     }
@@ -64,8 +73,7 @@ public class AggregateClient extends AbstractClient {
             int start_event = this.sequence_number;
 
             for (String line = this.dataGenerator.getData(); line != null; line = this.dataGenerator.getData()) {
-
-                this.persistenceStrategy.StoreMessage(new JsonMessage(this.sequence_number, line));
+                this.persistenceStrategy.StoreMessage(new Hmac_Message_JsonMessage(this.sequence_number, line,ALGORITHM,KEY));
                 if (this.persistenceStrategy.isReadyToSend()) {
                     this.getAcknowledgment(channel, this.persistenceStrategy.ReadLastMessage());
                     this.sequence_number += 1;
@@ -84,6 +92,8 @@ public class AggregateClient extends AbstractClient {
                     this.sequence_number+=1;
                 }
             }
+        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
+            throw new RuntimeException(e);
         }
         return;
     }
