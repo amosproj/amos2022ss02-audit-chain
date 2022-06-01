@@ -12,8 +12,13 @@ There is a central event queue, which records these events and uses them for fur
 There is a central event queue, which records events and uses them for further actions. Consumers can approach the queue, in order to get the events and work with them accordingly. Events are recorded serially and the central event queue is transmitted via the network queue. In order to define terms, we could define three main characters: 
 - *the producer*: who is the creator and sender of the events
 - *the queue*: the middle ground where events are stored and safely shared
-- *the consumer*: who takes events from the queue in order to perform further actions with them (that are not of interest in our application). 
-A sample of the interaction described above could be the following: 
+- *the consumer*: who takes events from the queue in order to perform further actions with them (that are not of interest in our application). <br />
+<br />
+ A sample of the interaction described above could be the following: <br />
+ <br />
+ 
+ ![modules](https://user-images.githubusercontent.com/104498986/171383351-c5bc80ac-5860-4bff-88d6-de2e91611ad5.png)
+ <br />
 
 In our case, producer dummy (which would be represented by the FS-Filter and the IoT digital thermometer in the picture)  would create the events that are then stored in the central queue and from this one, our consumer dummy (so the data scanner and the audit protocol), would use them for further processing, like, also storing. 
 Listed, are the next steps that we are further developing: 
