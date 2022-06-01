@@ -6,6 +6,7 @@ public class AggregateMessage implements Message {
 
 
     Vector<Message> messages = new Vector<>();
+    
 
 
     public AggregateMessage() {

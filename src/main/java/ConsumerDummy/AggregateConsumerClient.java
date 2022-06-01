@@ -73,7 +73,12 @@ public class AggregateConsumerClient extends AbstractClient {
         return objStream.readObject();
     }
 
+    @Override
+    public void initFactory() {
+        this.factory.setHost(this.HOST);
+        this.factory.setPort(this.PORT);
 
+    }
 }
 
 

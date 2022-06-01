@@ -35,29 +35,6 @@ public class main {
         String PASSWORD = p.getProperty("PASSWORD");
         String queue_name = "FAKE";
 
-        String hmacSHA256Algorithm = "HmacSHA256";
-        String key = "0123456789";
-        String key1 = "00000";
-
-
-        Message m2 = new SimpleMessage(1,"dfd");
-        Hmac_Message_JsonMessage m1 = new Hmac_Message_JsonMessage(1,"Hello_World",hmacSHA256Algorithm,key);
-
-        boolean a = m1.verifyMAC(hmacSHA256Algorithm,key);
-        boolean b = m1.verifyMAC(hmacSHA256Algorithm,key1);
-
-        if(m1 instanceof Hmac_Message){
-            //HMAC_Message
-            int c = 5;
-        }else{
-            int c = 5;
-        }
-
-
-
-
-
-
 
         AbstractClient client = new AggregateClient(HOST, PORT, USER, PASSWORD, queue_name);
         client.start();
