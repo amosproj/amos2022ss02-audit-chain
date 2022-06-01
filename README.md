@@ -38,7 +38,7 @@ When the producer dummy is triggered, the data generator catches data events (me
 **The folder structure is as follows:**
 - **/producer dummy/**: Generate JAVADOC
 - **/consumer dummy/**: is a program which "communicates" with the rabbitmq (Middleware) in order to receive messages 
-- **/middleware/**: lies between an operating system and the applications running on it
+- **/middleware/**: enables the communication between producer dummy and consumer dummy
 - **/blockchain/**: data structure chosen for the message chain: work in progress.<br />
  <br />
  
