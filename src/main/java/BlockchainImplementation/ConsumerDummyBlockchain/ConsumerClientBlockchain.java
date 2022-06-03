@@ -39,7 +39,7 @@ public class ConsumerClientBlockchain extends AbstractClient {
 
         super("localhost", 5672, "guest", "guest", "ConsumerDummyBlockchain");
 
-        this.blockchain = new Blockchain<>(1);
+        this.blockchain = new Blockchain<>();
 
     }
 

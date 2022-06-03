@@ -2,6 +2,7 @@ package BlockchainImplementation.Blockchain.Blocks;
 
 import BlockchainImplementation.Blockchain.Hashing.Hasher;
 
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -12,20 +13,15 @@ import java.util.Date;
  * @param <R> The type of the information contained in the SubBlock.
  */
 
-public class SubBlock<T,R> {
+public class SubBlock<T,R> extends AbstractBlock<R>{
 
-    private final String previousHashBlock; /** contains the hash of the previous block */
-    private String hashBlock; /** contains the hash of the current block */
-    private final long timestamp; /** contains the date and time of when the block was created */
     private final T meta_data; /** contains the sequence number of the message */
-    private final R content; /** content of the current block */
 
 
-    public SubBlock(String previousHashBlock, T sequence_number, R message) {
-        this.previousHashBlock = previousHashBlock;
-        this.meta_data = sequence_number;
-        this.content = message;
-        this.timestamp = new Date().getTime();
+    public SubBlock(String previousHashBlock, T meta_data, R content) throws IOException {
+        super(previousHashBlock, content);
+        this.meta_data = meta_data;
+
         this.hashBlock = calcHash();
     }
 
@@ -35,20 +31,12 @@ public class SubBlock<T,R> {
      *
      * @return the hash of the current SubBlock
      */
-    private String calcHash() {
-        return Hasher.hashSHA256(previousHashBlock, Long.toString(timestamp), meta_data.toString(), content.toString());
+    @Override
+    protected String calcHash() {
+        return Hasher.hashSHA256(this.getPreviousHashBlock(), meta_data.toString(), transaction.toString());
     }
-
-    public String getHashBlock () {
-        return hashBlock;
-    }
-
-    public String getPreviousHashBlock () { return previousHashBlock; }
 
     public T getMeta_Data () { return meta_data; }
 
-    public R getContent() { return content; }
-
-    public long getTimestamp () { return timestamp; }
 
 }
