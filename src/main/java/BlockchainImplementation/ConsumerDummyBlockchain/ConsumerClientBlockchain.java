@@ -72,8 +72,14 @@ public class ConsumerClientBlockchain extends AbstractClient {
             int iterator = 0;
 
             for (Message m : messages) {
-                // if you use instanceOf you could accept both Messages and HmacMessages
-                m = (Hmac_Message) m;
+
+                if (m instanceof Hmac_Message) {
+                    Hmac_Message hmac_message = (Hmac_Message) m;
+
+                    if( !hmac_message.verifyMAC(ALGORITHM, KEY) ) {
+                        throw new RuntimeException("Message is not authentic.");
+                    }
+                }
 
                 seq_numbers[iterator] = m.getSequence_number();
                 transactions[iterator] = m.getMessage();
