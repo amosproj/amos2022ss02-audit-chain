@@ -77,7 +77,7 @@ public class ConsumerClientBlockchain extends AbstractClient {
                     Hmac_Message hmac_message = (Hmac_Message) m;
 
                     if( !hmac_message.verifyMAC(ALGORITHM, KEY) ) {
-                        System.out.println("Authentication failed ");
+                        throw new RuntimeException("Authentication of the message failed!");
                     }
                 }
 
