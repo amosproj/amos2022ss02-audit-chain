@@ -3,7 +3,6 @@ package BlockchainImplementation.Blockchain.Blocks;
 import BlockchainImplementation.Blockchain.Hashing.Hasher;
 
 import java.io.IOException;
-import java.util.Date;
 
 /**
  * A SubBlock is the smallest unit of a Block, it contains the clear information and points to its previous hashed SubBlock.
@@ -15,8 +14,7 @@ import java.util.Date;
 
 public class SubBlock<T,R> extends AbstractBlock<R>{
 
-    private final T meta_data; /** contains the sequence number of the message */
-
+    private final T meta_data; /** contains the meta data of the message */
 
     public SubBlock(String previousHashBlock, T meta_data, R content) throws IOException {
         super(previousHashBlock, content);
@@ -24,7 +22,6 @@ public class SubBlock<T,R> extends AbstractBlock<R>{
 
         this.hashBlock = calcHash();
     }
-
 
     /**
      * Calculates the hash of the current SubBlock just putting all its a properties together

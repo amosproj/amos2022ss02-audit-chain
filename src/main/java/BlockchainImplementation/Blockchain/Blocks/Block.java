@@ -1,21 +1,12 @@
 package BlockchainImplementation.Blockchain.Blocks;
 
-import BlockchainImplementation.Blockchain.Hashing.Hasher;
-import ProducerDummy.Messages.AggregateMessage;
-import ProducerDummy.Messages.Message;
-import ProducerDummy.Persistence.AggregateMessageFilePersistence;
-
-import java.io.File;
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
 
 /**
  * A Block is the unit of the blockchain. It contains the pointer to its previous block, a hashmap of data in which the
- * SubBlocks are stored, and other information. It has to be mined in order to be added to the blockchain. Which means
- * that a hash puzzle is solved in order to find the correct hash.
+ * SubBlocks are stored, and other information.
  *
  * @param <T> The type of the meta_data (it could be everything, e.g. sequence number) of the information contained
  *  *           in the SubBlock.
@@ -23,7 +14,7 @@ import java.util.Vector;
  */
 public class Block<T,R> extends AbstractBlock<Map<String, SubBlock<T,R>>>{
 
-    private String lastSubBlockHash;
+    private String lastSubBlockHash; /** The hash of the last SubBlock added*/
 
     public Block(String previousHashBlock, T[] meta_data, R[] content) throws IOException {
         super(previousHashBlock, new HashMap<>());
@@ -58,21 +49,4 @@ public class Block<T,R> extends AbstractBlock<Map<String, SubBlock<T,R>>>{
     }
 
 
-
-//    public String toString() {
-//
-//        String result = "";
-//
-//        String previous = lastSubBlockHash;
-//
-//        while(!previous.equals("0")) {
-//
-//            SubBlock subBlock = data.get(previous);
-//
-//            result = "<- " + previous + " || " + subBlock.getMeta_Data() + " | " +
-//                    subBlock.getContent() + " | " + result;
-//        }
-//
-//        return "[ " + result + " ]";
-//    }
 }

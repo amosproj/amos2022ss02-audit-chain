@@ -4,9 +4,13 @@ import BlockchainImplementation.Blockchain.Hashing.Hasher;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
+/**
+ * Abstract class for all type of blocks that belong to a blockchain. It is characterized by the fact that carries the
+ * transaction data and the hash of the previous block.
+ *
+ * @param <T> The type of the transaction data.
+ */
 public abstract class AbstractBlock<T> {
 
     private final String previousHashBlock; /** contains the hash of the previous block */
@@ -44,21 +48,13 @@ public abstract class AbstractBlock<T> {
 
     public long getTimestamp () { return timestamp; }
 
+    /**
+     * Checks if the current block has been tempered or instead if it is still authentic.
+     *
+     * @return true if the current block is authentic, false otherwise
+     */
+    public boolean isBlockAuthentic () {
+        return hashBlock.equals(calcHash());
+    }
 
-//    public String toString() {
-//
-//        String result = "";
-//
-//        String previous = lastSubBlockHash;
-//
-//        while(!previous.equals("0")) {
-//
-//            SubBlock subBlock = data.get(previous);
-//
-//            result = "<- " + previous + " || " + subBlock.getMeta_Data() + " | " +
-//                    subBlock.getContent() + " | " + result;
-//        }
-//
-//        return "[ " + result + " ]";
-//    }
 }
