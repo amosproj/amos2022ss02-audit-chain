@@ -59,5 +59,23 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
         return this.blockchain.get(hashBlock);
     }
 
+    /**
+     * Checks if the blockchain has been tempered or instead if it is still authentic.
+     *
+     * @return true if the blockchain is authentic, false otherwise
+     */
+    public boolean isBlockchainAuthentic () {
+        boolean authentic = true;
+
+        for (Block<T,R> block : this.blockchain.values()) {
+            authentic = block.isBlockAuthentic();
+
+            if (!authentic) {
+                break;
+            }
+        }
+
+        return authentic;
+    }
 
 }

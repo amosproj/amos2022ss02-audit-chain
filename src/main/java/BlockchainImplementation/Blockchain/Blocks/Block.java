@@ -48,5 +48,22 @@ public class Block<T,R> extends AbstractBlock<Map<String, SubBlock<T,R>>>{
         return lastSubBlockHash;
     }
 
+    @Override
+    public boolean isBlockAuthentic () {
+        boolean authentic = true;
+
+        for (SubBlock<T,R> subBlock : this.transaction.values()) {
+            authentic = subBlock.isBlockAuthentic();
+
+            if (!authentic) {
+                break;
+            }
+        }
+
+        authentic = authentic && hashBlock.equals(calcHash());
+
+        return authentic;
+    }
+
 
 }
