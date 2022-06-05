@@ -83,9 +83,9 @@ An open source message broker software.
    ```
    docker network create rabbitmq-cluster 
    ```
- - Get the middleware i.e rabbitmq running:
+ - Get the middleware i.e rabbitmq-cluster running in daemon mode:
    ```
-   docker compose up
+   docker-compose up -d
    ```
    https://user-images.githubusercontent.com/104498986/171229907-b865ec51-0488-4892-b9a9-155b550f6f70.mp4
  - To run the producer-dummy module
