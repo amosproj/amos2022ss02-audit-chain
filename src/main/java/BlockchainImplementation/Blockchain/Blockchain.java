@@ -59,20 +59,5 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
         return this.blockchain.get(hashBlock);
     }
 
-    public void printBlockchain() {
-        printBlockchain(getBlockFromHash(getLastBlockHash()));
-    }
 
-    private void printBlockchain(Block current) {
-
-        if (current == null) {
-            System.out.println("0");
-            return;
-        }
-
-        printBlockchain(getBlockFromHash(current.getPreviousHashBlock()));
-
-        System.out.println(" <- ( " + current.getHashBlock() + " | " + current.toString() + " )");
-
-    }
 }
