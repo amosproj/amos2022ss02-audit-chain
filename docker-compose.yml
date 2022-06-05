@@ -1,12 +1,52 @@
+version: "3.10"
 services:
-  rabbitmq:
-    container_name: "rabbitmq"
+  rabbit1:
     image: rabbitmq:3.10-management
+    container_name: rabbitmq-1
+    hostname: rabbit1
     environment:
-      RABBITMQ_DEFAULT_USER: "guest"
-      RABBITMQ_DEFAULT_PASS: "guest"
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+      - RABBITMQ_ERLANG_COOKIE=AUDITCHAIN2022
+      - RABBITMQ_NODENAME=rabbit1
+    volumes:
+      - "./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf"
     ports:
       # The standard AMQP protocol port
       - '5672:5672'
       # HTTP management UI
       - '15672:15672'
+
+  rabbit2:
+    image: rabbitmq:3.10-management
+    container_name: rabbitmq-2
+    hostname: rabbit2
+    links:
+      - rabbit1
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=AUDITCHAIN2022
+      - RABBITMQ_NODENAME=rabbit2
+      - CLUSTERED=true
+      - CLUSTER_WITH=rabbit1
+    volumes:
+      - "./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf"
+
+  rabbit3:
+    image: rabbitmq:3.10-management
+    container_name: rabbitmq-3
+    hostname: rabbit3
+    links:
+      - rabbit1
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=AUDITCHAIN2022
+      - RABBITMQ_NODENAME=rabbit3
+      - CLUSTERED=true
+      - CLUSTER_WITH=rabbit1
+      - RAM_NODE=true
+    volumes:
+      - "./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf"
+
+networks:
+  default:
+    external:
+      name: rabbitmq-cluster
