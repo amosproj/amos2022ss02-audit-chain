@@ -114,6 +114,9 @@ public class AggregateClient extends AbstractClient {
         }
     }
 
+    public int getSequence_number(){
+        return this.sequence_number;
+    }
 
 
 

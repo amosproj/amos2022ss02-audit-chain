@@ -49,5 +49,10 @@ abstract public class AbstractClient {
 
     }
 
+    public void recoverLastState() {
+        return;
+    }
+
+
 
 }

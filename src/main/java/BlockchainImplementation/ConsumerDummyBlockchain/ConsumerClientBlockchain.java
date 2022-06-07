@@ -6,7 +6,6 @@ import ProducerDummy.Client.AbstractClient;
 import ProducerDummy.Messages.AggregateMessage;
 import ProducerDummy.Messages.Hmac_Message;
 import ProducerDummy.Messages.Message;
-import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.DeliverCallback;
