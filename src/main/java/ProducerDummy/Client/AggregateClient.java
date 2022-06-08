@@ -2,7 +2,7 @@ package ProducerDummy.Client;
 
 
 import ProducerDummy.DataGeneration.NullObjectDataReader;
-import ProducerDummy.Messages.Hmac_Message_JsonMessage;
+import ProducerDummy.Messages.Hmac_JsonMessage;
 import ProducerDummy.Messages.Message;
 import ProducerDummy.Persistence.NullObjectPersistenceStrategy;
 import com.rabbitmq.client.Channel;
@@ -50,7 +50,7 @@ public class AggregateClient extends Producer {
             int start_event = this.sequence_number;
 
             for (String line = this.dataGenerator.getData(); line != null; line = this.dataGenerator.getData()) {
-                this.persistenceStrategy.StoreMessage(new Hmac_Message_JsonMessage(this.sequence_number, line, ALGORITHM, KEY));
+                this.persistenceStrategy.StoreMessage(new Hmac_JsonMessage(this.sequence_number, line, ALGORITHM, KEY));
                 if (isReadyToSend()) {
                     this.getAcknowledgment(channel, this.persistenceStrategy.ReadLastMessage());
                     this.sequence_number += 1;

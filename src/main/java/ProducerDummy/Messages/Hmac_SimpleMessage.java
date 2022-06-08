@@ -1,34 +1,33 @@
 package ProducerDummy.Messages;
 
 import org.apache.commons.codec.digest.HmacUtils;
-import org.json.JSONObject;
+
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-public class Hmac_Message_JsonMessage extends JsonMessage implements Hmac_Message {
-    public static String HMAC_KEY = "hmac";
 
+public class Hmac_SimpleMessage extends SimpleMessage implements Hmac_Message {
 
+    private String hmac;
 
-    public Hmac_Message_JsonMessage(int sequence_number, String message, String algorithm, String key) throws NoSuchAlgorithmException, InvalidKeyException {
+    public Hmac_SimpleMessage(int sequence_number, String message, String algorithm, String key) throws NoSuchAlgorithmException, InvalidKeyException {
         super(sequence_number, message);
         this.setHmac(this.calculateMac(algorithm,key));
     }
 
-    public Hmac_Message_JsonMessage(int sequence_number, String message, String hmac) {
+    public Hmac_SimpleMessage(int sequence_number, String message, String hmac)  {
         super(sequence_number, message);
         this.setHmac(hmac);
     }
 
 
-
-    public void setHmac(String hmac){
-        this.json_message.addProperty(HMAC_KEY,hmac);
+    private void setHmac(String hmac){
+        this.hmac = hmac;
     }
 
     public String getHmac(){
-        return this.json_message.get(HMAC_KEY).getAsString();
+        return this.hmac;
     }
 
     @Override
@@ -44,12 +43,5 @@ public class Hmac_Message_JsonMessage extends JsonMessage implements Hmac_Messag
         String data = this.toString();
         return new HmacUtils(algorithm,key).hmacHex(data);
     }
-
-    @Override
-    public Message toSimpleFormat() {
-        return new Hmac_Message_SimpleMessage(this.getSequence_number(),this.getMessage(),this.getHmac());
-    }
-
-
 
 }

@@ -9,7 +9,6 @@ import ProducerDummy.Persistence.PersistenceStrategy;
 
 import com.google.gson.*;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 
 import org.junit.Test;
@@ -89,7 +88,7 @@ public class FilePersistenceTest {
 
 
         Vector<Message> m = new Vector<>();
-        Message message = new Hmac_Message_SimpleMessage(1, "Hello World", ALGORITHM, KEY);
+        Message message = new Hmac_SimpleMessage(1, "Hello World", ALGORITHM, KEY);
         m.add(message);
         Message message2 = new SimpleMessage(1, "fsdfds");
         m.add(message2);
@@ -132,7 +131,7 @@ public class FilePersistenceTest {
             String message_string = o1.getAsJsonPrimitive(MESSAGE_STRING).toString();
             try{
                 String hmac = o1.getAsJsonPrimitive(HMAC).toString();
-                m1 = new Hmac_Message_JsonMessage(sequence_number,message_string,hmac);
+                m1 = new Hmac_JsonMessage(sequence_number,message_string,hmac);
                 m1 = (Hmac_Message) m1;
 
             }catch (NullPointerException e){
