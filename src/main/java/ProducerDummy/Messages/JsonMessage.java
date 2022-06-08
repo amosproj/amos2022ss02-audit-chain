@@ -17,7 +17,6 @@ public class JsonMessage implements Message {
     public void formatMessage(int sequence_number, String message) {
         this.setMessage(message);
         this.setSequence_number(sequence_number);
-        return;
     }
 
     @Override
@@ -43,7 +42,7 @@ public class JsonMessage implements Message {
 
 
     public String toString() {
-        return Integer.toString(this.getSequence_number()) + this.getMessage();
+        return this.getSequence_number() + this.getMessage();
     }
 
 
