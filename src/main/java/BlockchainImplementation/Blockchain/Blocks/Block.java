@@ -48,6 +48,12 @@ public class Block<T,R> extends AbstractBlock<Map<String, SubBlock<T,R>>>{
         return lastSubBlockHash;
     }
 
+    /**
+     * {@inheritdoc}
+     * Moreover checks if every SubBlock is also authentic or not.
+     *
+     * @return true if the current block is authentic, false otherwise
+     */
     @Override
     public boolean isBlockAuthentic () {
         boolean authentic = true;
