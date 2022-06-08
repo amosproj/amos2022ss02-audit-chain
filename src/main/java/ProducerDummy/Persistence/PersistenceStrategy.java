@@ -3,6 +3,8 @@ package ProducerDummy.Persistence;
 
 import ProducerDummy.Messages.Message;
 
+import java.nio.file.Path;
+
 /** Interface for the persistence strategy mechanisms */
 public interface PersistenceStrategy {
 
@@ -23,5 +25,9 @@ public interface PersistenceStrategy {
      */
 
     public Message ReadLastMessage();
+
+    public Path getFilePath();
+
+    public void cleanFile();
 
 }

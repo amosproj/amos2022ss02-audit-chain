@@ -7,7 +7,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 public class Hmac_Message_JsonMessage extends JsonMessage implements Hmac_Message {
-    public static String HMAC_KEY = "HMAC";
+    public static String HMAC_KEY = "hmac";
 
 
 
@@ -44,4 +44,12 @@ public class Hmac_Message_JsonMessage extends JsonMessage implements Hmac_Messag
         String data = this.toString();
         return new HmacUtils(algorithm,key).hmacHex(data);
     }
+
+    @Override
+    public Message toSimpleFormat() {
+        return new Hmac_Message_SimpleMessage(this.getSequence_number(),this.getMessage(),this.getHmac());
+    }
+
+
+
 }

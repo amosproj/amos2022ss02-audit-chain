@@ -16,6 +16,11 @@ public class Hmac_Message_SimpleMessage extends SimpleMessage implements Hmac_Me
         this.setHmac(this.calculateMac(algorithm,key));
     }
 
+    public Hmac_Message_SimpleMessage(int sequence_number, String message, String hmac)  {
+        super(sequence_number, message);
+        this.setHmac(hmac);
+    }
+
 
     private void setHmac(String hmac){
         this.hmac = hmac;

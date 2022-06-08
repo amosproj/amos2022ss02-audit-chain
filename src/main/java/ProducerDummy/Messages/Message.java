@@ -14,4 +14,7 @@ public interface Message extends Serializable {
 
     public void setMessage(String json_message);
 
+    // the SimpleFormat is how Messages are stored external
+    public Message toSimpleFormat();
+
 }

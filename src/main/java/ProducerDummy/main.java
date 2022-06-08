@@ -3,12 +3,11 @@ package ProducerDummy;
 import ProducerDummy.Client.AbstractClient;
 import ProducerDummy.Client.AggregateClient;
 import ProducerDummy.Client.Client;
+import ProducerDummy.Client.Producer;
 import ProducerDummy.DataGeneration.DataGenerator;
 import ProducerDummy.DataGeneration.FileDataReader;
-import ProducerDummy.Messages.Hmac_Message;
-import ProducerDummy.Messages.Hmac_Message_JsonMessage;
-import ProducerDummy.Messages.Message;
-import ProducerDummy.Messages.SimpleMessage;
+import ProducerDummy.Messages.*;
+import ProducerDummy.Persistence.AggregateMessageFilePersistence;
 import ProducerDummy.Persistence.FilePersistenceStrategy;
 import ProducerDummy.Persistence.PersistenceStrategy;
 
@@ -45,10 +44,10 @@ public class main {
 
         String base_path = Paths.get(System.getProperty("user.dir"),filepath).toString();
         DataGenerator dataGenerator = new FileDataReader(base_path,"household_power_consumption.txt");
-        PersistenceStrategy filePersistenceStrategy = new FilePersistenceStrategy(base_path,"last_messages");
+        PersistenceStrategy filePersistenceStrategy = new FilePersistenceStrategy(base_path,"last_messages.txt");
 
 
-        Client client = new Client(HOST, PORT, USER, PASSWORD, queue_name);
+        Producer client = new Client(HOST, PORT, USER, PASSWORD, queue_name);
         client.setDataGenerator(dataGenerator);
         client.setPersistenceStrategy(filePersistenceStrategy);
         client.start();

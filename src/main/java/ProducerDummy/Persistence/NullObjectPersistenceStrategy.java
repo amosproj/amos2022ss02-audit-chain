@@ -4,6 +4,9 @@ package ProducerDummy.Persistence;
 import ProducerDummy.Messages.Message;
 import ProducerDummy.Messages.SimpleMessage;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 /***
  * This Implementation should be used for Debug purpose because you don´t want to write every message into your Hdd.
  */
@@ -28,5 +31,15 @@ public class NullObjectPersistenceStrategy implements PersistenceStrategy {
     @Override
     public Message ReadLastMessage() {
         return new SimpleMessage(0, "DEBUG");
+    }
+
+    @Override
+    public Path getFilePath() {
+        return Paths.get(System.getProperty("user.dir"));
+    }
+
+    @Override
+    public void cleanFile() {
+        return;
     }
 }

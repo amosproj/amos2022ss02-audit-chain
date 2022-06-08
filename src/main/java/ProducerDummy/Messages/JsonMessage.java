@@ -5,8 +5,8 @@ import com.google.gson.JsonObject;
 public class JsonMessage implements Message {
 
     JsonObject json_message = new JsonObject();
-    public static String MESSAGE_KEY = "Message";
-    public static String SEQUENCE_NUMBER = "Sequence_Number";
+    public static String MESSAGE_KEY = "message";
+    public static String SEQUENCE_NUMBER = "sequence_number";
 
     public JsonMessage(int sequence_number, String json_message) {
         this.formatMessage(sequence_number, json_message);
@@ -38,6 +38,11 @@ public class JsonMessage implements Message {
     public void setMessage(String message) {
         this.json_message.addProperty(MESSAGE_KEY, message);
 
+    }
+
+    @Override
+    public Message toSimpleFormat() {
+        return new SimpleMessage(this.getSequence_number(),this.getMessage());
     }
 
 

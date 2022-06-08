@@ -1,13 +1,8 @@
 package ProducerDummy.Persistence;
 
-import ProducerDummy.Messages.JsonMessage;
-import ProducerDummy.Messages.Message;
+import ProducerDummy.Messages.*;
 import com.google.gson.Gson;
 import com.google.gson.*;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-
 
 import java.io.*;
 import java.nio.file.Path;
@@ -22,7 +17,7 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
 
     protected Path filepath;
     protected FileWriter fileWriter;
-    private Gson gson = new Gson();
+    protected Gson gson = new Gson();
 
     /**
      * Constructor for the FilePersistenceStrategy.
@@ -31,7 +26,7 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
      *
      * @throws IOException if the filepath is not valid
      */
-    public FilePersistenceStrategy(String path,String fileName) throws IOException {
+    public FilePersistenceStrategy(String path, String fileName) throws IOException {
         this.filepath = Paths.get(path, fileName);
         this.CreatePersistenceMechanism();
     }
@@ -46,7 +41,7 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
         try {
             // Open FileWrite and overwrite last Messages.Message
             this.fileWriter = new FileWriter(filepath.toString());
-            gson.toJson(message.toString(),fileWriter);
+            gson.toJson(message.toSimpleFormat(), fileWriter);
             fileWriter.close();
 
         } catch (IOException e) {
@@ -67,7 +62,7 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
             if (file.createNewFile()) {
                 System.out.println("File created: " + file.getName());
             } else {
-                System.out.println(String.format("File %s already exists",file.getName()));
+                System.out.println(String.format("File %s already exists", file.getName()));
 
             }
         } catch (IOException e) {
@@ -90,13 +85,26 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
 
         try {
             JsonElement jsonElement = JsonParser.parseReader(new FileReader(file));
-            JsonArray m = jsonElement.getAsJsonArray();
+            //this should be the only valid state, since in the single Filemode only the last Message will be stored
+            if (jsonElement.isJsonObject()) {
+                // every Message consists of at least sequence_number and message_string
+                JsonObject jsonObject = jsonElement.getAsJsonObject();
+                String message_string = jsonObject.getAsJsonPrimitive(JsonMessage.MESSAGE_KEY).toString();
+                int sequence_number = jsonObject.getAsJsonPrimitive(JsonMessage.SEQUENCE_NUMBER).getAsInt();
+                // if there is a Hmac key we know it is a Hmac Message else it is just a normal Message
+                try {
+                    String hmac = jsonObject.getAsJsonPrimitive(Hmac_Message_JsonMessage.HMAC_KEY).getAsString();
+                    return new Hmac_Message_SimpleMessage(sequence_number, message_string, hmac);
+                } catch (NullPointerException e) {
+                    return new SimpleMessage(sequence_number, message_string);
+                }
 
+            }
 
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
-        }catch (IllegalStateException e){
+        } catch (IllegalStateException e) {
             //thats means there is no message inside
             return null;
         }
@@ -104,12 +112,24 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
         return null;
     }
 
-    /**
-     * @return filepath as string
-     */
-    public String getFilePath() {
-        return this.filepath.toString();
+    @Override
+    public Path getFilePath() {
+        return this.filepath;
     }
+
+
+    @Override
+    public void cleanFile() {
+        try {
+            this.fileWriter.close();
+        } catch (IOException e) {
+            System.out.println("Already Closed");
+        }
+        File file = new File(this.filepath.toString());
+        file.delete();
+        this.CreatePersistenceMechanism();
+    }
+
 
 
 }

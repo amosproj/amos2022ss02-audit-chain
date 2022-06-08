@@ -1,7 +1,5 @@
 package ProducerDummy.DataGeneration;
 
-import ProducerDummy.Persistence.AggregateHmacMessageFilePersistence;
-
 import java.io.*;
 
 import java.nio.file.Paths;
