@@ -18,12 +18,11 @@ public abstract class AbstractBlock<T> {
     private final long timestamp; /** contains the date and time of when the block was created */
     protected final T transaction; /** contains the transaction data */
 
-    public AbstractBlock(String previousHashBlock, T transaction) throws IOException {
+    public AbstractBlock(String previousHashBlock, T transaction) {
         this.previousHashBlock = previousHashBlock;
         this.transaction = transaction;
 
         this.timestamp = new Date().getTime();
-        this.hashBlock = calcHash();
     }
 
     /**

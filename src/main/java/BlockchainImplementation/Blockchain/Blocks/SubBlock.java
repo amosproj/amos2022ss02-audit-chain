@@ -16,7 +16,7 @@ public class SubBlock<T,R> extends AbstractBlock<R>{
 
     private final T meta_data; /** contains the meta data of the message */
 
-    public SubBlock(String previousHashBlock, T meta_data, R content) throws IOException {
+    public SubBlock(String previousHashBlock, T meta_data, R content) {
         super(previousHashBlock, content);
         this.meta_data = meta_data;
 

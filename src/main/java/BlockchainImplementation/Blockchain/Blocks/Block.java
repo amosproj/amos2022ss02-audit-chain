@@ -16,7 +16,7 @@ public class Block<T,R> extends AbstractBlock<Map<String, SubBlock<T,R>>>{
 
     private String lastSubBlockHash; /** The hash of the last SubBlock added*/
 
-    public Block(String previousHashBlock, T[] meta_data, R[] content) throws IOException {
+    public Block(String previousHashBlock, T[] meta_data, R[] content) {
         super(previousHashBlock, new HashMap<>());
 
         putData(meta_data, content);
@@ -30,7 +30,7 @@ public class Block<T,R> extends AbstractBlock<Map<String, SubBlock<T,R>>>{
      * @param meta_data Array meta_data(s) of the information in a SubBlock.
      * @param content Array of the information of the SubBlock.
      */
-    private void putData(T[] meta_data, R[] content) throws IOException {
+    private void putData(T[] meta_data, R[] content) {
 
         String previousHash = "0";
 
@@ -64,6 +64,5 @@ public class Block<T,R> extends AbstractBlock<Map<String, SubBlock<T,R>>>{
 
         return authentic;
     }
-
 
 }
