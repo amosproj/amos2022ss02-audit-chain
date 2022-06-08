@@ -3,6 +3,7 @@ package ProducerDummy.Client;
 
 import ProducerDummy.DataGeneration.DataGenerator;
 import ProducerDummy.DataGeneration.FileDataReader;
+import ProducerDummy.DataGeneration.NullObjectDataReader;
 import ProducerDummy.Messages.Hmac_Message_JsonMessage;
 import ProducerDummy.Messages.JsonMessage;
 import ProducerDummy.Messages.Message;
@@ -47,7 +48,7 @@ public class AggregateClient extends AbstractClient {
      */
     public AggregateClient(String host, int port, String username, String password, String queue_name) throws IOException {
         super(host, port, username, password, queue_name);
-        this.dataGenerator = new FileDataReader();
+        this.dataGenerator = new NullObjectDataReader();
         this.persistenceStrategy = new AggregateHmacMessageFilePersistence(path, "messages.txt");
         this.recoverLastState();
 

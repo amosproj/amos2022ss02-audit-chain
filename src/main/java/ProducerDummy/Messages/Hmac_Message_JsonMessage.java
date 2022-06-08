@@ -24,16 +24,11 @@ public class Hmac_Message_JsonMessage extends JsonMessage implements Hmac_Messag
 
 
     public void setHmac(String hmac){
-        JSONObject object = new JSONObject();
-        if(this.json_message != null){
-            object = new JSONObject(this.json_message);
-        }
-        object.put(HMAC_KEY,hmac);
-        this.json_message = object.toString();
+        this.json_message.addProperty(HMAC_KEY,hmac);
     }
 
     public String getHmac(){
-        return new JSONObject(this.json_message).getString(HMAC_KEY);
+        return this.json_message.get(HMAC_KEY).getAsString();
     }
 
     @Override

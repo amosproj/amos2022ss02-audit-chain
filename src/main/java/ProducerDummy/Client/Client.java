@@ -2,13 +2,17 @@ package ProducerDummy.Client;
 
 import ProducerDummy.DataGeneration.DataGenerator;
 import ProducerDummy.DataGeneration.FileDataReader;
+import ProducerDummy.DataGeneration.NullObjectDataReader;
 import ProducerDummy.Messages.JsonMessage;
 import ProducerDummy.Messages.Message;
 import ProducerDummy.Persistence.FilePersistenceStrategy;
+import ProducerDummy.Persistence.NullObjectPersistenceStrategy;
 import ProducerDummy.Persistence.PersistenceStrategy;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.ConnectionFactory;
 
+import javax.xml.crypto.Data;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -19,11 +23,9 @@ import java.util.concurrent.TimeoutException;
  * Client.Client implementation
  */
 public class Client extends AbstractClient {
-    private static final String path = "\\ProducerDummy\\src\\main\\";
 
-
-    private final DataGenerator dataGenerator;
-    private final PersistenceStrategy persistenceStrategy;
+    private DataGenerator dataGenerator;
+    private PersistenceStrategy persistenceStrategy;
     /**
      * Sequence number kept by the client to order the message it sends
      */
@@ -39,10 +41,19 @@ public class Client extends AbstractClient {
      */
     public Client(String host, int port, String username, String password, String queue_name) throws IOException {
         super(host, port, username, password, queue_name);
-        this.dataGenerator = new FileDataReader();
-        this.persistenceStrategy = new FilePersistenceStrategy(path,"last_message.txt");
+        this.dataGenerator = new NullObjectDataReader();
+        this.persistenceStrategy = new NullObjectPersistenceStrategy("nopath","nofile");
         this.recoverLastState();
         this.recoverLastMessage();
+    }
+
+
+    public void setDataGenerator(DataGenerator dataGenerator){
+        this.dataGenerator = dataGenerator;
+    }
+
+    public void setPersistenceStrategy(PersistenceStrategy persistenceStrategy){
+        this.persistenceStrategy = persistenceStrategy;
     }
 
 

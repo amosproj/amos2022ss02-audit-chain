@@ -2,6 +2,12 @@ package ProducerDummy.Persistence;
 
 import ProducerDummy.Messages.JsonMessage;
 import ProducerDummy.Messages.Message;
+import com.google.gson.Gson;
+import com.google.gson.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+
 
 import java.io.*;
 import java.nio.file.Path;
@@ -16,6 +22,7 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
 
     protected Path filepath;
     protected FileWriter fileWriter;
+    private Gson gson = new Gson();
 
     /**
      * Constructor for the FilePersistenceStrategy.
@@ -25,7 +32,7 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
      * @throws IOException if the filepath is not valid
      */
     public FilePersistenceStrategy(String path,String fileName) throws IOException {
-        this.filepath = Paths.get(System.getProperty("user.dir"), path, fileName);
+        this.filepath = Paths.get(path, fileName);
         this.CreatePersistenceMechanism();
     }
 
@@ -39,13 +46,12 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
         try {
             // Open FileWrite and overwrite last Messages.Message
             this.fileWriter = new FileWriter(filepath.toString());
-            this.fileWriter.write(message.getSequence_number() + "\r\n");
-            this.fileWriter.write(message.getMessage() + "\r\n");
-            this.fileWriter.close();
+            gson.toJson(message.toString(),fileWriter);
+            fileWriter.close();
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
 
     }
 
@@ -83,20 +89,19 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
         File file = new File(this.filepath.toString());
 
         try {
-            String next_line = null;
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String sequence_number = br.readLine();
-            String message = br.readLine();
-            if(sequence_number != null && message != null){
-                return new JsonMessage(Integer.parseInt(sequence_number), message);
-            }else{
-                //file empty
-                return null;
-            }
-        } catch (IOException e) {
-            // there are no values in the file or the file is missing therefore we never did send a Messages.Message to the Broker
+            JsonElement jsonElement = JsonParser.parseReader(new FileReader(file));
+            JsonArray m = jsonElement.getAsJsonArray();
+
+
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }catch (IllegalStateException e){
+            //thats means there is no message inside
             return null;
         }
+
+        return null;
     }
 
     /**

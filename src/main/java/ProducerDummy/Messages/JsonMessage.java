@@ -1,16 +1,16 @@
 package ProducerDummy.Messages;
 
-
-import org.json.JSONObject;
+import com.google.gson.JsonObject;
 
 public class JsonMessage implements Message {
-    String json_message;
+
+    JsonObject json_message = new JsonObject();
     public static String MESSAGE_KEY = "Message";
-    public static String SEQUENCE_KEY = "Sequence_Number";
+    public static String SEQUENCE_NUMBER = "Sequence_Number";
+
     public JsonMessage(int sequence_number, String json_message) {
         this.formatMessage(sequence_number, json_message);
     }
-
 
 
     @Override
@@ -22,50 +22,29 @@ public class JsonMessage implements Message {
 
     @Override
     public int getSequence_number() {
-        return new JSONObject(this.json_message).getInt(SEQUENCE_KEY);
+        return this.json_message.get(SEQUENCE_NUMBER).getAsInt();
     }
 
     @Override
     public void setSequence_number(int sequence_number) {
-        JSONObject object = new JSONObject();
-        if(this.json_message != null) {
-            object = new JSONObject(this.json_message);
-        }
-        object.put(SEQUENCE_KEY,sequence_number);
-        this.json_message = object.toString();
-
+        this.json_message.addProperty(SEQUENCE_NUMBER, sequence_number);
     }
 
     @Override
     public String getMessage() {
-        return new JSONObject(this.json_message).getString(MESSAGE_KEY);
+        return this.json_message.get(MESSAGE_KEY).getAsString();
     }
 
     @Override
-    public void setMessage(String json_message) {
-        JSONObject object = new JSONObject();
-        if(this.json_message != null){
-            object = new JSONObject(this.json_message);
-        }
-        object.put(MESSAGE_KEY, json_message);
-        this.json_message = object.toString();
+    public void setMessage(String message) {
+        this.json_message.addProperty(MESSAGE_KEY, message);
 
     }
 
-    @Override
-    public Message getMessageObject() {
-        return (JsonMessage) this;
-    }
 
-    public SimpleMessage toSimpleMessage(){
-        return new SimpleMessage(this.getSequence_number(),this.getMessage());
-    }
-    public String toString(){
+    public String toString() {
         return Integer.toString(this.getSequence_number()) + this.getMessage();
     }
-
-
-
 
 
 }

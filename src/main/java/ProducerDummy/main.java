@@ -2,10 +2,15 @@ package ProducerDummy;
 
 import ProducerDummy.Client.AbstractClient;
 import ProducerDummy.Client.AggregateClient;
+import ProducerDummy.Client.Client;
+import ProducerDummy.DataGeneration.DataGenerator;
+import ProducerDummy.DataGeneration.FileDataReader;
 import ProducerDummy.Messages.Hmac_Message;
 import ProducerDummy.Messages.Hmac_Message_JsonMessage;
 import ProducerDummy.Messages.Message;
 import ProducerDummy.Messages.SimpleMessage;
+import ProducerDummy.Persistence.FilePersistenceStrategy;
+import ProducerDummy.Persistence.PersistenceStrategy;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileReader;
@@ -24,6 +29,7 @@ public class main {
         String filepath = Paths.get("src", "main", "java","ProducerDummy").toString();
         String filename = "config.properties";
 
+
         Path config_path = Paths.get(System.getProperty("user.dir"), filepath, filename);
         Properties p = new Properties();
         FileReader reader = new FileReader(config_path.toString());
@@ -36,8 +42,18 @@ public class main {
         String queue_name = "FAKE";
 
 
-        AbstractClient client = new AggregateClient(HOST, PORT, USER, PASSWORD, queue_name);
+
+        String base_path = Paths.get(System.getProperty("user.dir"),filepath).toString();
+        DataGenerator dataGenerator = new FileDataReader(base_path,"household_power_consumption.txt");
+        PersistenceStrategy filePersistenceStrategy = new FilePersistenceStrategy(base_path,"last_messages");
+
+
+        Client client = new Client(HOST, PORT, USER, PASSWORD, queue_name);
+        client.setDataGenerator(dataGenerator);
+        client.setPersistenceStrategy(filePersistenceStrategy);
         client.start();
+
+
 
 
         return;

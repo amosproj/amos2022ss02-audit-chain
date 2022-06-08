@@ -25,8 +25,8 @@ public class FileDataReader implements DataGenerator {
      *
      * @throws FileNotFoundException if no file with the path specified is found
      * */
-    public FileDataReader() throws FileNotFoundException {
-        String file_path = Paths.get(System.getProperty("user.dir"),FileDataReader.path,FileDataReader.file_name).toString();
+    public FileDataReader(String path,String filename) throws FileNotFoundException {
+        String file_path = Paths.get(path,file_name).toString();
         File file = new File(file_path);
         FileReader fr = new FileReader(file);
         this.br = new BufferedReader(fr);
