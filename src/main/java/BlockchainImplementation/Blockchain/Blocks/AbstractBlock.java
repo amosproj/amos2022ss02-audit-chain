@@ -18,12 +18,11 @@ public abstract class AbstractBlock<T> {
     private final long timestamp; /** contains the date and time of when the block was created */
     protected final T transaction; /** contains the transaction data */
 
-    public AbstractBlock(String previousHashBlock, T transaction) throws IOException {
+    public AbstractBlock(String previousHashBlock, T transaction) {
         this.previousHashBlock = previousHashBlock;
         this.transaction = transaction;
 
         this.timestamp = new Date().getTime();
-        this.hashBlock = calcHash();
     }
 
     /**
@@ -32,7 +31,7 @@ public abstract class AbstractBlock<T> {
      * @return the hash of the current block
      * */
     protected String calcHash() {
-        return Hasher.hashSHA256(previousHashBlock, Integer.toString(transaction.hashCode()));
+        return Hasher.hashSHA256(previousHashBlock, transaction.toString());
     }
 
     /**
@@ -50,6 +49,7 @@ public abstract class AbstractBlock<T> {
 
     /**
      * Checks if the current block has been tempered or instead if it is still authentic.
+     * It does it checking if the saved hash of the block still corresponds to the one evaluated.
      *
      * @return true if the current block is authentic, false otherwise
      */
