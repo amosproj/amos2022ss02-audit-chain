@@ -106,4 +106,9 @@ An open source message broker software.
 
    ```
    mvn javadoc:javadoc
-
+   ```
+   
+ - Run Test
+   ```
+   mvn clean compile test
+   ```
