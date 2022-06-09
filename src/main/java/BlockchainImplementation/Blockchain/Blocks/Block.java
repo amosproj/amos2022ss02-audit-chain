@@ -1,5 +1,7 @@
 package BlockchainImplementation.Blockchain.Blocks;
 
+import BlockchainImplementation.Blockchain.Hashing.Hasher;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;

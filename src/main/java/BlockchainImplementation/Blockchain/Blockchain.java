@@ -35,16 +35,12 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
     public void addABlock(T[] meta_data, R[] content) {
         Block<T,R> block;
 
-        try {
-            block = new Block<>(this.getLastBlockHash(), meta_data, content);
+        block = new Block<>(this.getLastBlockHash(), meta_data, content);
 
-            this.lastBlockHash = block.getHashBlock();
+        this.lastBlockHash = block.getHashBlock();
 
-            blockchain.put(lastBlockHash, block);
+        blockchain.put(lastBlockHash, block);
 
-        } catch (Exception e) {
-            throw new RuntimeException("Error while adding a block to the blockchain");
-        }
 
     }
 

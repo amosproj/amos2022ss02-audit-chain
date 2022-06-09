@@ -31,7 +31,7 @@ public abstract class AbstractBlock<T> {
      * @return the hash of the current block
      * */
     protected String calcHash() {
-        return Hasher.hashSHA256(previousHashBlock, Integer.toString(transaction.hashCode()));
+        return Hasher.hashSHA256(previousHashBlock, transaction.toString());
     }
 
     /**
