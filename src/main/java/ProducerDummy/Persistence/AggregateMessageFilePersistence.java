@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.apache.commons.codec.binary.StringUtils;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -54,7 +55,8 @@ public class AggregateMessageFilePersistence extends FilePersistenceStrategy {
         AggregateMessage messages = new AggregateMessage();
 
         try {
-            JsonElement jsonElement = JsonParser.parseString("[" + Files.readString(getFilePath()) + "]");
+            // modify the file so gson can parse it
+            JsonElement jsonElement = JsonParser.parseString("["+Files.readString(getFilePath()).replaceAll(",$","") + "]");
             if (jsonElement.isJsonArray()) {
                 //more than one Objects
                 JsonArray jsonArray = jsonElement.getAsJsonArray();

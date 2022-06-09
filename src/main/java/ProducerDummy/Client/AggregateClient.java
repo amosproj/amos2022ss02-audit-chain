@@ -2,8 +2,7 @@ package ProducerDummy.Client;
 
 
 import ProducerDummy.DataGeneration.NullObjectDataReader;
-import ProducerDummy.Messages.Hmac_JsonMessage;
-import ProducerDummy.Messages.Message;
+import ProducerDummy.Messages.*;
 import ProducerDummy.Persistence.NullObjectPersistenceStrategy;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -17,7 +16,7 @@ import java.util.concurrent.TimeoutException;
 
 public class AggregateClient extends Producer {
 
-    private int SIZE = 1024;
+    private int SIZE = 2014;
 
     //TODO only for test purpose
     private static String KEY = "0123456";
@@ -41,6 +40,7 @@ public class AggregateClient extends Producer {
     }
 
     public void start() throws IOException, TimeoutException {
+        AggregateMessage aggregateMessage = new AggregateMessage();
 
         System.out.println("Starting to send Messages.Message to AMQP Host");
         try (Connection connection = this.factory.newConnection();
@@ -50,12 +50,14 @@ public class AggregateClient extends Producer {
             int start_event = this.sequence_number;
 
             for (String line = this.dataGenerator.getData(); line != null; line = this.dataGenerator.getData()) {
-                this.persistenceStrategy.StoreMessage(new Hmac_JsonMessage(this.sequence_number, line, ALGORITHM, KEY));
+                Hmac_Message hmac_message = new Hmac_JsonMessage(this.sequence_number,line,ALGORITHM,KEY);
+                aggregateMessage.addMessage(hmac_message);
+                this.persistenceStrategy.StoreMessage(hmac_message);
                 if (isReadyToSend()) {
                     this.getAcknowledgment(channel, this.persistenceStrategy.ReadLastMessage());
                     this.sequence_number += 1;
                     this.persistenceStrategy.cleanFile();
-                    System.out.format(String.format("Message from event Number %d until %d were sent", start_event, this.sequence_number + "\n"));
+                    System.out.format(String.format("Message from event Number %d until %d were sent  \n", start_event, this.sequence_number));
                     //at least for now we just catch it ...
                     try {
                         TimeUnit.SECONDS.sleep(5);
@@ -68,27 +70,13 @@ public class AggregateClient extends Producer {
                     this.sequence_number += 1;
                 }
             }
+
         } catch (NoSuchAlgorithmException | InvalidKeyException e) {
             throw new RuntimeException(e);
         }
         return;
     }
 
-
-    public void getAcknowledgment(Channel channel, Message message) {
-        //we try for 5 times for acknowledgment and if we get it, we publish the message
-        for (int i = 0; i <= 5; i++) {
-            try {
-                channel.basicPublish("", this.QUEUE_NAME, null, serialize(message));
-                channel.waitForConfirmsOrDie(5_000);
-                break;
-            } catch (InterruptedException | TimeoutException | IOException e) {
-                if (i == 5) {
-                    System.out.println("Could not send message");
-                }
-            }
-        }
-    }
 
 
     public boolean isReadyToSend() throws IOException {

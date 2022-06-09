@@ -13,9 +13,9 @@ public class main {
 
     public static void main(String[] args) throws IOException, TimeoutException {
 
+
         String filepath = Paths.get("src", "main", "java","ConsumerDummy").toString();
         String filename = "config.properties";
-
         Path config_path = Paths.get(System.getProperty("user.dir"), filepath, filename);
         Properties p = new Properties();
         FileReader reader = new FileReader(config_path.toString());

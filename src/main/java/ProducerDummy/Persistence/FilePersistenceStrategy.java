@@ -124,10 +124,20 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
             this.fileWriter.close();
         } catch (IOException e) {
             System.out.println("Already Closed");
+        }catch (NullPointerException e){
+            //happens iw storeMessage was never called --> File is closed
         }
-        File file = new File(this.filepath.toString());
-        file.delete();
-        this.CreatePersistenceMechanism();
+
+        try {
+            PrintWriter pw = new PrintWriter(this.getFilePath().toString());
+            pw.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found, could not delete" + this.getFilePath().toString());
+            throw new RuntimeException(e);
+        }
+
+
+
     }
 
 
