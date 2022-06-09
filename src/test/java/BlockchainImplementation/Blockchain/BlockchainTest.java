@@ -2,17 +2,12 @@ package BlockchainImplementation.Blockchain;
 
 import BlockchainImplementation.Blockchain.Blocks.Block;
 import BlockchainImplementation.Blockchain.Blocks.SubBlock;
-import BlockchainImplementation.Blockchain.Hashing.Hasher;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class BlockchainTest {
 
@@ -25,23 +20,84 @@ public class BlockchainTest {
         assertThat(blockchain.getLastBlockHash()).isEqualTo("0");
     }
 
-//    @Test
-//    @DisplayName("Adding a block to an empty Blockchain should be possible")
-//    public void addingABlockToAnEmptyBlockchainShouldWork() throws IOException {
-//        Blockchain<String, String> blockchain = new Blockchain<>();
-//        blockchain.addABlock(new String[]{"1", "2", "3"},
-//                            new String[]{"a", "b", "c"});
-//
-//        assertThat(blockchain.getLastBlockHash()).isNotEqualTo("0");
-//    }
-//
-////    Block block = blockchain.getBlockFromHash(blockchain.getLastBlockHash());
-////    Map<String, SubBlock> map = (Map<String, SubBlock>) block.getTransaction();
-////    SubBlock<String,String> secondary = new SubBlock<>("0", );
-////    SubBlock<String, String> subBlock = map.get(Hasher.hashSHA256())
-////
-////    assertAll(
-////                () -> assertThat(map.get("1")).isEqualTo("a"),
-////                () -> assertThat(map.get("2")).isEqualTo("b"),
-////                () -> assertThat(map.get("3")).isEqualTo("c"));
+
+
+    @Test
+    @DisplayName("A Blockchain with a block should not have as its last block '0'")
+    public void aBlockchainWithABlockShouldNotHaveItsLastBlockAs0() {
+        Blockchain<String, String> blockchain = new Blockchain<>();
+        blockchain.addABlock(new String[]{"1", "2", "3"},
+                            new String[]{"a", "b", "c"});
+
+        assertThat(blockchain.getLastBlockHash()).isNotEqualTo("0");
+    }
+
+    @Test
+    @DisplayName("Hash of the blocks in the blockchain should allow to find them starting from the last block hash")
+    public void hashBlocksInBlockchainShouldAllowToFindThemStartingFromLastBlockHash() {
+        Blockchain<String, String> blockchain = new Blockchain<>();
+        blockchain.addABlock(new String[]{"1", "2", "3"},
+                             new String[]{"a", "b", "c"});
+
+        blockchain.addABlock(new String[]{"4", "5", "6"},
+                             new String[]{"d", "e", "f"});
+
+        blockchain.addABlock(new String[]{"7", "8", "9"},
+                             new String[]{"g", "h", "i"});
+
+        String lastHashBlock = blockchain.getLastBlockHash();
+        Block<String, String> third = blockchain.getBlockFromHash(lastHashBlock);
+        Block<String, String> second = blockchain.getBlockFromHash(third.getPreviousHashBlock());
+
+        Block<String, String> dumFirst = new Block<>("0", new String[]{"1", "2", "3"},
+                                                                          new String[]{"a", "b", "c"});
+
+        Block<String, String> dumSecond = new Block<>(dumFirst.getHashBlock(), new String[]{"4", "5", "6"},
+                                                                                new String[]{"d", "e", "f"});
+
+        System.out.println(second.getPreviousHashBlock());
+        System.out.println(second.getTransaction().keySet());
+        System.out.println(second.getTransaction().values());
+
+        assertThat(second.getHashBlock()).isEqualTo(dumSecond.getHashBlock());
+    }
+
+    @Test
+    @DisplayName("isAuthentic() over an unchanged blockchain should return true")
+    public void isAuthenticOverAnUnchangedBlockchainShouldReturnTrue() {
+        Blockchain<String, String> blockchain = new Blockchain<>();
+        blockchain.addABlock(new String[]{"1", "2", "3"},
+                new String[]{"a", "b", "c"});
+
+        blockchain.addABlock(new String[]{"4", "5", "6"},
+                new String[]{"d", "e", "f"});
+
+        blockchain.addABlock(new String[]{"7", "8", "9"},
+                new String[]{"g", "h", "i"});
+
+        assertThat(blockchain.isBlockchainAuthentic()).isTrue();
+
+    }
+
+    @Test
+    @DisplayName("isAuthentic() over a tempered blockchain should return false")
+    public void isAuthenticOverATemperedBlockchainShouldReturnFalse() {
+        Blockchain<String, String> blockchain = new Blockchain<>();
+        blockchain.addABlock(new String[]{"1", "2", "3"},
+                             new String[]{"a", "b", "c"});
+
+        blockchain.addABlock(new String[]{"4", "5", "6"},
+                           new String[]{"d", "e", "f"});
+
+        blockchain.addABlock(new String[]{"7", "8", "9"},
+                            new String[]{"g", "h", "i"});
+
+        Block<String, String> last = blockchain.getBlockFromHash(blockchain.getLastBlockHash());
+        Map<String, SubBlock<String,String>> transactions = last.getTransaction();
+        transactions.put("0000000", last.getTransaction().get(last.getLastSubBlockHash()));
+
+        assertThat(blockchain.isBlockchainAuthentic()).isFalse();
+
+    }
+
 }
