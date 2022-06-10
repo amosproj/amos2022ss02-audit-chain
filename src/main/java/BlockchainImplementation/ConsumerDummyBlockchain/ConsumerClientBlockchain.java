@@ -86,8 +86,6 @@ public class ConsumerClientBlockchain extends AbstractClient {
             }
 
             blockchain.addABlock(seq_numbers, transactions);
-
-            //blockchain.printBlockchain();
         };
 
         channel.basicConsume(QUEUE_NAME, true, deliverCallback, consumerTag -> {
