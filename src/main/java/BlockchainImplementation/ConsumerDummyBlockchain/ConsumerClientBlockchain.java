@@ -1,7 +1,9 @@
 package BlockchainImplementation.ConsumerDummyBlockchain;
 
 import BlockchainImplementation.Blockchain.Blockchain;
+import BlockchainImplementation.Blockchain.Blocks.Block;
 import ConsumerDummy.AggregateConsumerClient;
+import ConsumerDummy.ConsumerClient;
 import ProducerDummy.Client.AbstractClient;
 import ProducerDummy.Messages.AggregateMessage;
 import ProducerDummy.Messages.Hmac_Message;
@@ -21,7 +23,7 @@ import java.util.concurrent.TimeoutException;
 
 import static ConsumerDummy.AggregateConsumerClient.deserializeMessage;
 
-public class ConsumerClientBlockchain extends AbstractClient {
+public class ConsumerClientBlockchain extends ConsumerClient {
 
     private Blockchain<Integer, String> blockchain;
     private static String KEY = "0123456";
@@ -34,9 +36,9 @@ public class ConsumerClientBlockchain extends AbstractClient {
      *
      * @throws IOException if the file cannot be read
      */
-    public ConsumerClientBlockchain() throws IOException {
+    public ConsumerClientBlockchain(String host, int port, String username, String password, String queue_name) throws IOException {
 
-        super("localhost", 5672, "guest", "guest", "ConsumerDummyBlockchain");
+        super(host, port, username, password, queue_name);
 
         this.blockchain = new Blockchain<>();
 
@@ -47,13 +49,14 @@ public class ConsumerClientBlockchain extends AbstractClient {
      * @throws IOException if an I/O error occurs
      * @throws TimeoutException if the timeout expires
      */
+    @Override
     public void start() throws IOException, TimeoutException {
         System.out.println("Starting to receive Messages.");
         Connection connection = this.factory.newConnection();
         Channel channel = connection.createChannel();
         channel.queueDeclare(QUEUE_NAME, false, false, false, null);
 
-        System.out.println(" [*] Waiting for messages.");
+        System.out.println(" [-] Waiting for messages.");
 
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
             AggregateMessage message;
@@ -83,13 +86,17 @@ public class ConsumerClientBlockchain extends AbstractClient {
                 seq_numbers[iterator] = m.getSequence_number();
                 transactions[iterator] = m.getMessage();
                 iterator++;
+                System.out.println(" [x] Received n." + m.getSequence_number() + " - '" + m.getMessage() + "'");
             }
 
             blockchain.addABlock(seq_numbers, transactions);
+            System.out.println(" [---] Added a new block to the blockchain with previous messages [---]");
+            System.out.println(" [-] Waiting for messages.");
         };
 
         channel.basicConsume(QUEUE_NAME, true, deliverCallback, consumerTag -> {
         });
     }
+
 }
 
