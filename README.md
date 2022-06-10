@@ -99,7 +99,7 @@ An open source message broker software.
    https://user-images.githubusercontent.com/104498986/171228527-b9953e5c-cffa-414a-bd9a-7ca58bb34c0b.mp4
  - To run the blockchain module
    ```
-       mvn clean compile exec:java@BlockChain
+       mvn clean compile exec:java@Blockchain
    ```
 
  - Generate JAVADOC (then you can find it at /target/site/apidocs/index.html).
