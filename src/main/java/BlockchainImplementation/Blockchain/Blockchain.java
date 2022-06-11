@@ -74,4 +74,35 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
         return authentic;
     }
 
+    public void blockchainToJson(Path path){
+        JsonElement jsonBlockchain = gson.toJson(this.blockchain); 
+        String output = jsonBlockchain.toString(); 
+        try{
+            File content = Files.writeString(path, output, StandardCharsets.UTF_8); 
+            //in order to make the file secure against manipulation
+            content.setReadOnly(); 
+        } 
+        catch(IOException e){//maybe we need to add an Exception e
+            System.out.println("Sorry, wrong path"); 
+        }
+    }
+
+    public void jsonToBlockchain(Path path){
+        
+    }
+
+    public static void main(String [] args){
+        Blockchain<String, String> blockchain = new Blockchain<>();
+        blockchain.addABlock(new String[]{"1", "2", "3"},
+                             new String[]{"a", "b", "c"});
+
+        blockchain.addABlock(new String[]{"4", "5", "6"},
+                             new String[]{"d", "e", "f"});
+
+        blockchain.addABlock(new String[]{"7", "8", "9"},
+                             new String[]{"g", "h", "i"});       
+        blockchain.blockchainToJson(Paths.get("src", "main", "java","BlockchainImplementation"));
+
+    }
+
 }
