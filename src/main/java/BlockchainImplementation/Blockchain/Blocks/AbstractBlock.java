@@ -35,6 +35,14 @@ public abstract class AbstractBlock<T> {
     }
 
     /**
+     * Calculates the hash only of the transaction data of current block calling {@link Hasher#hashSHA256} method
+     *
+     * @return the hash of the current block
+     * */
+    public String calcHmacData() { return Hasher.hashSHA256(transaction.toString());
+    }
+
+    /**
      * @return hash of the current block saved in the block
      */
     public String getHashBlock () {

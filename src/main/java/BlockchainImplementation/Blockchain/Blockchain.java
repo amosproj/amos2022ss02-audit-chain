@@ -3,8 +3,12 @@ package BlockchainImplementation.Blockchain;
 import BlockchainImplementation.Blockchain.Blocks.Block;
 import BlockchainImplementation.Blockchain.Blocks.SubBlock;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.nio.file.Files;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -72,6 +76,36 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
         }
 
         return authentic;
+    }
+
+    public void isFileAuthentic(File file)  {
+        List<String> result = Collections.emptyList();
+
+        try{
+            result =  Files.readAllLines(file.toPath());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        T[] meta_data = (T[]) new String[result.size()];
+        R[] content = (R[]) new String[result.size()];
+
+        for (int i = 0; i < result.size(); i++)
+            if(i % 2 == 0)
+                meta_data[i] = (T) result.get(i);
+            else
+                content[i] = (R) result.get(i);
+
+        Block<T, R> block = new Block<>("0", meta_data, content);
+        String hmac = block.calcHmacData();
+
+        //pensa di storare il genesis
+        //toccherebbe controllare blocco per blocco dal genesis se sono autentici e se corrisponde a quel file
+        //se qualcuno non e' autentico va tenuto in considerazione
+
+       //tieni conto che mahari il metodo is authentic dovrebbe cambiare e partire a ricalcolare tutto dall'inizio
+
+
     }
 
 }

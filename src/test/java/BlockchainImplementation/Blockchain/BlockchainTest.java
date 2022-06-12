@@ -55,10 +55,6 @@ public class BlockchainTest {
         Block<String, String> dumSecond = new Block<>(dumFirst.getHashBlock(), new String[]{"4", "5", "6"},
                                                                                 new String[]{"d", "e", "f"});
 
-        System.out.println(second.getPreviousHashBlock());
-        System.out.println(second.getTransaction().keySet());
-        System.out.println(second.getTransaction().values());
-
         assertThat(second.getHashBlock()).isEqualTo(dumSecond.getHashBlock());
     }
 

@@ -33,6 +33,11 @@ public class SubBlock<T,R> extends AbstractBlock<R>{
         return Hasher.hashSHA256(this.getPreviousHashBlock(), meta_data.toString(), transaction.toString());
     }
 
+    @Override
+    public String calcHmacData () {
+        return Hasher.hashSHA256( meta_data.toString(), transaction.toString());
+    }
+
     public T getMeta_Data () { return meta_data; }
 
     /**
