@@ -3,9 +3,15 @@ package BlockchainImplementation.Blockchain;
 import BlockchainImplementation.Blockchain.Blocks.Block;
 import BlockchainImplementation.Blockchain.Blocks.SubBlock;
 
-import java.io.File;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.Map;
+import com.google.gson.Gson; //this is weird no? 
 
 /**
  * Data structure that represents the blockchain. It contains a hashmap of Blocks in which transactions and their
@@ -75,11 +81,12 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
     }
 
     public void blockchainToJson(Path path){
-        JsonElement jsonBlockchain = gson.toJson(this.blockchain); 
-        String output = jsonBlockchain.toString(); 
+        Gson gson = new Gson(); 
+        String jsonBlockchain = gson.toJson(this.blockchain); 
         try{
-            File content = Files.writeString(path, output, StandardCharsets.UTF_8); 
+            Path newPath = Files.writeString(path, jsonBlockchain, StandardCharsets.UTF_8);  
             //in order to make the file secure against manipulation
+            File content = newPath.toFile();
             content.setReadOnly(); 
         } 
         catch(IOException e){//maybe we need to add an Exception e
@@ -88,7 +95,20 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
     }
 
     public void jsonToBlockchain(Path path){
-        
+        Gson gson = new Gson(); 
+        //alla fine ci deve essere qualcosa tipo this = quella che viene ripresa dal json
+        //try catch: nel catch ok wrong path perchè la blockchain non esiste e quindi rimane vuota (non devi fare niente-> niente deve essere recuperato dal file bc there's nothing)
+        try (Reader reader = new FileReader(path.toFile())) {
+
+            // Convert JSON File to Java Object
+            Blockchain blockchain = gson.fromJson(path.toFile().toString(), Blockchain.class);
+		
+			// print staff object
+            System.out.println(blockchain);
+
+        } catch (IOException e) {
+            System.out.println("Sorry, wrong path - this means that the blockchain does not exist yet"); 
+        }
     }
 
     public static void main(String [] args){
@@ -101,8 +121,8 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
 
         blockchain.addABlock(new String[]{"7", "8", "9"},
                              new String[]{"g", "h", "i"});       
-        blockchain.blockchainToJson(Paths.get("src", "main", "java","BlockchainImplementation"));
-
+        blockchain.blockchainToJson(Paths.get("src", "main", "java","BlockchainImplementation")); 
+        
     }
 
 }
