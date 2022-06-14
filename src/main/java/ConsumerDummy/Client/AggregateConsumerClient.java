@@ -71,7 +71,7 @@ public class AggregateConsumerClient extends AbstractClient {
             channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
         };
 
-        channel.basicConsume(QUEUE_NAME, true, deliverCallback, consumerTag -> {
+        channel.basicConsume(QUEUE_NAME, false, deliverCallback, consumerTag -> {
         });
     }
 
