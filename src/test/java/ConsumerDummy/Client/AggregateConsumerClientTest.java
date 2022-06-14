@@ -1,17 +1,15 @@
 package ConsumerDummy.Client;
 
-import ConsumerDummy.Messages.AggregateMessage;
-import ConsumerDummy.Messages.JsonMessage;
+import ProducerDummy.Messages.AggregateMessage;
+import ProducerDummy.Messages.JsonMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.nio.file.Paths;
-import java.util.Scanner;
 import java.util.Vector;
 import java.util.concurrent.TimeoutException;
 
@@ -37,7 +35,7 @@ class AggregateConsumerClientTest {
     @Test
     @DisplayName("Test basic functions")
     void start() throws IOException, TimeoutException {
-        String path = Paths.get(System.getProperty("user.dir"), "src", "main", "messages.txt").toString();
+        String path = Paths.get(System.getProperty("user.dir"), "src", "main", "resources", "ConsumerDummy", "messages.txt").toString();
         //Deleting file if it already exists
         File f = new File(path);
         f.delete();
@@ -45,10 +43,7 @@ class AggregateConsumerClientTest {
         //Testing of messaging.txt is created
         AggregateConsumerClient c = new AggregateConsumerClient("localhost", 5672, " ", " ", "Fake");
         assertTrue(f.exists());
-
-        // Maybe implement a RabbitMQ mock queue (but is this really necessary?)
-
-
+        f.delete();
 
     }
 
@@ -57,7 +52,7 @@ class AggregateConsumerClientTest {
     void deserializeMessage() throws IOException, ClassNotFoundException {
 
         AggregateMessage m = new AggregateMessage(); // generate AggregateMessage
-        for(int i = 0; i < 5; i++){
+        for (int i = 0; i < 5; i++) {
             m.addMessage(new JsonMessage(i, "Test " + i));  // adding 5 messages
         }
 
@@ -72,14 +67,11 @@ class AggregateConsumerClientTest {
         assertNotNull(bytecode); // check if serialization worked
 
         AggregateMessage mDeserialized = (AggregateMessage) AggregateConsumerClient.deserializeMessage(bytecode); //deserialization
-        Vector messages  = mDeserialized.getMessages(); //get messages
+        Vector messages = mDeserialized.getMessages(); //get messages
 
-        for(int i = 0; i < 5; i++){
-            assertEquals(i , ((JsonMessage) messages.get(i)).getSequence_number()); //check if sequence number is correct
+        for (int i = 0; i < 5; i++) {
+            assertEquals(i, ((JsonMessage) messages.get(i)).getSequence_number()); //check if sequence number is correct
             assertEquals("Test " + i, ((JsonMessage) messages.get(i)).getMessage()); //check if message is correct
         }
-
-
-
     }
 }

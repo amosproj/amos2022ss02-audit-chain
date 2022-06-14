@@ -3,7 +3,7 @@ package ConsumerDummy;
 
 
 
-import ConsumerDummy.Client.AbstractClient;
+import ProducerDummy.Client.AbstractClient;
 import ConsumerDummy.Client.AggregateConsumerClient;
 
 import java.io.FileReader;
@@ -17,7 +17,7 @@ public class main {
 
     public static void main(String[] args) throws IOException, TimeoutException {
 
-        String filepath = Paths.get("src", "main", "java","ConsumerDummy").toString();
+        String filepath = Paths.get("src", "main", "resources","ConsumerDummy").toString();
         String filename = "config.properties";
 
         Path config_path = Paths.get(System.getProperty("user.dir"), filepath, filename);

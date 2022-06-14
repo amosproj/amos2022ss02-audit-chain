@@ -23,4 +23,5 @@ class ConsumerClientTest {
             throw new RuntimeException(e);
         }
     }
+
 }
