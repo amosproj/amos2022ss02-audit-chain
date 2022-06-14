@@ -6,6 +6,7 @@ public class AggregateMessage implements Message {
 
 
     Vector<Message> messages = new Vector<>();
+    
 
 
     public AggregateMessage() {
@@ -24,11 +25,6 @@ public class AggregateMessage implements Message {
         this.messages.add(message);
     }
 
-
-    @Override
-    public Message getMessageObject() {
-        return this;
-    }
 
     @Override
     public void formatMessage(int sequence_number, String message) {
@@ -55,6 +51,11 @@ public class AggregateMessage implements Message {
     public void setMessage(String message) {
         this.messages.get(this.messages.size() - 1).setMessage("test");
         return;
+    }
+
+    @Override
+    public Message toSimpleFormat() {
+        throw new UnsupportedOperationException("There is no SimpleFormat for AggregateMessage");
     }
 
     public int getMessageSize() {

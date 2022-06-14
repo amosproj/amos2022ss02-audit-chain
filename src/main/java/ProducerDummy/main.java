@@ -2,10 +2,14 @@ package ProducerDummy;
 
 import ProducerDummy.Client.AbstractClient;
 import ProducerDummy.Client.AggregateClient;
-import ProducerDummy.Messages.Hmac_Message;
-import ProducerDummy.Messages.Hmac_Message_JsonMessage;
-import ProducerDummy.Messages.Message;
-import ProducerDummy.Messages.SimpleMessage;
+import ProducerDummy.Client.Client;
+import ProducerDummy.Client.Producer;
+import ProducerDummy.DataGeneration.DataGenerator;
+import ProducerDummy.DataGeneration.FileDataReader;
+import ProducerDummy.Messages.*;
+import ProducerDummy.Persistence.AggregateMessageFilePersistence;
+import ProducerDummy.Persistence.FilePersistenceStrategy;
+import ProducerDummy.Persistence.PersistenceStrategy;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileReader;
@@ -24,6 +28,7 @@ public class main {
         String filepath = Paths.get("src", "main", "java","ProducerDummy").toString();
         String filename = "config.properties";
 
+
         Path config_path = Paths.get(System.getProperty("user.dir"), filepath, filename);
         Properties p = new Properties();
         FileReader reader = new FileReader(config_path.toString());
@@ -35,32 +40,19 @@ public class main {
         String PASSWORD = p.getProperty("PASSWORD");
         String queue_name = "FAKE";
 
-        String hmacSHA256Algorithm = "HmacSHA256";
-        String key = "0123456789";
-        String key1 = "00000";
 
 
-        Message m2 = new SimpleMessage(1,"dfd");
-        Hmac_Message_JsonMessage m1 = new Hmac_Message_JsonMessage(1,"Hello_World",hmacSHA256Algorithm,key);
-
-        boolean a = m1.verifyMAC(hmacSHA256Algorithm,key);
-        boolean b = m1.verifyMAC(hmacSHA256Algorithm,key1);
-
-        if(m1 instanceof Hmac_Message){
-            //HMAC_Message
-            int c = 5;
-        }else{
-            int c = 5;
-        }
+        String base_path = Paths.get(System.getProperty("user.dir"),filepath).toString();
+        DataGenerator dataGenerator = new FileDataReader(base_path,"household_power_consumption.txt");
+        PersistenceStrategy filePersistenceStrategy = new AggregateMessageFilePersistence(base_path,"last_messages.txt");
 
 
-
-
-
-
-
-        AbstractClient client = new AggregateClient(HOST, PORT, USER, PASSWORD, queue_name);
+        Producer client = new AggregateClient(HOST, PORT, USER, PASSWORD, queue_name);
+        client.setDataGenerator(dataGenerator);
+        client.setPersistenceStrategy(filePersistenceStrategy);
         client.start();
+
+
 
 
         return;

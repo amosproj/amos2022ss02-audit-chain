@@ -82,8 +82,6 @@ public class AggregateConsumerClient extends AbstractClient {
 
         return objStream.readObject();
     }
-
-
 }
 
 

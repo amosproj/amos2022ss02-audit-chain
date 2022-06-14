@@ -12,8 +12,13 @@ There is a central event queue, which records these events and uses them for fur
 There is a central event queue, which records events and uses them for further actions. Consumers can approach the queue, in order to get the events and work with them accordingly. Events are recorded serially and the central event queue is transmitted via the network queue. In order to define terms, we could define three main characters: 
 - *the producer*: who is the creator and sender of the events
 - *the queue*: the middle ground where events are stored and safely shared
-- *the consumer*: who takes events from the queue in order to perform further actions with them (that are not of interest in our application). 
-A sample of the interaction described above could be the following: 
+- *the consumer*: who takes events from the queue in order to perform further actions with them (that are not of interest in our application). <br />
+<br />
+ A sample of the interaction described above could be the following: <br />
+ <br />
+ 
+ ![modules](https://user-images.githubusercontent.com/104498986/171383351-c5bc80ac-5860-4bff-88d6-de2e91611ad5.png)
+ <br />
 
 In our case, producer dummy (which would be represented by the FS-Filter and the IoT digital thermometer in the picture)  would create the events that are then stored in the central queue and from this one, our consumer dummy (so the data scanner and the audit protocol), would use them for further processing, like, also storing. 
 Listed, are the next steps that we are further developing: 
@@ -33,7 +38,7 @@ When the producer dummy is triggered, the data generator catches data events (me
 **The folder structure is as follows:**
 - **/producer dummy/**: Generate JAVADOC
 - **/consumer dummy/**: is a program which "communicates" with the rabbitmq (Middleware) in order to receive messages 
-- **/middleware/**: lies between an operating system and the applications running on it
+- **/middleware/**: enables the communication between producer dummy and consumer dummy
 - **/blockchain/**: data structure chosen for the message chain: work in progress.<br />
  <br />
  
@@ -64,8 +69,6 @@ An open source message broker software.
 	```
 	git clone https://github.com/amosproj/amos2022ss02-audit-chain.git
 	```
-
-
 	https://user-images.githubusercontent.com/104498986/171228250-fe4c4e2e-93b7-4c99-be40-1b1585ffadc2.mp4
 
 
@@ -75,28 +78,37 @@ An open source message broker software.
     ```
  - Or download the latest release and unzip the package from git.
 
-	**Open the project in your favorite IDE. We use IntellJ for demos**
- - Get the middleware i.e rabbitmq running:
+    **Open the project in your favorite IDE. We use IntellJ for demos**
+ - create a network by the name rabbitmq-cluster:
    ```
-   docker compose up
-    ```
+   docker network create rabbitmq-cluster 
+   ```
+ - Get the middleware i.e rabbitmq-cluster running in daemon mode:
+   ```
+   docker-compose up -d
+   ```
    https://user-images.githubusercontent.com/104498986/171229907-b865ec51-0488-4892-b9a9-155b550f6f70.mp4
-- To run the producer-dummy module
-  ```
-  mvn clean compile exec:java@ProducerDummy
-  ```
-- To run the consumer-dummy module
-  ```
-  mvn clean compile exec:java@ConsumerDummy
-  ```
-  https://user-images.githubusercontent.com/104498986/171228527-b9953e5c-cffa-414a-bd9a-7ca58bb34c0b.mp4
-- To run the blockchain module
-  ```
-      mvn clean compile exec:java@BlockChain
-  ```
+ - To run the producer-dummy module
+   ```
+   mvn clean compile exec:java@ProducerDummy
+   ```
+ - To run the consumer-dummy module
+   ```
+   mvn clean compile exec:java@ConsumerDummy
+   ```
+   https://user-images.githubusercontent.com/104498986/171228527-b9953e5c-cffa-414a-bd9a-7ca58bb34c0b.mp4
+ - To run the blockchain module
+   ```
+       mvn clean compile exec:java@Blockchain
+   ```
 
-- Generate JAVADOC (then you can find it at /target/site/apidocs/index.html).
+ - Generate JAVADOC (then you can find it at /target/site/apidocs/index.html).
 
-  ```
-  mvn javadoc:javadoc
-
+   ```
+   mvn javadoc:javadoc
+   ```
+   
+ - Run Test
+   ```
+   mvn clean compile test
+   ```

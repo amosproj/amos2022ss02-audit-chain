@@ -3,13 +3,14 @@ package ProducerDummy.Persistence;
 
 import ProducerDummy.Messages.Message;
 
+import java.nio.file.Path;
+
 /** Interface for the persistence strategy mechanisms */
 public interface PersistenceStrategy {
 
     /***
      * Store the Messages.Message into your Persistence Mechanism e.g File or Database.
      *
-     * @param sequenceNumber the sequence number of the message
      * @param message message to be stored as a string
      */
     public void StoreMessage(Message message);
@@ -24,5 +25,9 @@ public interface PersistenceStrategy {
      */
 
     public Message ReadLastMessage();
+
+    public Path getFilePath();
+
+    public void cleanFile();
 
 }

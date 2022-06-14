@@ -10,7 +10,6 @@ import java.util.concurrent.TimeoutException;
  * Abstract class for Clients
  */
 abstract public class AbstractClient {
-    static int START_NUMBER = 0;
 
     protected String HOST;
     protected int PORT;
@@ -49,6 +48,10 @@ abstract public class AbstractClient {
 
     public void start() throws IOException, TimeoutException {
 
+    }
+
+    public void recoverLastState() {
+        return;
     }
 
 
