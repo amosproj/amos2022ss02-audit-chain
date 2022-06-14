@@ -1,6 +1,7 @@
-package ConsumerDummy;
+package ConsumerDummy.Client;
 
 import ProducerDummy.Client.AbstractClient;
+
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.DeliverCallback;
