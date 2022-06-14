@@ -43,4 +43,28 @@ public class SubBlock<T,R> extends AbstractBlock<R>{
         return "[" + meta_data.toString() + ";" + transaction.toString() + "]";
     }
 
+    @Override
+    public boolean equals (Object obj) {
+
+        if(!(obj instanceof SubBlock)) {
+            return false;
+        }
+
+        SubBlock<T, R> block = (SubBlock<T, R>) obj;
+
+        if(!this.transaction.equals(block.transaction) || !this.meta_data.equals(block.meta_data))
+            return false;
+
+        if(!hashBlock.equals(block.getHashBlock()))
+            return false;
+
+        if(!getPreviousHashBlock().equals(block.getPreviousHashBlock()))
+            return false;
+
+        if(getTimestamp() !=(block.getTimestamp()))
+            return false;
+
+        return true;
+    }
+
 }

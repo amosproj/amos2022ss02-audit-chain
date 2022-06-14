@@ -115,4 +115,25 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
             System.out.println("Sorry, wrong path - this means that the blockchain does not exist yet"); 
         }
     }
+
+    @Override
+    public boolean equals (Object obj) {
+
+        if(!(obj instanceof Blockchain))
+            return false;
+
+        Blockchain<T, R> blockchain = (Blockchain<T, R>) obj;
+
+        if (this.blockchain.size() != blockchain.blockchain.size())
+            return false;
+
+        if(!this.lastBlockHash.equals(blockchain.lastBlockHash))
+            return false;
+
+        for(String hash : this.blockchain.keySet())
+            if(!this.blockchain.get(hash).equals(blockchain.blockchain.get(hash)))
+                return false;
+
+        return true;
+    }
 }

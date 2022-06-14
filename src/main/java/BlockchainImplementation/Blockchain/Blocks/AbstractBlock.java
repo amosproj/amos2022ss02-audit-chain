@@ -1,5 +1,6 @@
 package BlockchainImplementation.Blockchain.Blocks;
 
+import BlockchainImplementation.Blockchain.Blockchain;
 import BlockchainImplementation.Blockchain.Hashing.Hasher;
 
 import java.io.IOException;
