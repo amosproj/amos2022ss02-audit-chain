@@ -61,9 +61,6 @@ public class SubBlock<T,R> extends AbstractBlock<R>{
         if(!getPreviousHashBlock().equals(block.getPreviousHashBlock()))
             return false;
 
-        if(getTimestamp() !=(block.getTimestamp()))
-            return false;
-
         return true;
     }
 

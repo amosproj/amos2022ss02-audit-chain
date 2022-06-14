@@ -91,9 +91,6 @@ public class Block<T,R> extends AbstractBlock<Map<String, SubBlock<T,R>>>{
         if(!getPreviousHashBlock().equals(block.getPreviousHashBlock()))
             return false;
 
-        if(getTimestamp() !=(block.getTimestamp()))
-            return false;
-
         for(String hash : this.transaction.keySet())
             if(!this.transaction.get(hash).equals(block.transaction.get(hash)))
                 return false;
