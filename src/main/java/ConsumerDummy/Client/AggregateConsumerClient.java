@@ -12,6 +12,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.nio.file.Paths;
+import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.TimeoutException;
 
@@ -51,7 +52,7 @@ public class AggregateConsumerClient extends Consumer {
 
         Connection connection = this.factory.newConnection();
         Channel channel = connection.createChannel();
-        channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+        channel.queueDeclare(QUEUE_NAME, true, false, false, Map.of("x-queue-type", "quorum"));
 
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
             ProducerDummy.Messages.AggregateMessage message;

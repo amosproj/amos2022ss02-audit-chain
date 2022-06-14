@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -45,7 +46,7 @@ public class AggregateClient extends Producer {
         System.out.println("Starting to send Messages.Message to AMQP Host");
         try (Connection connection = this.factory.newConnection();
              Channel channel = connection.createChannel()) {
-            channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+            channel.queueDeclare(QUEUE_NAME, true, false, false, Map.of("x-queue-type", "quorum"));
             channel.confirmSelect();
             int start_event = this.sequence_number;
 
