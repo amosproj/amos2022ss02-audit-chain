@@ -16,7 +16,6 @@ import java.util.Vector;
 import java.util.concurrent.TimeoutException;
 
 
-
 public class ConsumerClientBlockchain extends Consumer {
 
     private Blockchain<Integer, String> blockchain;
@@ -30,10 +29,9 @@ public class ConsumerClientBlockchain extends Consumer {
      *
      * @throws IOException if the file cannot be read
      */
-    public ConsumerClientBlockchain() throws IOException {
+    public ConsumerClientBlockchain(String host, int port, String username, String password, String queue_name) throws IOException {
 
-        super("localhost", 5672, "guest", "guest", "ConsumerDummyBlockchain");
-
+        super(host, port, username, password, queue_name);
         this.blockchain = new Blockchain<>();
 
     }
@@ -71,7 +69,7 @@ public class ConsumerClientBlockchain extends Consumer {
                 if (m instanceof Hmac_Message) {
                     Hmac_Message hmac_message = (Hmac_Message) m;
 
-                    if( !hmac_message.verifyMAC(ALGORITHM, KEY) ) {
+                    if (!hmac_message.verifyMAC(ALGORITHM, KEY)) {
                         throw new RuntimeException("Authentication of the message failed!");
                     }
                 }
