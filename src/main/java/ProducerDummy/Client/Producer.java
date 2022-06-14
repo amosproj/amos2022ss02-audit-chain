@@ -9,6 +9,7 @@ import com.rabbitmq.client.Connection;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 public class Producer extends AbstractClient {
@@ -66,7 +67,7 @@ public class Producer extends AbstractClient {
         System.out.println("Message(s) in File found, will send them immediately!");
         try (Connection connection = this.factory.newConnection();
              Channel channel = connection.createChannel()) {
-            channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+            channel.queueDeclare(QUEUE_NAME, true, false, false, Map.of("x-queue-type", "quorum"));
             channel.confirmSelect();
             this.getAcknowledgment(channel, message);
 
