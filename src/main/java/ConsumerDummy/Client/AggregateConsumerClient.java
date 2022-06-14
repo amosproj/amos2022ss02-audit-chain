@@ -15,7 +15,7 @@ import java.nio.file.Paths;
 import java.util.Vector;
 import java.util.concurrent.TimeoutException;
 
-public class AggregateConsumerClient extends AbstractClient {
+public class AggregateConsumerClient extends Consumer {
 
     static int sequence_number = 0;
     private final AggregateMessageFilePersistence persistenceStrategy;
@@ -56,7 +56,7 @@ public class AggregateConsumerClient extends AbstractClient {
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
             ProducerDummy.Messages.AggregateMessage message;
             try {
-                message = (ProducerDummy.Messages.AggregateMessage) deserializeMessage(delivery.getBody()); // cast deserialized bytestream to AggregateMessage
+                message = (ProducerDummy.Messages.AggregateMessage) deserialize(delivery.getBody()); // cast deserialized bytestream to AggregateMessage
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -73,14 +73,6 @@ public class AggregateConsumerClient extends AbstractClient {
 
         channel.basicConsume(QUEUE_NAME, false, deliverCallback, consumerTag -> {
         });
-    }
-
-
-    public static Object deserializeMessage(byte[] bytes) throws IOException, ClassNotFoundException {
-        ByteArrayInputStream byteStream = new ByteArrayInputStream(bytes);
-        ObjectInputStream objStream = new ObjectInputStream(byteStream);
-
-        return objStream.readObject();
     }
 }
 

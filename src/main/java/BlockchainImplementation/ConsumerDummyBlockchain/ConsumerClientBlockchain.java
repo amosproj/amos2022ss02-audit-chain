@@ -1,7 +1,7 @@
 package BlockchainImplementation.ConsumerDummyBlockchain;
 
 import BlockchainImplementation.Blockchain.Blockchain;
-import ConsumerDummy.AggregateConsumerClient;
+import ConsumerDummy.Client.Consumer;
 import ProducerDummy.Client.AbstractClient;
 import ProducerDummy.Messages.AggregateMessage;
 import ProducerDummy.Messages.Hmac_Message;
@@ -9,19 +9,15 @@ import ProducerDummy.Messages.Message;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.DeliverCallback;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.TimeoutException;
 
-import static ConsumerDummy.AggregateConsumerClient.deserializeMessage;
 
-public class ConsumerClientBlockchain extends AbstractClient {
+
+public class ConsumerClientBlockchain extends Consumer {
 
     private Blockchain<Integer, String> blockchain;
     private static String KEY = "0123456";
@@ -59,7 +55,7 @@ public class ConsumerClientBlockchain extends AbstractClient {
             AggregateMessage message;
 
             try {
-                message = (AggregateMessage) AggregateConsumerClient.deserializeMessage(delivery.getBody());
+                message = (AggregateMessage) deserialize(delivery.getBody());
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }

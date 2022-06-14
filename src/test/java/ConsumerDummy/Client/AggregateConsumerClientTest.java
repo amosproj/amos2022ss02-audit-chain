@@ -66,7 +66,7 @@ class AggregateConsumerClientTest {
         }
         assertNotNull(bytecode); // check if serialization worked
 
-        AggregateMessage mDeserialized = (AggregateMessage) AggregateConsumerClient.deserializeMessage(bytecode); //deserialization
+        AggregateMessage mDeserialized = (AggregateMessage) AggregateConsumerClient.deserialize(bytecode); //deserialization
         Vector messages = mDeserialized.getMessages(); //get messages
 
         for (int i = 0; i < 5; i++) {
