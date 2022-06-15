@@ -1,5 +1,6 @@
 package BlockchainImplementation.Blockchain.Blocks;
 
+import BlockchainImplementation.Blockchain.Blockchain;
 import BlockchainImplementation.Blockchain.Hashing.Hasher;
 
 import java.io.IOException;
@@ -15,14 +16,12 @@ public abstract class AbstractBlock<T> {
 
     private final String previousHashBlock; /** contains the hash of the previous block */
     protected String hashBlock; /** contains the hash of the current block */
-    private final long timestamp; /** contains the date and time of when the block was created */
     protected final T transaction; /** contains the transaction data */
 
     public AbstractBlock(String previousHashBlock, T transaction) {
         this.previousHashBlock = previousHashBlock;
         this.transaction = transaction;
 
-        this.timestamp = new Date().getTime();
     }
 
     /**
@@ -45,7 +44,6 @@ public abstract class AbstractBlock<T> {
 
     public T getTransaction () { return transaction; }
 
-    public long getTimestamp () { return timestamp; }
 
     /**
      * Checks if the current block has been tempered or instead if it is still authentic.
