@@ -55,7 +55,7 @@ public class Client extends Producer {
         System.out.println("Starting to send Messages.Message to AMQP Host");
         try (Connection connection = this.factory.newConnection();
              Channel channel = connection.createChannel()) {
-            channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+            channel.queueDeclare(QUEUE_NAME, true, false, false, Map.of("x-queue-type", "quorum"));
             // If sequence_number is bigger we have a Message in our persistence_mechanism
             if(this.sequence_number > START_NUMBER){
                 Message message = this.recoverLastMessage();
