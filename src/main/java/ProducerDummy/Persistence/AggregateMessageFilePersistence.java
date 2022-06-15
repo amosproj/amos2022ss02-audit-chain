@@ -34,7 +34,6 @@ public class AggregateMessageFilePersistence extends FilePersistenceStrategy {
         super(path, fileName);
     }
 
-
     public void StoreMessage(Message message) {
         try {
             this.fileWriter = new FileWriter(filepath.toString(), true);

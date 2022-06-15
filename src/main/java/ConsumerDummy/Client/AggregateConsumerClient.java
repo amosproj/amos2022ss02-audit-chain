@@ -52,8 +52,7 @@ public class AggregateConsumerClient extends Consumer {
 
         Connection connection = this.factory.newConnection();
         Channel channel = connection.createChannel();
-        channel.queueDeclare(QUEUE_NAME, true, false, false, Map.of("x-queue-type", "quorum"));
-
+        channel.queueDeclare(QUEUE_NAME, false, false, false, null);
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
             ProducerDummy.Messages.AggregateMessage message;
             try {

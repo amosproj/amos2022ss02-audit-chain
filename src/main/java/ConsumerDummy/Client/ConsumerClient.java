@@ -34,8 +34,7 @@ public class ConsumerClient extends AbstractClient {
         System.out.println("Starting to receive Messages.");
         Connection connection = this.factory.newConnection();
         Channel channel = connection.createChannel();
-        channel.queueDeclare(QUEUE_NAME, true, false, false, Map.of("x-queue-type", "quorum"));
-
+        channel.queueDeclare(QUEUE_NAME, false, false, false, null);
         System.out.println(" [*] Waiting for messages.");
 
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
