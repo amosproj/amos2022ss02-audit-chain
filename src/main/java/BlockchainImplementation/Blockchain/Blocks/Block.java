@@ -3,7 +3,9 @@ package BlockchainImplementation.Blockchain.Blocks;
 import BlockchainImplementation.Blockchain.Hashing.Hasher;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -56,21 +58,18 @@ public class Block<T,R> extends AbstractBlock<Map<String, SubBlock<T,R>>>{
      *
      * @return true if the current block is authentic, false otherwise
      */
-    @Override
-    public boolean isBlockAuthentic () {
-        boolean authentic = true;
+
+    public List<SubBlock<T, R>> getTemperedTransaction () {
+
+        List<SubBlock<T, R>> temperedTransaction = new ArrayList<>();
 
         for (SubBlock<T,R> subBlock : this.transaction.values()) {
-            authentic = subBlock.isBlockAuthentic();
-
-            if (!authentic) {
-                break;
+            if(!subBlock.isAuthentic()) {
+                temperedTransaction.add(subBlock);
             }
         }
 
-        authentic = authentic && hashBlock.equals(calcHash());
-
-        return authentic;
+        return temperedTransaction;
     }
 
 }

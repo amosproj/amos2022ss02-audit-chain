@@ -1,5 +1,6 @@
 package BlockchainImplementation.Blockchain.Blocks;
 
+import BlockchainImplementation.Blockchain.Blockchain;
 import BlockchainImplementation.Blockchain.Hashing.Hasher;
 
 import java.io.IOException;
@@ -15,14 +16,12 @@ public abstract class AbstractBlock<T> {
 
     private final String previousHashBlock; /** contains the hash of the previous block */
     protected String hashBlock; /** contains the hash of the current block */
-    private final long timestamp; /** contains the date and time of when the block was created */
     protected final T transaction; /** contains the transaction data */
 
     public AbstractBlock(String previousHashBlock, T transaction) {
         this.previousHashBlock = previousHashBlock;
         this.transaction = transaction;
 
-        this.timestamp = new Date().getTime();
     }
 
     /**
@@ -32,14 +31,6 @@ public abstract class AbstractBlock<T> {
      * */
     protected String calcHash() {
         return Hasher.hashSHA256(previousHashBlock, transaction.toString());
-    }
-
-    /**
-     * Calculates the hash only of the transaction data of current block calling {@link Hasher#hashSHA256} method
-     *
-     * @return the hash of the current block
-     * */
-    public String calcHmacData() { return Hasher.hashSHA256(transaction.toString());
     }
 
     /**
@@ -53,7 +44,9 @@ public abstract class AbstractBlock<T> {
 
     public T getTransaction () { return transaction; }
 
-    public long getTimestamp () { return timestamp; }
+    public String calcHmacData () {
+        return Hasher.hashSHA256(transaction.toString());
+    }
 
     /**
      * Checks if the current block has been tempered or instead if it is still authentic.
@@ -61,7 +54,7 @@ public abstract class AbstractBlock<T> {
      *
      * @return true if the current block is authentic, false otherwise
      */
-    public boolean isBlockAuthentic () {
+    public boolean isAuthentic () {
         return hashBlock.equals(calcHash());
     }
 

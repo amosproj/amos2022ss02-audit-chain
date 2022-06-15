@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -69,19 +70,19 @@ public class BlockTest {
     }
 
     @Test
-    @DisplayName("isAuthentic() over a unchanged block should return true")
-    public void isAuthenticOverAUnchangedBlockShouldReturnTrue() {
+    @DisplayName("getTemperedTransaction() over a unchanged block should return an empty List")
+    public void getTemperedTransactionOverAUnchangedBlockShouldReturnAnEmptyList() {
         Block<String, String> block = new Block<>("0",
                 new String[]{"1","2","3"},
                 new String[]{"a","b","c"});
 
-        assertThat(block.isBlockAuthentic()).isTrue();
+        assertThat(block.getTemperedTransaction().size()).isEqualTo(0);
 
     }
 
     @Test
-    @DisplayName("isAuthentic() over a tempered block should return false")
-    public void isAuthenticOverATemperedBlockShouldReturnFalse() {
+    @DisplayName("getTemperedTransaction() over a tempered block should return the List with subBlocks tempered")
+    public void getTemperedTransactionOverATemperedBlockShouldReturnTheListWithSubBlocksTempered() {
         Block<String, String> block = new Block<>("0",
                 new String[]{"1","2","3"},
                 new String[]{"a","b","c"});
@@ -90,7 +91,9 @@ public class BlockTest {
 
         transactions.put("0000000", block.getTransaction().get(block.getLastSubBlockHash()));
 
-        assertThat(block.isBlockAuthentic()).isFalse();
+        List<SubBlock<String, String>> temperedTransaction = block.getTemperedTransaction();
+
+        assertThat(temperedTransaction.get(0)).isEqualTo(block.getTransaction().get(block.getLastSubBlockHash()));
 
     }
 
