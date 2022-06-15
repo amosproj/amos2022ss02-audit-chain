@@ -107,7 +107,7 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
         try (Reader reader = new FileReader(path.toFile())) {
 
             // Convert JSON File to Java Object
-            Blockchain blockchain = gson.fromJson(path.toFile().toString(), Blockchain.class);
+            Blockchain<T, R> blockchain = gson.fromJson(reader, Blockchain.class);
             //print
             System.out.println(blockchain);
 

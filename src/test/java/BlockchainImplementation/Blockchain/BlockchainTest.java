@@ -125,7 +125,7 @@ public class BlockchainTest {
         blockchain.blockchainToJson(); 
         List<String> blockchainAlist = Files.readAllLines(Paths.get("the-file-name.json")); 
         String blockchainString = blockchainAlist.toString(); 
-        assertThat(blockchainString).isEqualTo(fileString);
+        assertThat(fileString).isEqualTo(blockchainString);
     }
 
 
@@ -141,8 +141,12 @@ public class BlockchainTest {
                              new String[]{"d", "e", "f"});
 
         blockchain.addABlock(new String[]{"7", "8", "9"},
-                             new String[]{"g", "h", "i"});       
+                             new String[]{"g", "h", "i"});  
+        blockchain.blockchainToJson();
+        Blockchain<String, String> blockchain2 = new Blockchain<>(); 
+        blockchain2.jsonToBlockchain(Paths.get("the-file-name.json"));
 
-        //assertThat(blockchain).equals(blockchain.jsonToBlockchain(Paths.get("the-file-name.json"))); 
+        assertThat(blockchain).isEqualTo(blockchain2);
+        
     }
 }
