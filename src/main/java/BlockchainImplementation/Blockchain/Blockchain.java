@@ -82,7 +82,11 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
 
         return authentic;
     }
-
+    
+    /**
+     * Parses the blockchain and saves it in a JSON file. The file will be saved in the current directory.
+     * If the path is not found, a message is shown.
+     */
     public void blockchainToJson(){
         Gson gson = new Gson(); 
         String jsonBlockchain = gson.toJson(this);
@@ -98,6 +102,12 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
 //        path.toFile().setReadOnly(); //creates problems
     }
 
+    /**
+     * Takes the json file contained in the path and parses it into a blockchain.
+     * If the file is not found, a message is shown and it means that is the first time that the blockchain has been saved
+     *
+     * @param path represents the path where the json file is located
+     */
     public void jsonToBlockchain(Path path) {
         Gson gson = new Gson();
         Blockchain<T, R> blockchainFromJson = new Blockchain<>();
