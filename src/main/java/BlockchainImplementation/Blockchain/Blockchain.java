@@ -3,7 +3,6 @@ package BlockchainImplementation.Blockchain;
 import BlockchainImplementation.Blockchain.Blocks.Block;
 import BlockchainImplementation.Blockchain.Blocks.SubBlock;
 
-<<<<<<< HEAD
 import java.io.BufferedReader;
 import java.io.File;
 import java.nio.file.Files;
