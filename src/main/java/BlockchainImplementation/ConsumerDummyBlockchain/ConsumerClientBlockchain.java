@@ -1,9 +1,13 @@
 package BlockchainImplementation.ConsumerDummyBlockchain;
 
 import BlockchainImplementation.Blockchain.Blockchain;
+<<<<<<< HEAD
 import BlockchainImplementation.Blockchain.Blocks.Block;
 import ConsumerDummy.AggregateConsumerClient;
 import ConsumerDummy.ConsumerClient;
+=======
+import ConsumerDummy.Client.Consumer;
+>>>>>>> dev
 import ProducerDummy.Client.AbstractClient;
 import ProducerDummy.Messages.AggregateMessage;
 import ProducerDummy.Messages.Hmac_Message;
@@ -11,19 +15,18 @@ import ProducerDummy.Messages.Message;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.DeliverCallback;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.TimeoutException;
 
-import static ConsumerDummy.AggregateConsumerClient.deserializeMessage;
 
+<<<<<<< HEAD
 public class ConsumerClientBlockchain extends ConsumerClient {
+=======
+public class ConsumerClientBlockchain extends Consumer {
+>>>>>>> dev
 
     private Blockchain<Integer, String> blockchain;
     private static String KEY = "0123456";
@@ -37,9 +40,13 @@ public class ConsumerClientBlockchain extends ConsumerClient {
      * @throws IOException if the file cannot be read
      */
     public ConsumerClientBlockchain(String host, int port, String username, String password, String queue_name) throws IOException {
+<<<<<<< HEAD
 
         super(host, port, username, password, queue_name);
+=======
+>>>>>>> dev
 
+        super(host, port, username, password, queue_name);
         this.blockchain = new Blockchain<>();
 
     }
@@ -62,7 +69,7 @@ public class ConsumerClientBlockchain extends ConsumerClient {
             AggregateMessage message;
 
             try {
-                message = (AggregateMessage) AggregateConsumerClient.deserializeMessage(delivery.getBody());
+                message = (AggregateMessage) deserialize(delivery.getBody());
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -78,7 +85,7 @@ public class ConsumerClientBlockchain extends ConsumerClient {
                 if (m instanceof Hmac_Message) {
                     Hmac_Message hmac_message = (Hmac_Message) m;
 
-                    if( !hmac_message.verifyMAC(ALGORITHM, KEY) ) {
+                    if (!hmac_message.verifyMAC(ALGORITHM, KEY)) {
                         throw new RuntimeException("Authentication of the message failed!");
                     }
                 }

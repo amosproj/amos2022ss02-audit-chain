@@ -10,14 +10,13 @@ import java.util.concurrent.TimeoutException;
  * Abstract class for Clients
  */
 abstract public class AbstractClient {
-    static int START_NUMBER = 0;
 
     protected String HOST;
     protected int PORT;
     protected String USER;
     protected String PASSWORD;
     protected String QUEUE_NAME;
-    protected ConnectionFactory factory = new ConnectionFactory();
+    public ConnectionFactory factory = new ConnectionFactory();
 
     /**
      * Constructor for Client.AbstractClient. Initializes the filepath, the file reader and set information for the
@@ -52,7 +51,6 @@ abstract public class AbstractClient {
     public void recoverLastState() {
         return;
     }
-
 
 
 }

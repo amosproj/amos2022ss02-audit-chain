@@ -1,7 +1,8 @@
 package ProducerDummy.Persistence;
 
-import ProducerDummy.Messages.JsonMessage;
-import ProducerDummy.Messages.Message;
+import ProducerDummy.Messages.*;
+import com.google.gson.Gson;
+import com.google.gson.*;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -16,6 +17,7 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
 
     protected Path filepath;
     protected FileWriter fileWriter;
+    protected Gson gson = new Gson();
 
     /**
      * Constructor for the FilePersistenceStrategy.
@@ -24,8 +26,8 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
      *
      * @throws IOException if the filepath is not valid
      */
-    public FilePersistenceStrategy(String path,String fileName) throws IOException {
-        this.filepath = Paths.get(System.getProperty("user.dir"), path, fileName);
+    public FilePersistenceStrategy(String path, String fileName) throws IOException {
+        this.filepath = Paths.get(path, fileName);
         this.CreatePersistenceMechanism();
     }
 
@@ -35,17 +37,18 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
      * @param message message to be stored as a string
      */
     @Override
-    public void StoreMessage(Message message) {
+    public void StoreMessage(Message message) throws NullPointerException {
         try {
             // Open FileWrite and overwrite last Messages.Message
             this.fileWriter = new FileWriter(filepath.toString());
-            this.fileWriter.write(message.getSequence_number() + "\r\n");
-            this.fileWriter.write(message.getMessage() + "\r\n");
-            this.fileWriter.close();
+            gson.toJson(message.toSimpleFormat(), fileWriter);
+            fileWriter.close();
+
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }catch (NullPointerException e){
+            throw new NullPointerException();
         }
-
 
     }
 
@@ -61,7 +64,7 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
             if (file.createNewFile()) {
                 System.out.println("File created: " + file.getName());
             } else {
-                System.out.println(String.format("File %s already exists",file.getName()));
+                System.out.println(String.format("File %s already exists", file.getName()));
 
             }
         } catch (IOException e) {
@@ -83,28 +86,62 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
         File file = new File(this.filepath.toString());
 
         try {
-            String next_line = null;
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String sequence_number = br.readLine();
-            String message = br.readLine();
-            if(sequence_number != null && message != null){
-                return new JsonMessage(Integer.parseInt(sequence_number), message);
-            }else{
-                //file empty
-                return null;
+            JsonElement jsonElement = JsonParser.parseReader(new FileReader(file));
+            //this should be the only valid state, since in the single Filemode only the last Message will be stored
+            if (jsonElement.isJsonObject()) {
+                // every Message consists of at least sequence_number and message_string
+                JsonObject jsonObject = jsonElement.getAsJsonObject();
+                String message_string = jsonObject.getAsJsonPrimitive(JsonMessage.MESSAGE_KEY).getAsString();
+                int sequence_number = jsonObject.getAsJsonPrimitive(JsonMessage.SEQUENCE_NUMBER).getAsInt();
+                // if there is a Hmac key we know it is a Hmac Message else it is just a normal Message
+                try {
+                    String hmac = jsonObject.getAsJsonPrimitive(Hmac_JsonMessage.HMAC_KEY).getAsString();
+                    return new Hmac_SimpleMessage(sequence_number, message_string, hmac);
+                } catch (NullPointerException e) {
+                    return new SimpleMessage(sequence_number, message_string);
+                }
+
             }
-        } catch (IOException e) {
-            // there are no values in the file or the file is missing therefore we never did send a Messages.Message to the Broker
+
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalStateException e) {
+            //thats means there is no message inside
             return null;
         }
+
+        return null;
     }
 
-    /**
-     * @return filepath as string
-     */
-    public String getFilePath() {
-        return this.filepath.toString();
+    @Override
+    public Path getFilePath() {
+        return this.filepath;
     }
+
+
+    @Override
+    public void cleanFile() {
+        try {
+            this.fileWriter.close();
+        } catch (IOException e) {
+            System.out.println("Already Closed");
+        }catch (NullPointerException e){
+            //happens iw storeMessage was never called --> File is closed
+        }
+
+        try {
+            PrintWriter pw = new PrintWriter(this.getFilePath().toString());
+            pw.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found, could not delete" + this.getFilePath().toString());
+            throw new RuntimeException(e);
+        }
+
+
+
+    }
+
 
 
 }

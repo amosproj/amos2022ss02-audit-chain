@@ -1,12 +1,14 @@
-package ConsumerDummy;
+package ConsumerDummy.Client;
 
 import ProducerDummy.Client.AbstractClient;
+
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.DeliverCallback;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -32,7 +34,7 @@ public class ConsumerClient extends AbstractClient {
         System.out.println("Starting to receive Messages.");
         Connection connection = this.factory.newConnection();
         Channel channel = connection.createChannel();
-        channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+        channel.queueDeclare(QUEUE_NAME, true, false, false, Map.of("x-queue-type", "quorum"));
 
         System.out.println(" [*] Waiting for messages.");
 

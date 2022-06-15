@@ -44,9 +44,11 @@ public abstract class AbstractBlock<T> {
 
     public T getTransaction () { return transaction; }
 
+
     public String calcHmacData () {
         return Hasher.hashSHA256(transaction.toString());
     }
+
 
     /**
      * Checks if the current block has been tempered or instead if it is still authentic.

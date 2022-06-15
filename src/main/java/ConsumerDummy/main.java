@@ -1,6 +1,10 @@
 package ConsumerDummy;
 
+
+
+
 import ProducerDummy.Client.AbstractClient;
+import ConsumerDummy.Client.AggregateConsumerClient;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -15,7 +19,6 @@ public class main {
 
         String filepath = Paths.get("src", "main", "resources","ConsumerDummy").toString();
         String filename = "config.properties";
-
         Path config_path = Paths.get(System.getProperty("user.dir"), filepath, filename);
         Properties p = new Properties();
         FileReader reader = new FileReader(config_path.toString());
@@ -29,7 +32,7 @@ public class main {
 
 
 
-        AbstractClient client = new AggregateConsumerClient(HOST,PORT,USER,PASSWORD,queue_name);
+        AggregateConsumerClient client = new AggregateConsumerClient(HOST,PORT,USER,PASSWORD,queue_name);
         client.start();
         return;
     }

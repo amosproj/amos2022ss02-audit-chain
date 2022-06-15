@@ -1,5 +1,6 @@
 package BlockchainImplementation.Blockchain.Blocks;
 
+import BlockchainImplementation.Blockchain.Blockchain;
 import BlockchainImplementation.Blockchain.Hashing.Hasher;
 
 import java.io.IOException;
@@ -70,6 +71,30 @@ public class Block<T,R> extends AbstractBlock<Map<String, SubBlock<T,R>>>{
         }
 
         return temperedTransaction;
+    }
+
+    @Override
+    public boolean equals (Object obj) {
+
+        if(!(obj instanceof Block))
+            return false;
+
+        Block<T, R> block = (Block<T, R>) obj;
+
+        if(!lastSubBlockHash.equals(block.getLastSubBlockHash()))
+            return false;
+
+        if(!hashBlock.equals(block.getHashBlock()))
+            return false;
+
+        if(!getPreviousHashBlock().equals(block.getPreviousHashBlock()))
+            return false;
+
+        for(String hash : this.transaction.keySet())
+            if(!this.transaction.get(hash).equals(block.transaction.get(hash)))
+                return false;
+
+        return true;
     }
 
 }
