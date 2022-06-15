@@ -37,7 +37,7 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
      * @param message message to be stored as a string
      */
     @Override
-    public void StoreMessage(Message message) {
+    public void StoreMessage(Message message) throws NullPointerException {
         try {
             // Open FileWrite and overwrite last Messages.Message
             this.fileWriter = new FileWriter(filepath.toString());
@@ -46,6 +46,8 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
 
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }catch (NullPointerException e){
+            throw new NullPointerException();
         }
 
     }
@@ -89,7 +91,7 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
             if (jsonElement.isJsonObject()) {
                 // every Message consists of at least sequence_number and message_string
                 JsonObject jsonObject = jsonElement.getAsJsonObject();
-                String message_string = jsonObject.getAsJsonPrimitive(JsonMessage.MESSAGE_KEY).toString();
+                String message_string = jsonObject.getAsJsonPrimitive(JsonMessage.MESSAGE_KEY).getAsString();
                 int sequence_number = jsonObject.getAsJsonPrimitive(JsonMessage.SEQUENCE_NUMBER).getAsInt();
                 // if there is a Hmac key we know it is a Hmac Message else it is just a normal Message
                 try {

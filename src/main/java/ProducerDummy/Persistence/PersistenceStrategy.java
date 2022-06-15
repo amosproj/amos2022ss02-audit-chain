@@ -13,7 +13,7 @@ public interface PersistenceStrategy {
      *
      * @param message message to be stored as a string
      */
-    public void StoreMessage(Message message);
+    public void StoreMessage(Message message) throws NullPointerException;
 
     /**
      * Create a persistence mechanism, e.g create the File or the Database.

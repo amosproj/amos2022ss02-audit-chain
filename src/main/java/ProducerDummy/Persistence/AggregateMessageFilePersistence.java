@@ -43,6 +43,8 @@ public class AggregateMessageFilePersistence extends FilePersistenceStrategy {
             fileWriter.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } catch (NullPointerException e){
+            throw new NullPointerException();
         }
 
 
@@ -64,7 +66,7 @@ public class AggregateMessageFilePersistence extends FilePersistenceStrategy {
                 for (int i = 1; i < jsonArray.size(); i++) {
                     JsonObject jsonObject = jsonArray.get(i-1).getAsJsonObject();
 
-                    String message_string = jsonObject.getAsJsonPrimitive(JsonMessage.MESSAGE_KEY).toString();
+                    String message_string = jsonObject.getAsJsonPrimitive(JsonMessage.MESSAGE_KEY).getAsString();
                     int sequence_number = jsonObject.getAsJsonPrimitive(JsonMessage.SEQUENCE_NUMBER).getAsInt();
                     // if there is a Hmac key we know it is a Hmac Message else it is just a normal Message
                     try {
@@ -80,6 +82,8 @@ public class AggregateMessageFilePersistence extends FilePersistenceStrategy {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }catch (NullPointerException e){
+            throw new NullPointerException();
         }
 
 
