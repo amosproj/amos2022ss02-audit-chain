@@ -13,6 +13,9 @@ import java.util.HashMap;
 import java.util.Map;
 import com.google.gson.Gson;
 
+import static java.nio.file.StandardOpenOption.CREATE;
+import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
+
 /**
  * Data structure that represents the blockchain. It contains a hashmap of Blocks in which transactions and their
  * meta_data are stored.
@@ -22,7 +25,7 @@ import com.google.gson.Gson;
  */
 public class Blockchain<T,R> implements BlockchainInterface<T,R> {
 
-    private final Map<String, Block<T,R>> blockchain; /** Map of blocks and their hash */
+    private Map<String, Block<T,R>> blockchain; /** Map of blocks and their hash */
     private String lastBlockHash; /** The hash of the last block of the blockchain */
 
     public Blockchain() {
@@ -82,38 +85,41 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
 
     public void blockchainToJson(){
         Gson gson = new Gson(); 
-        String jsonBlockchain = gson.toJson(this.blockchain); 
+        String jsonBlockchain = gson.toJson(this);
+        Path path = Paths.get("the-file-name.json");
+
         try{
-            Path path = Paths.get("the-file-name.json");
-            path = Files.writeString(path, jsonBlockchain, StandardCharsets.UTF_8);  
-            //in order to make the file secure against manipulation
-            //File content = path.toFile();
-            path.toFile().setReadOnly(); 
+            path = Files.writeString(path, jsonBlockchain, StandardCharsets.UTF_8, CREATE, TRUNCATE_EXISTING);
         } 
         catch(IOException e){//maybe we need to add an Exception e
-            System.out.println("Sorry, wrong path"); 
+            System.out.println("Sorry, wrong path");
         }
+
+//        path.toFile().setReadOnly(); //creates problems
     }
 
-     /* 
-    @Override
-    public void blockchainToJson(Path path){
+    public void jsonToBlockchain(Path path) {
+        Gson gson = new Gson();
+        Blockchain<T, R> blockchainFromJson = new Blockchain<>();
 
-    }
-    */
+        FileReader fileReader = null;
+        try {
 
-    public void jsonToBlockchain(Path path){
-        Gson gson = new Gson(); 
-        try (Reader reader = new FileReader(path.toFile())) {
+            fileReader = new FileReader(path.toFile());
 
             // Convert JSON File to Java Object
-            Blockchain<T, R> blockchain = gson.fromJson(reader, Blockchain.class);
-            //print
-            System.out.println(blockchain);
+            Object obj = gson.fromJson(fileReader, Blockchain.class);
+            blockchainFromJson = (Blockchain<T, R>) obj;
+
+            fileReader.close();
 
         } catch (IOException e) {
-            System.out.println("Sorry, wrong path - this means that the blockchain does not exist yet"); 
+            System.out.println("Blockchain does not exist yet or the path is wrong");
         }
+
+        this.blockchain = blockchainFromJson.blockchain;
+        this.lastBlockHash = blockchainFromJson.lastBlockHash;
+
     }
 
     @Override
