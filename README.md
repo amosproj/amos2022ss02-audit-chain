@@ -17,7 +17,7 @@ There is a central event queue, which records events and uses them for further a
  A sample of the interaction described above could be the following: <br />
  <br />
  
- ![modules](https://user-images.githubusercontent.com/104498986/171383351-c5bc80ac-5860-4bff-88d6-de2e91611ad5.png)
+ ![modules](https://user-images.githubusercontent.com/48165495/174449922-4773d975-2c8f-481a-bcdd-9f8192827f5d.png)
  <br />
 
 In our case, producer dummy (which would be represented by the FS-Filter and the IoT digital thermometer in the picture)  would create the events that are then stored in the central queue and from this one, our consumer dummy (so the data scanner and the audit protocol), would use them for further processing, like, also storing. 
@@ -32,7 +32,7 @@ Listed, are the next steps that we are further developing:
 **We have used the component diagram to show different parts of our code solution. Our code is basically composed of 3 major components:**
 - **Producer dummy** (client): which operates through the dependencies among its 3 sub-components database, data generator, and persistence mechanism (storage buffer). 
 When the producer dummy is triggered, the data generator catches data events (message) from the database and then forwards it to the client session and persistence mechanism. The persistence mechanism is a contingent component that stores the last data event and gets triggered in case of any failure.
-- **Rabbit MQ** (Event Queue): After the producer dummy successfully generates an event, it goes to rabbit MQ (event queue). Rabbit MQ is a 3rd party program that we are using as a component for queuing events. 
+- **Rabbit MQ** (Event Queue): After the producer dummy successfully generates an event, it goes to rabbit MQ (event queue). RabbitMQ is a 3rd party program that we are using as a component for queuing events. 
 - **Consumer dummy**: Lastly, after RabbitMQ queues events successfully, the data event moves to the consumer dummy. 
 
 **The folder structure is as follows:**
