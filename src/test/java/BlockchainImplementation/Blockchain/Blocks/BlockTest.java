@@ -76,7 +76,7 @@ public class BlockTest {
                 new String[]{"1","2","3"},
                 new String[]{"a","b","c"});
 
-        assertThat(block.getTemperedTransaction().size()).isEqualTo(0);
+        assertThat(block.getTemperedMessageIfAny().size()).isEqualTo(0);
 
     }
 
@@ -91,7 +91,7 @@ public class BlockTest {
 
         transactions.put(block.getLastSubBlockHash(), new SubBlock<>("0", "4", "d"));
 
-        List<SubBlock<String, String>> temperedTransaction = block.getTemperedTransaction();
+        List<SubBlock<String, String>> temperedTransaction = block.getTemperedMessageIfAny();
 
         assertThat(temperedTransaction.get(0)).isEqualTo(block.getTransaction().get(block.getLastSubBlockHash()));
 

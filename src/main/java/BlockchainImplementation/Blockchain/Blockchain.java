@@ -3,16 +3,12 @@ package BlockchainImplementation.Blockchain;
 import BlockchainImplementation.Blockchain.Blocks.Block;
 import BlockchainImplementation.Blockchain.Blocks.SubBlock;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.nio.file.Files;
 import java.util.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.Map;
 import com.google.gson.Gson;
@@ -69,9 +65,9 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
     }
 
     /**
-     * Checks if the blockchain has been tempered or instead if it is still authentic.
+     * Checks if the blockchain has tempered messages inside and returns a list of the involved subBlocks.
      *
-     * @return true if the blockchain is authentic, false otherwise
+     * @return a list of subBlocks with the tempered messages; the list is empty if there is none.
      */
     public List<SubBlock<T, R>> getTemperedMessageIfAny () {
 
@@ -79,7 +75,7 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
 
         for (Block<T,R> block : this.blockchain.values()) {
 
-            List<SubBlock<T, R>> tempered = block.getTemperedTransaction();
+            List<SubBlock<T, R>> tempered = block.getTemperedMessageIfAny();
 
             temperedMessage.addAll(tempered);
 
@@ -87,7 +83,7 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
 
         return temperedMessage;
     }
-    
+
     /**
      * Parses the blockchain and saves it in a JSON file. The file will be saved in the current directory.
      * If the path is not found, a message is shown.
