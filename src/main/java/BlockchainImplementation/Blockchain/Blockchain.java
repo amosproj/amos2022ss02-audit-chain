@@ -66,6 +66,8 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
 
     /**
      * Checks if the blockchain has tempered messages inside and returns a list of the involved subBlocks.
+     * If a Block does not correspond to the hash saved anymore its all subBlocks are considered tempered and get returned
+     * with other possible tempered subBlocks.
      *
      * @return a list of subBlocks with the tempered messages; the list is empty if there is none.
      */
@@ -73,16 +75,115 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
 
         List<SubBlock<T, R>> temperedMessage = new ArrayList<>();
 
-        for (Block<T,R> block : this.blockchain.values()) {
+        for(String hash : this.blockchain.keySet()) {
 
-            List<SubBlock<T, R>> tempered = block.getTemperedMessageIfAny();
+            List<SubBlock<T, R>> tempered = this.blockchain.get(hash).getTemperedMessageIfAny();
+
+            if(tempered.size() == 0)
+                if(!hash.equals(this.blockchain.get(hash).getHashBlock()))
+                    tempered.addAll(this.blockchain.get(hash).getTransaction().values());
 
             temperedMessage.addAll(tempered);
-
         }
 
         return temperedMessage;
     }
+
+    /**
+     * Checks if the blockchain contains a specific message and if it results as tempered or if one of its subBlocks
+     * do. If it is the case a list of the involved subBlocks is returned. If all the subBlocks result authentic but the
+     * hash of the block does not correspond with the one saved in the block or the one saved in the hashMap then the whole
+     * block is considered as tempered.
+     *
+     * @param meta_data the meta_data of the block to find
+     * @param content the content of the block to find
+     *
+     * @return a list of subBlocks that belongs to the block with that meta_data and content with the tempered messages;
+     *          the list is empty if none of its subBlocks result as tempered; The list is null if the block has not been found.
+     *
+     */
+    public List<SubBlock<T, R>> getTemperedMessageFromABlockIfAny (T[] meta_data, R[] content) {
+
+        List<SubBlock<T, R>> temperedMessage = null;
+
+        for(String hash : this.blockchain.keySet()) {
+
+            Block<T,R> b = this.blockchain.get(hash);
+
+            String prevHash = b.getPreviousHashBlock();
+            Block<T,R> block = new Block<>(prevHash, meta_data, content);
+
+            if(block.getHashBlock().equals(b.getHashBlock()) || block.getHashBlock().equals(hash)) {
+
+                temperedMessage = block.getTemperedMessageIfAny();
+
+                if(temperedMessage.size() == 0)
+                    if(!block.getHashBlock().equals(b.getHashBlock()) || !block.getHashBlock().equals(hash))
+                        temperedMessage.addAll(block.getTransaction().values());
+
+            }
+
+            break;
+        }
+
+        return temperedMessage;
+    }
+
+    /**
+     * Checks if the blockchain contains a specific message obtained from a file and if it results as tempered or if one of its subBlocks
+     * do. If it is the case a list of the involved subBlocks is returned. If all the subBlocks result authentic but the
+     * hash of the block does not correspond with the one saved in the block or the one saved in the hashMap then the whole
+     * block is considered as tempered.
+     *
+     * @param file the file which contains the data of the block to find.
+     *
+     * @return a list of subBlocks that belongs to the block with that meta_data and content with the tempered messages;
+     *          the list is empty if none of its subBlocks result as tempered; The list is null if the block has not been found.
+     *
+     */
+    public List<SubBlock<T, R>> getTemperedMessageFromABlockIfAny (File file) {
+
+        List<String> linesFromFile = Collections.emptyList();
+
+        try{
+            linesFromFile =  Files.readAllLines(file.toPath());
+        } catch (Exception e) {
+            System.out.println("File Not Found");
+        }
+
+        T[] meta_data = (T[]) new String[linesFromFile.size()/3];
+        R[] content = (R[]) new String[linesFromFile.size()/3];
+
+        for (int i = 0; i < linesFromFile.size(); i++)
+            if(i % 3 == 0)
+                meta_data[i] = (T) linesFromFile.get(i);
+            else
+                if(i % 3 == 1)
+                    content[i] = (R) linesFromFile.get(i);
+                else { /* hmacData useless now */ }
+
+        return getTemperedMessageFromABlockIfAny(meta_data, content);
+
+    }
+
+    /**
+     * Checks if the blockchain contains a specific message obtained from a file in a specific path and if it results as tempered or if one of its subBlocks
+     * do. If it is the case a list of the involved subBlocks is returned. If all the subBlocks result authentic but the
+     * hash of the block does not correspond with the one saved in the block or the one saved in the hashMap then the whole
+     * block is considered as tempered.
+     *
+     * @param path the path of the file which contains the data of the block to find.
+     *
+     * @return a list of subBlocks that belongs to the block with that meta_data and content with the tempered messages;
+     *          the list is empty if none of its subBlocks result as tempered; The list is null if the block has not been found.
+     *
+     */
+    public List<SubBlock<T, R>> getTemperedMessageFromABlockIfAny (String path) {
+
+        return getTemperedMessageFromABlockIfAny(new File(path));
+
+    }
+
 
     /**
      * Parses the blockchain and saves it in a JSON file. The file will be saved in the current directory.
