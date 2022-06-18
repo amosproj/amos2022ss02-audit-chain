@@ -51,7 +51,7 @@ public class Block<T,R> extends AbstractBlock<Map<String, SubBlock<T,R>>>{
      * The message is considered tempered if one of these condition is satisfied:
      * - the subBlock in which it is contained is not authentic
      * - the subBlock associated to the key in the hashmap, results to have a different hash when calculated again
-     * - the Block in which its subBlock is part results non-authentic (e.g. a non-authorized message has been added to the block)
+     * - the Block in which its subBlock is part results non-authentic (e.g. a non-authorized SubBlock (authentic) has been added to the block)
      *
      * @return a list of subBlocks with the tempered messages; the list is empty if there is none.
      */

@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -88,7 +89,7 @@ public class BlockchainTest {
 
     @Test
     @DisplayName("getTemperedMessageIfAny() over a tempered blockchain should return the List with subBlocks tempered")
-    public void getTemperedMessageIfAnyOverATemperedBlockchainShouldReturnFalse() {
+    public void getTemperedMessageIfAnyOverATemperedBlockchainShouldReturnListWithSubBlocksTempered() {
         Blockchain<String, String> blockchain = new Blockchain<>();
         blockchain.addABlock(new String[]{"1", "2", "3"},
                              new String[]{"a", "b", "c"});
@@ -106,6 +107,34 @@ public class BlockchainTest {
         List<SubBlock<String, String>> temperedTransaction = blockchain.getTemperedMessageIfAny();
 
         assertThat(temperedTransaction.get(0)).isEqualTo(last.getTransaction().get(last.getLastSubBlockHash()));
+
+    }
+
+    @Test
+    @DisplayName("getTemperedMessageIfAny() over a tempered blockchain in which a Block has had a non-authorized addition should return the list of its subBlocks")
+    public void getTemperedMessageIfAnyOverATemperedBlockchainInWhichABlockHadUnauthorizedAdditionShouldReturnAListWithItsSubblocks() {
+        Blockchain<String, String> blockchain = new Blockchain<>();
+        blockchain.addABlock(new String[]{"1", "2", "3"},
+                new String[]{"a", "b", "c"});
+
+        blockchain.addABlock(new String[]{"4", "5", "6"},
+                new String[]{"d", "e", "f"});
+
+        blockchain.addABlock(new String[]{"7", "8", "9"},
+                new String[]{"g", "h", "i"});
+
+        Block<String, String> last = blockchain.getBlockFromHash(blockchain.getLastBlockHash());
+        Map<String, SubBlock<String,String>> transactions = last.getTransaction();
+        SubBlock<String, String> subBlock = new SubBlock<>(last.getTransaction().get(last.getLastSubBlockHash()).getHashBlock(),
+                                                        "10", "l");
+        transactions.put(subBlock.getHashBlock(), subBlock);
+
+        List<SubBlock<String, String>> temperedTransaction = blockchain.getTemperedMessageIfAny();
+        List<SubBlock<String, String>> temperedTransaction2 = new ArrayList<>();
+
+        temperedTransaction2.addAll(last.getTransaction().values());
+
+        assertThat(temperedTransaction).isEqualTo(temperedTransaction2);
 
     }
 
