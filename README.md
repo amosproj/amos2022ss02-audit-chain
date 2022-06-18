@@ -33,7 +33,7 @@ Listed, are the next steps that we are further developing:
 - **Producer dummy** (client): which operates through the dependencies among its 3 sub-components database, data generator, and persistence mechanism (storage buffer). 
 When the producer dummy is triggered, the data generator catches data events (message) from the database and then forwards it to the client session and persistence mechanism. The persistence mechanism is a contingent component that stores the last data event and gets triggered in case of any failure.
 - **Rabbit MQ** (Event Queue): After the producer dummy successfully generates an event, it goes to rabbit MQ (event queue). Rabbit MQ is a 3rd party program that we are using as a component for queuing events. 
-- **Consumer dummy**: Lastly, after rabbit MQ queues events successfully, the data event moves to the consumer dummy. 
+- **Consumer dummy**: Lastly, after RabbitMQ queues events successfully, the data event moves to the consumer dummy. 
 
 **The folder structure is as follows:**
 - **/producer dummy/**: Generate JAVADOC
