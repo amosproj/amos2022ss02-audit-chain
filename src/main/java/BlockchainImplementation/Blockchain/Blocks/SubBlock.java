@@ -41,7 +41,7 @@ public class SubBlock<T,R> extends AbstractBlock<R>{
     public T getMeta_Data () { return meta_data; }
 
     /**
-     * @return the information of the SubBlock as [transaction;meta
+     * @return the information of the SubBlock as [transaction;meta]
      */
     @Override
     public String toString() {

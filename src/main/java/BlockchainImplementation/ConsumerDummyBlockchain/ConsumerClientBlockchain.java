@@ -1,13 +1,7 @@
 package BlockchainImplementation.ConsumerDummyBlockchain;
 
 import BlockchainImplementation.Blockchain.Blockchain;
-<<<<<<< HEAD
-import BlockchainImplementation.Blockchain.Blocks.Block;
-import ConsumerDummy.AggregateConsumerClient;
-import ConsumerDummy.ConsumerClient;
-=======
 import ConsumerDummy.Client.Consumer;
->>>>>>> dev
 import ProducerDummy.Client.AbstractClient;
 import ProducerDummy.Messages.AggregateMessage;
 import ProducerDummy.Messages.Hmac_Message;
@@ -21,12 +15,7 @@ import java.io.IOException;
 import java.util.Vector;
 import java.util.concurrent.TimeoutException;
 
-
-<<<<<<< HEAD
-public class ConsumerClientBlockchain extends ConsumerClient {
-=======
 public class ConsumerClientBlockchain extends Consumer {
->>>>>>> dev
 
     private Blockchain<Integer, String> blockchain;
     private static String KEY = "0123456";
@@ -40,11 +29,6 @@ public class ConsumerClientBlockchain extends Consumer {
      * @throws IOException if the file cannot be read
      */
     public ConsumerClientBlockchain(String host, int port, String username, String password, String queue_name) throws IOException {
-<<<<<<< HEAD
-
-        super(host, port, username, password, queue_name);
-=======
->>>>>>> dev
 
         super(host, port, username, password, queue_name);
         this.blockchain = new Blockchain<>();

@@ -109,7 +109,6 @@ public class BlockchainTest {
 
     }
 
-
     @Test
     @DisplayName("blockchainToJson() json comparison should return true")
     public void blockchainToJsonShouldReturnTrue() throws IOException {
@@ -148,9 +147,7 @@ public class BlockchainTest {
 
         Blockchain<String, String> blockchain2 = new Blockchain<>();
 
-        blockchain2.jsonToBlockchain(Paths.get("the-file-name.json"));
-
-        assertThat(blockchain).isEqualTo(blockchain2);
+        blockchain2.jsonToBlockchain(Paths.get("the-file-name.json"));assertThat(blockchain).isEqualTo(blockchain2);
     }
 
 }

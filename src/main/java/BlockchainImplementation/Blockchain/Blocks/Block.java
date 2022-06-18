@@ -4,10 +4,7 @@ import BlockchainImplementation.Blockchain.Blockchain;
 import BlockchainImplementation.Blockchain.Hashing.Hasher;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A Block is the unit of the blockchain. It contains the pointer to its previous block, a hashmap of data in which the
@@ -58,15 +55,15 @@ public class Block<T,R> extends AbstractBlock<Map<String, SubBlock<T,R>>>{
      * Moreover checks if every SubBlock is also authentic or not.
      *
      * @return true if the current block is authentic, false otherwise
+     *
      */
-
     public List<SubBlock<T, R>> getTemperedTransaction () {
 
         List<SubBlock<T, R>> temperedTransaction = new ArrayList<>();
 
-        for (SubBlock<T,R> subBlock : this.transaction.values()) {
-            if(!subBlock.isAuthentic()) {
-                temperedTransaction.add(subBlock);
+        for(String key : this.transaction.keySet()) {
+            if(!this.transaction.get(key).isAuthentic() || !(key.equals(this.transaction.get(key).hashBlock))) {
+                temperedTransaction.add(this.transaction.get(key));
             }
         }
 

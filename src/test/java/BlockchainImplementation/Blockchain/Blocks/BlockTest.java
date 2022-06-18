@@ -89,7 +89,7 @@ public class BlockTest {
 
         Map<String, SubBlock<String,String>> transactions = block.getTransaction();
 
-        transactions.put("0000000", block.getTransaction().get(block.getLastSubBlockHash()));
+        transactions.put(block.getLastSubBlockHash(), new SubBlock<>("0", "4", "d"));
 
         List<SubBlock<String, String>> temperedTransaction = block.getTemperedTransaction();
 
