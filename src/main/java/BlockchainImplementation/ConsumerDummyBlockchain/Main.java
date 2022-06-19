@@ -1,5 +1,6 @@
 package BlockchainImplementation.ConsumerDummyBlockchain;
 
+import ProducerDummy.Client.AbstractClient;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -10,10 +11,8 @@ import java.util.concurrent.TimeoutException;
 public class Main {
 
     public static void main(String[] args) throws IOException, TimeoutException {
-
-        String filepath = Paths.get("src", "main", "resources","ProducerDummy").toString();
+        String filepath = Paths.get("src", "main", "resources","BlockchainImplementation").toString();
         String filename = "config.properties";
-
 
         Path config_path = Paths.get(System.getProperty("user.dir"), filepath, filename);
         Properties p = new Properties();
@@ -26,8 +25,8 @@ public class Main {
         String PASSWORD = p.getProperty("PASSWORD");
         String queue_name = "FAKE";
 
+        AbstractClient client = new ConsumerClientBlockchain(HOST,PORT,USER,PASSWORD,queue_name);
 
-        ConsumerClientBlockchain client = new ConsumerClientBlockchain(HOST, PORT, USER, PASSWORD, queue_name);
         client.start();
         return;
 
