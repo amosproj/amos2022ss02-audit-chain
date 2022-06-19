@@ -2,10 +2,7 @@ package BlockchainImplementation.Blockchain;
 
 import BlockchainImplementation.Blockchain.Blocks.Block;
 import BlockchainImplementation.Blockchain.Blocks.SubBlock;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,12 +14,30 @@ import java.util.List;
 import java.util.Map;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class BlockchainTest {
+
+    private static Blockchain<String, String> setupBlockchain() {
+
+        Blockchain<String, String> blockchain = new Blockchain<>();
+        blockchain.addABlock(new String[]{"1", "2", "3"},
+                new String[]{"a", "b", "c"});
+
+        blockchain.addABlock(new String[]{"4", "5", "6"},
+                new String[]{"d", "e", "f"});
+
+        blockchain.addABlock(new String[]{"7", "8", "9"},
+                new String[]{"g", "h", "i"});
+
+        return blockchain;
+
+    }
 
     @AfterAll
     public static void cleanUp() throws IOException {
         Files.deleteIfExists(Paths.get("the-file-name.json"));
+        Files.deleteIfExists(Paths.get("test.txt"));
     }
 
     @Test
@@ -32,7 +47,6 @@ public class BlockchainTest {
 
         assertThat(blockchain.getLastBlockHash()).isEqualTo("0");
     }
-
 
 
     @Test
@@ -48,15 +62,8 @@ public class BlockchainTest {
     @Test
     @DisplayName("Hash of the blocks in the blockchain should allow to find them starting from the last block hash")
     public void hashBlocksInBlockchainShouldAllowToFindThemStartingFromLastBlockHash() {
-        Blockchain<String, String> blockchain = new Blockchain<>();
-        blockchain.addABlock(new String[]{"1", "2", "3"},
-                             new String[]{"a", "b", "c"});
 
-        blockchain.addABlock(new String[]{"4", "5", "6"},
-                             new String[]{"d", "e", "f"});
-
-        blockchain.addABlock(new String[]{"7", "8", "9"},
-                             new String[]{"g", "h", "i"});
+        Blockchain<String, String> blockchain = setupBlockchain();
 
         String lastHashBlock = blockchain.getLastBlockHash();
         Block<String, String> third = blockchain.getBlockFromHash(lastHashBlock);
@@ -73,15 +80,8 @@ public class BlockchainTest {
     @Test
     @DisplayName("getTemperedMessageIfAny() over a unchanged blockchain should return an empty List")
     public void getTemperedMessageIfAnyOverAUnchangedBlockchainShouldReturnAnEmptyList() {
-        Blockchain<String, String> blockchain = new Blockchain<>();
-        blockchain.addABlock(new String[]{"1", "2", "3"},
-                new String[]{"a", "b", "c"});
 
-        blockchain.addABlock(new String[]{"4", "5", "6"},
-                new String[]{"d", "e", "f"});
-
-        blockchain.addABlock(new String[]{"7", "8", "9"},
-                new String[]{"g", "h", "i"});
+        Blockchain<String, String> blockchain = setupBlockchain();
 
         assertThat(blockchain.getTemperedMessageIfAny().size()).isEqualTo(0);
 
@@ -90,15 +90,7 @@ public class BlockchainTest {
     @Test
     @DisplayName("getTemperedMessageIfAny() over a tempered blockchain should return the List with subBlocks tempered")
     public void getTemperedMessageIfAnyOverATemperedBlockchainShouldReturnListWithSubBlocksTempered() {
-        Blockchain<String, String> blockchain = new Blockchain<>();
-        blockchain.addABlock(new String[]{"1", "2", "3"},
-                             new String[]{"a", "b", "c"});
-
-        blockchain.addABlock(new String[]{"4", "5", "6"},
-                           new String[]{"d", "e", "f"});
-
-        blockchain.addABlock(new String[]{"7", "8", "9"},
-                            new String[]{"g", "h", "i"});
+        Blockchain<String, String> blockchain = setupBlockchain();
 
         Block<String, String> last = blockchain.getBlockFromHash(blockchain.getLastBlockHash());
         Map<String, SubBlock<String,String>> transactions = last.getTransaction();
@@ -113,15 +105,7 @@ public class BlockchainTest {
     @Test
     @DisplayName("getTemperedMessageIfAny() over a tempered blockchain in which a Block has had a non-authorized addition should return the list of its subBlocks")
     public void getTemperedMessageIfAnyOverATemperedBlockchainInWhichABlockHadUnauthorizedAdditionShouldReturnAListWithItsSubblocks() {
-        Blockchain<String, String> blockchain = new Blockchain<>();
-        blockchain.addABlock(new String[]{"1", "2", "3"},
-                new String[]{"a", "b", "c"});
-
-        blockchain.addABlock(new String[]{"4", "5", "6"},
-                new String[]{"d", "e", "f"});
-
-        blockchain.addABlock(new String[]{"7", "8", "9"},
-                new String[]{"g", "h", "i"});
+        Blockchain<String, String> blockchain = setupBlockchain();
 
         Block<String, String> last = blockchain.getBlockFromHash(blockchain.getLastBlockHash());
         Map<String, SubBlock<String,String>> transactions = last.getTransaction();
@@ -139,19 +123,338 @@ public class BlockchainTest {
     }
 
     @Test
+    @DisplayName("getTemperedMessageFromABlockIfAny() passing a block not in the blockchain should return null ")
+    public void getTemperedMessageFromABlockIfAnyPassingABlockNotInTheBlockchainShouldReturnNull() {
+
+        Blockchain<String, String> blockchain = setupBlockchain();
+
+        List<SubBlock<String, String>> temperedTransaction = blockchain.
+                getTemperedMessageFromABlockIfAny(new String[]{"0", "2", "3"},new String[]{"a", "b", "c"});
+
+        assertThat(temperedTransaction).isNull();
+
+    }
+
+    @Test
+    @DisplayName("getTemperedMessageFromABlockIfAny() passing a non tempered block in a tempered (other blocks) blockchain should return empty list ")
+    public void getTemperedMessageFromABlockIfAnyPassingANonTemperedBlockInTemperedBlockchainShouldReturnEmptyList() {
+
+        Blockchain<String, String> blockchain = setupBlockchain();
+
+        Block<String, String> last = blockchain.getBlockFromHash(blockchain.getLastBlockHash());
+        Map<String, SubBlock<String,String>> transactions = last.getTransaction();
+        transactions.put(last.getLastSubBlockHash(), new SubBlock<>("dasdasd", "9", "i"));
+
+
+        List<SubBlock<String, String>> temperedTransaction = blockchain.
+                getTemperedMessageFromABlockIfAny(new String[]{"1", "2", "3"},new String[]{"a", "b", "c"});
+
+        assertThat(temperedTransaction.size()).isEqualTo(0);
+
+    }
+
+    @Test
+    @DisplayName("getTemperedMessageFromABlockIfAny() passing a non tempered block in a tempered (previous blocks) blockchain should return empty list ")
+    public void getTemperedMessageFromABlockIfAnyPassingANonTemperedBlockInTemperedBlockchainShouldReturnEmptyList2() {
+
+        Blockchain<String, String> blockchain = setupBlockchain();
+
+        Block<String, String> last = blockchain.getBlockFromHash(
+                                    blockchain.getBlockFromHash(blockchain.getLastBlockHash()).getPreviousHashBlock());
+        Map<String, SubBlock<String,String>> transactions = last.getTransaction();
+        transactions.put(last.getLastSubBlockHash(), new SubBlock<>("dasdasd", "6", "f"));
+
+
+        List<SubBlock<String, String>> temperedTransaction = blockchain.
+                getTemperedMessageFromABlockIfAny(new String[]{"7", "8", "9"},new String[]{"g", "h", "i"});
+
+        assertThat(temperedTransaction.size()).isEqualTo(0);
+
+    }
+
+    @Test
+    @DisplayName("getTemperedMessageFromABlockIfAny() passing a tempered block in a tempered blockchain should return tempered SubBlock ")
+    public void getTemperedMessageFromABlockIfAnyPassingATemperedBlockInTemperedBlockchainShouldReturnTemperedSubBlock() {
+
+        Blockchain<String, String> blockchain = setupBlockchain();
+
+        Block<String, String> last = blockchain.getBlockFromHash(
+                blockchain.getBlockFromHash(blockchain.getLastBlockHash()).getPreviousHashBlock());
+        Map<String, SubBlock<String,String>> transactions = last.getTransaction();
+        transactions.put(last.getLastSubBlockHash(), new SubBlock<>("dasdasd", "6", "f"));
+
+
+        List<SubBlock<String, String>> temperedTransaction = blockchain.
+                getTemperedMessageFromABlockIfAny(new String[]{"4", "5", "6"},new String[]{"d", "e", "f"});
+
+        SubBlock<String, String> supposedResult = new SubBlock<>("dasdasd", "6", "f");
+
+        assertAll (
+            () -> assertThat(temperedTransaction.get(0)).isEqualTo(supposedResult),
+            () -> assertThat(temperedTransaction.size()).isEqualTo(1)
+        );
+
+    }
+
+    @Test
+    @DisplayName("getTemperedMessageFromABlockIfAny() passing a complete tempered block in a tempered blockchain should return all its SubBlock ")
+    public void getTemperedMessageFromABlockIfAnyPassingACompleteTemperedBlockInTemperedBlockchainShouldReturnAllItsSubBlock() {
+
+        Blockchain<String, String> blockchain = setupBlockchain();
+
+        Block<String, String> last = blockchain.getBlockFromHash(
+                blockchain.getBlockFromHash(blockchain.getLastBlockHash()).getPreviousHashBlock());
+        Map<String, SubBlock<String,String>> transactions = last.getTransaction();
+        SubBlock<String, String> unauthorized = new SubBlock<>(last.getLastSubBlockHash(), "7", "g");
+        transactions.put(unauthorized.getHashBlock(), unauthorized);
+
+
+        List<SubBlock<String, String>> temperedTransaction = blockchain.
+                getTemperedMessageFromABlockIfAny(new String[]{"4", "5", "6"},new String[]{"d", "e", "f"});
+
+        List<SubBlock<String, String>> supposedResult = new ArrayList<>();
+
+        for(String key : transactions.keySet())
+            supposedResult.add(transactions.get(key));
+
+        assertAll (
+                () -> assertThat(temperedTransaction).isEqualTo(supposedResult),
+                () -> assertThat(temperedTransaction.size()).isEqualTo(4)
+        );
+
+    }
+
+    @Test
+    @DisplayName("getTemperedMessageFromABlockIfAny() passing a block from a File not in the blockchain should return null ")
+    public void getTemperedMessageFromABlockIfAnyPassingABlockFromAFileNotInTheBlockchainShouldReturnNull() throws IOException {
+
+        Files.writeString(Path.of("test.txt"), "0\na\nuseless\n2\nb\nuseless\n3\nc\nuseless");
+
+        Blockchain<String, String> blockchain = setupBlockchain();
+
+        List<SubBlock<String, String>> temperedTransaction = blockchain.
+                getTemperedMessageFromABlockIfAny(new File("test.txt"));
+
+        assertThat(temperedTransaction).isNull();
+
+    }
+
+    @Test
+    @DisplayName("getTemperedMessageFromABlockIfAny() passing a non tempered block from a File in a tempered (other blocks) blockchain should return empty list ")
+    public void getTemperedMessageFromABlockIfAnyPassingANonTemperedBlockFromAFileInTemperedBlockchainShouldReturnEmptyList() throws IOException {
+
+        Files.writeString(Path.of("test.txt"), "1\na\nuseless\n2\nb\nuseless\n3\nc\nuseless");
+
+        Blockchain<String, String> blockchain = setupBlockchain();
+
+        Block<String, String> last = blockchain.getBlockFromHash(blockchain.getLastBlockHash());
+        Map<String, SubBlock<String,String>> transactions = last.getTransaction();
+        transactions.put(last.getLastSubBlockHash(), new SubBlock<>("dasdasd", "9", "i"));
+
+
+        List<SubBlock<String, String>> temperedTransaction = blockchain.
+                getTemperedMessageFromABlockIfAny(new File("test.txt"));
+
+        assertThat(temperedTransaction.size()).isEqualTo(0);
+
+    }
+
+    @Test
+    @DisplayName("getTemperedMessageFromABlockIfAny() passing a non tempered block from a File in a tempered (previous blocks) blockchain should return empty list ")
+    public void getTemperedMessageFromABlockIfAnyPassingANonTemperedBlockFromAFileInTemperedBlockchainShouldReturnEmptyList2() throws IOException {
+
+        Files.writeString(Path.of("test.txt"), "7\ng\nuseless\n8\nh\nuseless\n9\ni\nuseless");
+
+        Blockchain<String, String> blockchain = setupBlockchain();
+
+        Block<String, String> last = blockchain.getBlockFromHash(
+                blockchain.getBlockFromHash(blockchain.getLastBlockHash()).getPreviousHashBlock());
+        Map<String, SubBlock<String,String>> transactions = last.getTransaction();
+        transactions.put(last.getLastSubBlockHash(), new SubBlock<>("dasdasd", "6", "f"));
+
+
+        List<SubBlock<String, String>> temperedTransaction = blockchain.
+                getTemperedMessageFromABlockIfAny(new File("test.txt"));
+
+        assertThat(temperedTransaction.size()).isEqualTo(0);
+
+    }
+
+    @Test
+    @DisplayName("getTemperedMessageFromABlockIfAny() passing a tempered block from a File in a tempered blockchain should return tempered SubBlock ")
+    public void getTemperedMessageFromABlockIfAnyPassingATemperedBlockFromAFileInTemperedBlockchainShouldReturnTemperedSubBlock() throws IOException {
+
+        Files.writeString(Path.of("test.txt"), "4\nd\nuseless\n5\ne\nuseless\n6\nf\nuseless");
+
+        Blockchain<String, String> blockchain = setupBlockchain();
+
+        Block<String, String> last = blockchain.getBlockFromHash(
+                blockchain.getBlockFromHash(blockchain.getLastBlockHash()).getPreviousHashBlock());
+        Map<String, SubBlock<String,String>> transactions = last.getTransaction();
+        transactions.put(last.getLastSubBlockHash(), new SubBlock<>("dasdasd", "6", "f"));
+
+
+        List<SubBlock<String, String>> temperedTransaction = blockchain.
+                getTemperedMessageFromABlockIfAny(new File("test.txt"));
+
+        SubBlock<String, String> supposedResult = new SubBlock<>("dasdasd", "6", "f");
+
+        assertAll (
+                () -> assertThat(temperedTransaction.get(0)).isEqualTo(supposedResult),
+                () -> assertThat(temperedTransaction.size()).isEqualTo(1)
+        );
+
+    }
+
+    @Test
+    @DisplayName("getTemperedMessageFromABlockIfAny() passing a complete tempered block from a File in a tempered blockchain should return all its SubBlock ")
+    public void getTemperedMessageFromABlockIfAnyPassingACompleteTemperedBlockFromAFileInTemperedBlockchainShouldReturnAllItsSubBlock() throws IOException {
+
+        Files.writeString(Path.of("test.txt"), "4\nd\nuseless\n5\ne\nuseless\n6\nf\nuseless");
+
+        Blockchain<String, String> blockchain = setupBlockchain();
+
+        Block<String, String> last = blockchain.getBlockFromHash(
+                blockchain.getBlockFromHash(blockchain.getLastBlockHash()).getPreviousHashBlock());
+        Map<String, SubBlock<String,String>> transactions = last.getTransaction();
+        SubBlock<String, String> unauthorized = new SubBlock<>(last.getLastSubBlockHash(), "7", "g");
+        transactions.put(unauthorized.getHashBlock(), unauthorized);
+
+
+        List<SubBlock<String, String>> temperedTransaction = blockchain.
+                getTemperedMessageFromABlockIfAny(new File("test.txt"));
+
+        List<SubBlock<String, String>> supposedResult = new ArrayList<>();
+
+        for(String key : transactions.keySet())
+            supposedResult.add(transactions.get(key));
+
+        assertAll (
+                () -> assertThat(temperedTransaction).isEqualTo(supposedResult),
+                () -> assertThat(temperedTransaction.size()).isEqualTo(4)
+        );
+
+    }
+
+    @Test
+    @DisplayName("getTemperedMessageFromABlockIfAny() passing a block from a File Path not in the blockchain should return null ")
+    public void getTemperedMessageFromABlockIfAnyPassingABlockFromAFilePathNotInTheBlockchainShouldReturnNull() throws IOException {
+
+        Files.writeString(Path.of("test.txt"), "0\na\nuseless\n2\nb\nuseless\n3\nc\nuseless");
+
+        Blockchain<String, String> blockchain = setupBlockchain();
+
+        List<SubBlock<String, String>> temperedTransaction = blockchain.
+                getTemperedMessageFromABlockIfAny("test.txt");
+
+        assertThat(temperedTransaction).isNull();
+
+    }
+
+    @Test
+    @DisplayName("getTemperedMessageFromABlockIfAny() passing a non tempered block from a File Path in a tempered (other blocks) blockchain should return empty list ")
+    public void getTemperedMessageFromABlockIfAnyPassingANonTemperedBlockFromAFilePathInTemperedBlockchainShouldReturnEmptyList() throws IOException {
+
+        Files.writeString(Path.of("test.txt"), "1\na\nuseless\n2\nb\nuseless\n3\nc\nuseless");
+
+        Blockchain<String, String> blockchain = setupBlockchain();
+
+        Block<String, String> last = blockchain.getBlockFromHash(blockchain.getLastBlockHash());
+        Map<String, SubBlock<String,String>> transactions = last.getTransaction();
+        transactions.put(last.getLastSubBlockHash(), new SubBlock<>("dasdasd", "9", "i"));
+
+
+        List<SubBlock<String, String>> temperedTransaction = blockchain.
+                getTemperedMessageFromABlockIfAny("test.txt");
+
+        assertThat(temperedTransaction.size()).isEqualTo(0);
+
+    }
+
+    @Test
+    @DisplayName("getTemperedMessageFromABlockIfAny() passing a non tempered block from a File Path in a tempered (previous blocks) blockchain should return empty list ")
+    public void getTemperedMessageFromABlockIfAnyPassingANonTemperedBlockFromAFilePathInTemperedBlockchainShouldReturnEmptyList2() throws IOException {
+
+        Files.writeString(Path.of("test.txt"), "7\ng\nuseless\n8\nh\nuseless\n9\ni\nuseless");
+
+        Blockchain<String, String> blockchain = setupBlockchain();
+
+        Block<String, String> last = blockchain.getBlockFromHash(
+                blockchain.getBlockFromHash(blockchain.getLastBlockHash()).getPreviousHashBlock());
+        Map<String, SubBlock<String,String>> transactions = last.getTransaction();
+        transactions.put(last.getLastSubBlockHash(), new SubBlock<>("dasdasd", "6", "f"));
+
+
+        List<SubBlock<String, String>> temperedTransaction = blockchain.
+                getTemperedMessageFromABlockIfAny("test.txt");
+
+        assertThat(temperedTransaction.size()).isEqualTo(0);
+
+    }
+
+    @Test
+    @DisplayName("getTemperedMessageFromABlockIfAny() passing a tempered block from a File Path in a tempered blockchain should return tempered SubBlock ")
+    public void getTemperedMessageFromABlockIfAnyPassingATemperedBlockFromAFilePathInTemperedBlockchainShouldReturnTemperedSubBlock() throws IOException {
+
+        Files.writeString(Path.of("test.txt"), "4\nd\nuseless\n5\ne\nuseless\n6\nf\nuseless");
+
+        Blockchain<String, String> blockchain = setupBlockchain();
+
+        Block<String, String> last = blockchain.getBlockFromHash(
+                blockchain.getBlockFromHash(blockchain.getLastBlockHash()).getPreviousHashBlock());
+        Map<String, SubBlock<String,String>> transactions = last.getTransaction();
+        transactions.put(last.getLastSubBlockHash(), new SubBlock<>("dasdasd", "6", "f"));
+
+
+        List<SubBlock<String, String>> temperedTransaction = blockchain.
+                getTemperedMessageFromABlockIfAny("test.txt");
+
+        SubBlock<String, String> supposedResult = new SubBlock<>("dasdasd", "6", "f");
+
+        assertAll (
+                () -> assertThat(temperedTransaction.get(0)).isEqualTo(supposedResult),
+                () -> assertThat(temperedTransaction.size()).isEqualTo(1)
+        );
+
+    }
+
+    @Test
+    @DisplayName("getTemperedMessageFromABlockIfAny() passing a complete tempered block from a File Path in a tempered blockchain should return all its SubBlock ")
+    public void getTemperedMessageFromABlockIfAnyPassingACompleteTemperedBlockFromAFilePathInTemperedBlockchainShouldReturnAllItsSubBlock() throws IOException {
+
+        Files.writeString(Path.of("test.txt"), "4\nd\nuseless\n5\ne\nuseless\n6\nf\nuseless");
+
+        Blockchain<String, String> blockchain = setupBlockchain();
+
+        Block<String, String> last = blockchain.getBlockFromHash(
+                blockchain.getBlockFromHash(blockchain.getLastBlockHash()).getPreviousHashBlock());
+        Map<String, SubBlock<String,String>> transactions = last.getTransaction();
+        SubBlock<String, String> unauthorized = new SubBlock<>(last.getLastSubBlockHash(), "7", "g");
+        transactions.put(unauthorized.getHashBlock(), unauthorized);
+
+
+        List<SubBlock<String, String>> temperedTransaction = blockchain.
+                getTemperedMessageFromABlockIfAny("test.txt");
+
+        List<SubBlock<String, String>> supposedResult = new ArrayList<>();
+
+        for(String key : transactions.keySet())
+            supposedResult.add(transactions.get(key));
+
+        assertAll (
+                () -> assertThat(temperedTransaction).isEqualTo(supposedResult),
+                () -> assertThat(temperedTransaction.size()).isEqualTo(4)
+        );
+
+    }
+
+
+    @Test
     @DisplayName("blockchainToJson() json comparison should return true")
     public void blockchainToJsonShouldReturnTrue() throws IOException {
-        Blockchain<String, String> blockchain = new Blockchain<>();
-        blockchain.addABlock(new String[]{"1", "2", "3"},
-                             new String[]{"a", "b", "c"});
+        Blockchain<String, String> blockchain = setupBlockchain();
 
-        blockchain.addABlock(new String[]{"4", "5", "6"},
-                             new String[]{"d", "e", "f"});
-
-        blockchain.addABlock(new String[]{"7", "8", "9"},
-                             new String[]{"g", "h", "i"});
-
-        blockchain.blockchainToJson();
+        blockchain.blockchainToJson("the-file-name.json");
         String fileAlist = Files.readString(Paths.get("the-file-name.json"));
 
         String fileString = fileAlist.toString();
@@ -163,16 +466,9 @@ public class BlockchainTest {
     @Test
     @DisplayName("jsonToBlockchain() blockchain object comparison should return true")
     public void jsonToBlockchainShouldReturnTrue() {
-        Blockchain<String, String> blockchain = new Blockchain<>();
-        blockchain.addABlock(new String[]{"1", "2", "3"},
-                new String[]{"a", "b", "c"});
+        Blockchain<String, String> blockchain = setupBlockchain();
 
-        blockchain.addABlock(new String[]{"4", "5", "6"},
-                new String[]{"d", "e", "f"});
-
-        blockchain.addABlock(new String[]{"7", "8", "9"},
-                new String[]{"g", "h", "i"});
-        blockchain.blockchainToJson();
+        blockchain.blockchainToJson("the-file-name.json");
 
         Blockchain<String, String> blockchain2 = new Blockchain<>();
 

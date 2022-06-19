@@ -115,15 +115,15 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
 
             if(block.getHashBlock().equals(b.getHashBlock()) || block.getHashBlock().equals(hash)) {
 
-                temperedMessage = block.getTemperedMessageIfAny();
+                temperedMessage = b.getTemperedMessageIfAny();
 
                 if(temperedMessage.size() == 0)
                     if(!block.getHashBlock().equals(b.getHashBlock()) || !block.getHashBlock().equals(hash))
-                        temperedMessage.addAll(block.getTransaction().values());
+                        temperedMessage.addAll(b.getTransaction().values());
 
+                break;
             }
 
-            break;
         }
 
         return temperedMessage;
@@ -134,6 +134,10 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
      * do. If it is the case a list of the involved subBlocks is returned. If all the subBlocks result authentic but the
      * hash of the block does not correspond with the one saved in the block or the one saved in the hashMap then the whole
      * block is considered as tempered.
+     *
+     * The file has to be of a specific type such that the first line is the meta_data of the first message,
+     * the second line is the content of the first message and third line is the hmac of the first message, then this
+     * is repeated for the second message and so on.
      *
      * @param file the file which contains the data of the block to find.
      *
@@ -156,10 +160,10 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
 
         for (int i = 0; i < linesFromFile.size(); i++)
             if(i % 3 == 0)
-                meta_data[i] = (T) linesFromFile.get(i);
+                meta_data[i/3] = (T) linesFromFile.get(i);
             else
                 if(i % 3 == 1)
-                    content[i] = (R) linesFromFile.get(i);
+                    content[i/3] = (R) linesFromFile.get(i);
                 else { /* hmacData useless now */ }
 
         return getTemperedMessageFromABlockIfAny(meta_data, content);
@@ -171,6 +175,10 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
      * do. If it is the case a list of the involved subBlocks is returned. If all the subBlocks result authentic but the
      * hash of the block does not correspond with the one saved in the block or the one saved in the hashMap then the whole
      * block is considered as tempered.
+     *
+     * The file has to be of a specific type such that the first line is the meta_data of the first message,
+     * the second line is the content of the first message and third line is the hmac of the first message, then this
+     * is repeated for the second message and so on.
      *
      * @param path the path of the file which contains the data of the block to find.
      *
@@ -189,13 +197,13 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
      * Parses the blockchain and saves it in a JSON file. The file will be saved in the current directory.
      * If the path is not found, a message is shown.
      */
-    public void blockchainToJson(){
+    public void blockchainToJson(String path) {
         Gson gson = new Gson(); 
         String jsonBlockchain = gson.toJson(this);
-        Path path = Paths.get("the-file-name.json");
+        Path pathP = Paths.get(path);
 
         try{
-            path = Files.writeString(path, jsonBlockchain, StandardCharsets.UTF_8, CREATE, TRUNCATE_EXISTING);
+            pathP = Files.writeString(pathP, jsonBlockchain, StandardCharsets.UTF_8, CREATE, TRUNCATE_EXISTING);
         } 
         catch(IOException e){//maybe we need to add an Exception e
             System.out.println("Sorry, wrong path");
@@ -254,120 +262,5 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
 
         return true;
     }
-
-    //    /**
-//     * Checks if a given block under the form of a File is inside the blockchain and has been tempered.
-//     * It does this by highlighting all possible tempered (suspicious) blocks. A block is highlighted if something inside it
-//     * is not authentic with at least more than one transaction in common with the file given. Then the block chosen
-//     * (amond the highlighted ones) is the one with the highest number of transactions in common with the file.
-//     * In the end this one is again analyzed and only its messages (as SubBlocks) that resulted as tempered are returned
-//     * as a list.
-//     *
-//     * @param file the block to check under the form of a file
-//     *
-//     * @return a list of the messages that have been tempered
-//     * @return null if the file is authentic or not found in the blockchain (so even though a block was suspicious,
-//     *        there were 0 transactions in common with the one in the file) or if the file resulted as tempered but not
-//     *        its content
-//     *
-//     */
-//    public List<SubBlock<T,R>> getTemperedMessageIfAnyFromAFile(File file)  {
-//
-//        Block<T, R> block = fromFileToBlock(file);
-//        String hmacData = block.calcHmacData();
-//
-//        List<Object[]> possibleTemperedBlocks = new ArrayList<>();
-//
-//        Block<T, R> lastBlock = getBlockFromHash(lastBlockHash);
-//
-//        while(!lastBlock.getPreviousHashBlock().equals("0")) {
-//
-//            if(!lastBlock.isBlockAuthentic()) {
-//
-//                if(hmacData.equals(lastBlock.calcHmacData())) {
-//                    return null; //file content is authentic but its hash do not correspond with the one in the blockchain
-//                } else {
-//
-//                    int similarTransactions = howManySimilarTransaction(block, lastBlock);
-//
-//                    if(similarTransactions > 0) {
-//                        //not authentic
-//
-//                        possibleTemperedBlocks.add(new Object[]{similarTransactions, lastBlock});
-//
-//                    }
-//                }
-//
-//            }
-//
-//            lastBlock = getBlockFromHash(lastBlock.getPreviousHashBlock());
-//
-//        }
-//
-//        if(possibleTemperedBlocks.size() == 0) {
-//            return null; //file was not found in the blockchain
-//        }
-//
-//        Object[] max = Collections.max(possibleTemperedBlocks, Comparator.comparingInt(o -> (int) o[0])); //find the block with the most similar transactions
-//        Block<T,R> temperedBlock =  (Block<T, R>) max[1];
-//
-//        return getTemperedMessageFromBlock(block, temperedBlock);
-//
-//    }
-//
-//    private Block<T, R> fromFileToBlock (File file) {
-//
-//        List<String> result = Collections.emptyList();
-//
-//        try{
-//            result =  Files.readAllLines(file.toPath());
-//        } catch (Exception e) {
-//            System.out.println("File Not Found");
-//        }
-//
-//        T[] meta_data = (T[]) new String[result.size()];
-//        R[] content = (R[]) new String[result.size()];
-//
-//        for (int i = 0; i < result.size(); i++)
-//            if(i % 2 == 0)
-//                meta_data[i] = (T) result.get(i);
-//            else
-//                content[i] = (R) result.get(i);
-//
-//        Block<T, R> block = new Block<>("0", meta_data, content);
-//
-//        return block;
-//
-//    }
-//
-//    private int howManySimilarTransaction (Block<T, R> block1, Block<T, R> block2) {
-//
-//        int counter = 0;
-//
-//        for(String hash : block1.getTransaction().keySet()) {
-//            if(block2.getTransaction().get(hash) != null) {
-//                counter++;
-//            }
-//        }
-//
-//        return counter;
-//
-//    }
-//
-//    private List<SubBlock<T,R>> getTemperedMessageFromBlock (Block<T, R> block, Block<T, R> temperedBlock) {
-//
-//        List<SubBlock<T,R>> temperedSubBlocks = new ArrayList<>();
-//
-//        for(String temperedSubBlockHash : temperedBlock.getTransaction().keySet()) {
-//            if(block.getTransaction().get(temperedSubBlockHash) == null ) {
-//                temperedSubBlocks.add(temperedBlock.getTransaction().get(temperedSubBlockHash));
-//            } else {
-//                if(!block.getTransaction().get(temperedSubBlockHash).isBlockAuthentic())
-//                    temperedSubBlocks.add(temperedBlock.getTransaction().get(temperedSubBlockHash));
-//            }
-//        }
-//
-//        return temperedSubBlocks;
-//    }
 
 }
