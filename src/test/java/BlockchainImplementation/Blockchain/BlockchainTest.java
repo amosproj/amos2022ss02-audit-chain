@@ -15,6 +15,7 @@ import java.util.Map;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class BlockchainTest {
 
@@ -84,6 +85,16 @@ public class BlockchainTest {
         Blockchain<String, String> blockchain = setupBlockchain();
 
         assertThat(blockchain.getTemperedMessageIfAny().size()).isEqualTo(0);
+
+    }
+
+    @Test
+    @DisplayName("getTemperedMessageIfAny() putting a Illegal Interval should throw IllegalArgumentException")
+    public void getTemperedMessageIfAnyPuttingAIllegalIntervalShouldThrowIllegalArgumentException() {
+
+        Blockchain<String, String> blockchain = setupBlockchain();
+
+        assertThrows(IllegalArgumentException.class, () -> blockchain.getTemperedMessageIfAny("0",blockchain.getLastBlockHash()));
 
     }
 
