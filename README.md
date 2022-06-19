@@ -1,8 +1,19 @@
 # Audit Chain (AMOS SS 2022)
 **Welcome** to the *Audit Chain Repository*. This project is a middleware based on blockchain data structures to guarantee the unchanged, compliant, in sequence, fault tolerant and buffered data flow between any kind of producers and consumers. <br />
 <br />
+<p align="center">
+  <img 
+    width="500"
+    height="500"
+    src="https://user-images.githubusercontent.com/48165495/174490272-1963f607-5877-409d-89c2-210595b65bdb.jpeg"
+
+  >
+</p>
+
+
 ## AMOS Project
-The project is created as a work as part of a student project, carried out by Prof. Riehle at the Friedrich-Alexander University of Erlangen-Nuremberg.<br />
+The present project was created as part of a semester course by Master and Erasmus students and carried out by [Prof. Riehle](https://oss.cs.fau.de/person/riehle-dirk/]) at the [Friedrich-Alexander-Universität
+Erlangen-Nürnberg](https://www.fau.de]).
 <br />
 ## General
 First of all, the project is developed following a dependency structure, typical of the audit chain module. 
