@@ -23,6 +23,8 @@ public interface BlockchainInterface<T,R> {
 
     public List<SubBlock<T, R>> getTemperedMessageIfAny ();
 
+    public List<SubBlock<T, R>> getTemperedMessageIfAny (String hashStart, String hashEnd);
+
     public List<SubBlock<T, R>> getTemperedMessageFromABlockIfAny (T[] meta_data, R[] content);
 
     public List<SubBlock<T, R>> getTemperedMessageFromABlockIfAny (File file);

@@ -73,9 +73,30 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
      */
     public List<SubBlock<T, R>> getTemperedMessageIfAny () {
 
+        return getTemperedMessageIfAny(this.lastBlockHash, "0");
+
+    }
+
+    /**
+     * Checks if the blockchain has tempered messages inside between the intervals defined with the Hash of the blocks
+     * and returns a list of the involved subBlocks.
+     * If a Block does not correspond to the hash saved anymore its all subBlocks are considered tempered and get returned
+     * with other possible tempered subBlocks.
+     *
+     * @param hashStart the hash of the first block of the interval (included)
+     * @param hashEnd the hash of the last block of the interval (excluded)
+     *
+     * @throws IllegalArgumentException if the hashStart is before the hashEnd
+     *
+     * @return a list of subBlocks with the tempered messages; the list is empty if there is none.
+     */
+    public List<SubBlock<T, R>> getTemperedMessageIfAny (String hashStart, String hashEnd) {
+
         List<SubBlock<T, R>> temperedMessage = new ArrayList<>();
 
-        for(String hash : this.blockchain.keySet()) {
+        String hash = hashStart;
+
+        while(!hash.equals("0") && !hash.equals(hashEnd)) {
 
             List<SubBlock<T, R>> tempered = this.blockchain.get(hash).getTemperedMessageIfAny();
 
@@ -84,7 +105,13 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
                     tempered.addAll(this.blockchain.get(hash).getTransaction().values());
 
             temperedMessage.addAll(tempered);
+
+            hash = this.blockchain.get(hash).getPreviousHashBlock();
+
         }
+
+        if(hash.equals("0") && !hashEnd.equals("0"))
+            throw new IllegalArgumentException("The interval is not valid; HashStart is before HashEnd");
 
         return temperedMessage;
     }
