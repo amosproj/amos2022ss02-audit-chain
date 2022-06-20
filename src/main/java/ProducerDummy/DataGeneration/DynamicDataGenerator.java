@@ -28,7 +28,6 @@ public class DynamicDataGenerator implements DataGenerator {
 
 
     @Override
-    // set pointer to last Data read
     public String getData(int sequence_number) {
         String line = null;
         for (int i = 0; i < sequence_number; i++) {
