@@ -67,9 +67,13 @@ An open source message broker software.
 **Docker Engine**: Docker is for isolation of an application using containers.
  <br />
 **Docker CLI**: It is the Command Line Interface using Docker.
+### 5 . JUnit Tests: 
+JUnit is a unit testing open-source framework for the Java programming language. We use this framework to write and execute automated tests. However, in Java, there are test cases that must be re-executed every time a new code is added. This is done to make sure that nothing in the code is broken. We have JUnit Tests for the following cases:
+- JUnit Tests Producer Dummy 
+- JUnit Tests Consumer Dummy 
+- JUnit Tests Blockchain
 
- 
- 
+
 # Build,Deployment Documentation & Testing
 ### Prerequisites:
 - Git
@@ -120,3 +124,5 @@ An open source message broker software.
 ### Testing:
 The applications of our project contains unittests that can be used to test the individual components. To run them locally just execute the following command:
 
+# License:
+Distributed under the MIT License. For further information please see the [LICENSE](https://github.com/amosproj/amos2021ws05-fin-prod-port-quick-check/blob/main/LICENSE) file in the root directory.
