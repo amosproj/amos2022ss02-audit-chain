@@ -12,8 +12,8 @@
 
 
 ## AMOS Project
-The present project was created as part of a semester course by Master and Erasmus students and carried out by [Prof. Riehle](https://oss.cs.fau.de/person/riehle-dirk/]) at the [Friedrich-Alexander-Universität
-Erlangen-Nürnberg](https://www.fau.de]).
+The present project was created as part of a semester course by Master and Erasmus students and carried out by [Prof. Riehle](https://oss.cs.fau.de/person/riehle-dirk/) at the [Friedrich-Alexander-Universität
+Erlangen-Nürnberg](https://www.fau.de).
 <br />
 ## General
 First of all, the project is developed following a dependency structure, typical of the audit chain module. 
@@ -47,10 +47,10 @@ When the producer dummy is triggered, the data generator catches data events (me
 - **Consumer dummy**: Lastly, after RabbitMQ queues events successfully, the data event moves to the consumer dummy. 
 
 **The folder structure is as follows:**
-- **/producer dummy/**: Generate JAVADOC
-- **/consumer dummy/**: is a program which "communicates" with the rabbitMQ (Middleware) in order to receive messages 
-- **/middleware/**: enables the communication between producer dummy and consumer dummy
-- **/blockchain/**: data structure chosen for the message chain: work in progress.<br />
+- **[producer dummy](https://github.com/amosproj/amos2022ss02-audit-chain/tree/main/src/main/java/ProducerDummy)**: Generate JAVADOC
+- **[consumer dummy](https://github.com/amosproj/amos2022ss02-audit-chain/tree/main/src/main/java/ConsumerDummy)**: is a program which "communicates" with the rabbitMQ (Middleware) in order to receive messages 
+- **[middleware](https://github.com/amosproj/amos2022ss02-audit-chain/tree/main/Documentation/Middleware)**: enables the communication between producer dummy and consumer dummy
+- **[blockchain](https://github.com/amosproj/amos2022ss02-audit-chain/tree/main/src/main/java/BlockchainImplementation)**: data structure chosen for the message chain: work in progress.<br />
  <br />
  
 # Technology Stack:
@@ -70,7 +70,7 @@ An open source message broker software.
 
  
  
-# Build & Deployment Documentation
+# Build,Deployment Documentation & Testing
 ### Prerequisites:
 - Git
 - Java SDK 16
@@ -116,4 +116,7 @@ An open source message broker software.
 
   ```
   mvn javadoc:javadoc
+
+### Testing:
+The applications of our project contains unittests that can be used to test the individual components. To run them locally just execute the following command:
 
