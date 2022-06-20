@@ -121,8 +121,8 @@ JUnit is a unit testing open-source framework for the Java programming language.
   ```
   mvn javadoc:javadoc
 
-### Testing:
+### Testing
 The applications of our project contains unittests that can be used to test the individual components. To run them locally just execute the following command:
 
-# License:
+# License
 Distributed under the MIT License. For further information please see the [LICENSE](https://github.com/amosproj/amos2021ws05-fin-prod-port-quick-check/blob/main/LICENSE) file in the root directory.
