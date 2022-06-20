@@ -43,12 +43,12 @@ Listed, are the next steps that we are further developing:
 **We have used the component diagram to show different parts of our code solution. Our code is basically composed of 3 major components:**
 - **Producer dummy** (client): which operates through the dependencies among its 3 sub-components database, data generator, and persistence mechanism (storage buffer). 
 When the producer dummy is triggered, the data generator catches data events (message) from the database and then forwards it to the client session and persistence mechanism. The persistence mechanism is a contingent component that stores the last data event and gets triggered in case of any failure.
-- **Rabbit MQ** (Event Queue): After the producer dummy successfully generates an event, it goes to rabbit MQ (event queue). RabbitMQ is a 3rd party program that we are using as a component for queuing events. 
+- **Rabbit MQ** (Event Queue): After the producer dummy successfully generates an event, it goes to rabbitMQ (event queue). RabbitMQ is a 3rd party program that we are using as a component for queuing events. 
 - **Consumer dummy**: Lastly, after RabbitMQ queues events successfully, the data event moves to the consumer dummy. 
 
 **The folder structure is as follows:**
 - **/producer dummy/**: Generate JAVADOC
-- **/consumer dummy/**: is a program which "communicates" with the rabbitmq (Middleware) in order to receive messages 
+- **/consumer dummy/**: is a program which "communicates" with the rabbitMQ (Middleware) in order to receive messages 
 - **/middleware/**: enables the communication between producer dummy and consumer dummy
 - **/blockchain/**: data structure chosen for the message chain: work in progress.<br />
  <br />
@@ -59,12 +59,13 @@ In the following list you can see the projects underlying technology stack. To b
 ### 1. Programming Languages:
 **Java** (Backend): Java is an object-oriented programming language which consists of a development tool for creating code and a runtime environment to run code
 ### 2. Version Control Software:
-**Git**: Git is a distributed version control system with the aim to help our group to develop the software together.
+**Git**: Git is a distributed version control system with the aim to help our group to develop the software together. <br />
 **GitHub**: GitHub is the place where our repository lays. It is a provider for hosting software development and version control using Git.
 ### 3.  RabbitMQ:
 An open source message broker software.
 ### 4 . Other development tools:
 **Docker Engine**: Docker is for isolation of an application using containers.
+ <br />
 **Docker CLI**: It is the Command Line Interface using Docker.
 
  
@@ -92,7 +93,7 @@ An open source message broker software.
  - Or download the latest release and unzip the package from git.
 
 	**Open the project in your favorite IDE. We use IntellJ for demos**
- - Get the middleware i.e rabbitmq running:
+ - Get the middleware i.e rabbitMQ running:
    ```
    docker compose up
     ```
