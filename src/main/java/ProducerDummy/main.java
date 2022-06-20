@@ -6,6 +6,7 @@ import ProducerDummy.Client.Client;
 import ProducerDummy.Client.Producer;
 import ProducerDummy.DataGeneration.DataGenerator;
 import ProducerDummy.DataGeneration.FileDataReader;
+import ProducerDummy.DataGeneration.DynamicDataGenerator;
 import ProducerDummy.Messages.*;
 import ProducerDummy.Persistence.AggregateMessageFilePersistence;
 import ProducerDummy.Persistence.FilePersistenceStrategy;
@@ -43,7 +44,9 @@ public class main {
 
 
         String base_path = Paths.get(System.getProperty("user.dir"), filepath).toString();
-        DataGenerator dataGenerator = new FileDataReader(base_path, "household_power_consumption.txt");
+        //DataGenerator dataGenerator = new FileDataReader(base_path, "household_power_consumption.txt");
+        DataGenerator dataGenerator = new DynamicDataGenerator();
+
         PersistenceStrategy filePersistenceStrategy = new AggregateMessageFilePersistence(base_path, "last_messages.txt");
 
 

@@ -2,14 +2,21 @@ package Producer;
 
 import ProducerDummy.DataGeneration.DataGenerator;
 import ProducerDummy.DataGeneration.FileDataReader;
+import com.github.javafaker.service.FakeValuesService;
+import com.github.javafaker.service.RandomService;
 import org.junit.Test;
 import org.junit.Assert;
 import org.junit.jupiter.api.DisplayName;
+
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import java.io.FileNotFoundException;
 import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class DataGeneratorTest {
 
@@ -35,6 +42,17 @@ public class DataGeneratorTest {
 
     }
 
+    @Test
+    public void checkPattern() throws Exception {
+
+        FakeValuesService fakeValuesService = new FakeValuesService(
+                new Locale("en-GB"), new RandomService());
+
+        String alphaNumericString = fakeValuesService.regexify("[a-zA-Z0-9]{100}");
+        Matcher alphaNumericMatcher = Pattern.compile("[a-zA-Z0-9]{100}").matcher(alphaNumericString);
+
+        assertTrue(alphaNumericMatcher.find());
+    }
 
 
 
