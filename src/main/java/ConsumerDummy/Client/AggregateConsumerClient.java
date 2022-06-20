@@ -1,20 +1,17 @@
 package ConsumerDummy.Client;
 
-import ProducerDummy.Messages.JsonMessage;
-import ProducerDummy.Persistence.AggregateMessageFilePersistence;
-import ProducerDummy.Client.AbstractClient;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Map;
+import java.util.Vector;
+import java.util.concurrent.TimeoutException;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.DeliverCallback;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.nio.file.Paths;
-import java.util.Map;
-import java.util.Vector;
-import java.util.concurrent.TimeoutException;
+import ProducerDummy.Messages.JsonMessage;
+import ProducerDummy.Persistence.AggregateMessageFilePersistence;
 
 public class AggregateConsumerClient extends Consumer {
 
@@ -23,7 +20,6 @@ public class AggregateConsumerClient extends Consumer {
 
     //TODO Parameterize
     private static final String path = Paths.get("src", "main", "resources","ConsumerDummy").toString();
-
 
     /**
      * Constructor for Client.AbstractClient. Initializes the filepath, the file reader and set information for the
@@ -47,7 +43,6 @@ public class AggregateConsumerClient extends Consumer {
     }
 
     public void start() throws IOException, TimeoutException {
-
         System.out.println("Starting to receive Messages.");
 
         Connection connection = this.factory.newConnection();
@@ -75,6 +70,7 @@ public class AggregateConsumerClient extends Consumer {
         channel.basicConsume(QUEUE_NAME, false, deliverCallback, consumerTag -> {
         });
     }
+
 }
 
 

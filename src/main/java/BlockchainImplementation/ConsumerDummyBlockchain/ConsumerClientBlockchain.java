@@ -1,26 +1,24 @@
 package BlockchainImplementation.ConsumerDummyBlockchain;
 
-import BlockchainImplementation.Blockchain.Blockchain;
-import ConsumerDummy.Client.Consumer;
-import ProducerDummy.Client.AbstractClient;
-import ProducerDummy.Messages.AggregateMessage;
-import ProducerDummy.Messages.Hmac_Message;
-import ProducerDummy.Messages.Message;
+import java.io.IOException;
+import java.util.Vector;
+import java.util.concurrent.TimeoutException;
+
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.DeliverCallback;
 
-
-import java.io.IOException;
-import java.util.Vector;
-import java.util.concurrent.TimeoutException;
+import BlockchainImplementation.Blockchain.Blockchain;
+import ConsumerDummy.Client.Consumer;
+import ProducerDummy.Messages.AggregateMessage;
+import ProducerDummy.Messages.Hmac_Message;
+import ProducerDummy.Messages.Message;
 
 public class ConsumerClientBlockchain extends Consumer {
 
     private Blockchain<Integer, String> blockchain;
     private static String KEY = "0123456";
     private static String ALGORITHM = "HmacSHA256";
-
 
     /**
      * Constructor for AbstractClient. Initializes the filepath, the file reader and set information for the

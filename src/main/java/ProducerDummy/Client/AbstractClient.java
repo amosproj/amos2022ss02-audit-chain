@@ -1,10 +1,9 @@
 package ProducerDummy.Client;
 
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.Connection;
-
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
+
+import com.rabbitmq.client.ConnectionFactory;
 
 /**
  * Abstract class for Clients
@@ -25,32 +24,33 @@ abstract public class AbstractClient {
      * @throws IOException if the file cannot be read
      */
     public AbstractClient(String host, int port, String username, String password, String queue_name) {
+
         this.HOST = host;
         this.PORT = port;
         this.USER = username;
         this.PASSWORD = password;
         this.QUEUE_NAME = queue_name;
         this.initFactory();
+
     }
 
     /**
      * Initializes the connection factory. It can be used then to send messages to a server RabbitMQ
      */
     public void initFactory() {
+
         this.factory.setHost(this.HOST);
         this.factory.setUsername(this.USER);
         this.factory.setPassword(this.PASSWORD);
         this.factory.setPort(this.PORT);
+        
     }
 
-
     public void start() throws IOException, TimeoutException {
-
     }
 
     public void recoverLastState() {
         return;
     }
-
 
 }

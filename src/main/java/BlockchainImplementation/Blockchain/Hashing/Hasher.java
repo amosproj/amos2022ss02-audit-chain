@@ -4,7 +4,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
-
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class Hasher {

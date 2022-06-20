@@ -1,17 +1,13 @@
 package ConsumerDummy;
 
-
-
-
-import ProducerDummy.Client.AbstractClient;
-import ConsumerDummy.Client.AggregateConsumerClient;
-
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.concurrent.TimeoutException;
+
+import ConsumerDummy.Client.AggregateConsumerClient;
 
 public class main {
 
@@ -29,8 +25,6 @@ public class main {
         String USER = p.getProperty("USERNAME");
         String PASSWORD = p.getProperty("PASSWORD");
         String queue_name = "FAKE";
-
-
 
         AggregateConsumerClient client = new AggregateConsumerClient(HOST,PORT,USER,PASSWORD,queue_name);
         client.start();
