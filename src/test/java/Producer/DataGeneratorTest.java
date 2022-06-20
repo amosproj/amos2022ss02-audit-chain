@@ -43,7 +43,7 @@ public class DataGeneratorTest {
     }
 
     @Test
-    public void checkPattern() throws Exception {
+    public void checkGeneratedPatternTest() throws Exception {
 
         FakeValuesService fakeValuesService = new FakeValuesService(
                 new Locale("en-GB"), new RandomService());
@@ -53,8 +53,5 @@ public class DataGeneratorTest {
 
         assertTrue(alphaNumericMatcher.find());
     }
-
-
-
 
 }
