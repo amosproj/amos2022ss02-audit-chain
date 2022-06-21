@@ -1,11 +1,5 @@
 package ConsumerDummy;
 
-
-
-
-import ProducerDummy.Client.AbstractClient;
-import ConsumerDummy.Client.AggregateConsumerClient;
-
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -13,12 +7,13 @@ import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.concurrent.TimeoutException;
 
+import ConsumerDummy.Client.AggregateConsumerClient;
+
 public class main {
 
     public static void main(String[] args) throws IOException, TimeoutException {
 
         String filepath = Paths.get("src", "main", "resources","ConsumerDummy").toString();
-
         String filename = "config.properties";
         Path config_path = Paths.get(System.getProperty("user.dir"), filepath, filename);
         Properties p = new Properties();
@@ -30,8 +25,6 @@ public class main {
         String USER = p.getProperty("USERNAME");
         String PASSWORD = p.getProperty("PASSWORD");
         String queue_name = "FAKE";
-
-
 
         AggregateConsumerClient client = new AggregateConsumerClient(HOST,PORT,USER,PASSWORD,queue_name);
         client.start();

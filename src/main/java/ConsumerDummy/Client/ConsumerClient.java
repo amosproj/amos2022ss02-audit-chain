@@ -1,15 +1,15 @@
 package ConsumerDummy.Client;
 
-import ProducerDummy.Client.AbstractClient;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.DeliverCallback;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
-import java.util.concurrent.TimeoutException;
+import ProducerDummy.Client.AbstractClient;
 
 /**
  * Consumerclient implementation
@@ -44,5 +44,6 @@ public class ConsumerClient extends AbstractClient {
         };
         channel.basicConsume(QUEUE_NAME, true, deliverCallback, consumerTag -> { });
     }
+    
 }
 

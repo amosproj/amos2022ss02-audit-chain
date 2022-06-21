@@ -79,6 +79,12 @@ An open source message broker software.
  - Or download the latest release and unzip the package from git.
 
     **Open the project in your favorite IDE. We use IntellJ for demos**
+    
+ - Credentials used for rabbitmq in the project,
+   ```
+   username: guest
+   password:guest
+   ```
  - create a network by the name rabbitmq-cluster:
    ```
    docker network create rabbitmq-cluster 
@@ -88,10 +94,17 @@ An open source message broker software.
    docker-compose up -d
    ```
    https://user-images.githubusercontent.com/104498986/171229907-b865ec51-0488-4892-b9a9-155b550f6f70.mp4
+   
+ - **Note: Remember to edit the [config.properties](https://github.com/amosproj/amos2022ss02-audit-chain/blob/main/src/main/resources/ProducerDummy/config.properties) of the ProducerDummy with default username and password of rabbitmq**  <br />
+  <br />
+  
  - To run the producer-dummy module
    ```
    mvn clean compile exec:java@ProducerDummy
    ```
+  - **Note: Remember to edit the [config.properties](https://github.com/amosproj/amos2022ss02-audit-chain/blob/main/src/main/resources/ConsumerDummy/config.properties) of the ConsumerDummy with default username and password of rabbitmq**  <br />
+   <br />
+   
  - To run the consumer-dummy module
    ```
    mvn clean compile exec:java@ConsumerDummy

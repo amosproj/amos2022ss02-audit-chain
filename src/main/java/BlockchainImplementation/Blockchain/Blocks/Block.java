@@ -1,11 +1,6 @@
 package BlockchainImplementation.Blockchain.Blocks;
 
-import BlockchainImplementation.Blockchain.Blockchain;
-import BlockchainImplementation.Blockchain.Hashing.Hasher;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A Block is the unit of the blockchain. It contains the pointer to its previous block, a hashmap of data in which the
@@ -52,26 +47,28 @@ public class Block<T,R> extends AbstractBlock<Map<String, SubBlock<T,R>>>{
     }
 
     /**
-     * {@inheritdoc}
-     * Moreover checks if every SubBlock is also authentic or not.
+     * Checks if the block has tempered messages inside and returns a list of the involved subBlocks.
+     * The message is considered tempered if one of these condition is satisfied:
+     * - the subBlock in which it is contained is not authentic
+     * - the subBlock associated to the key in the hashmap, results to have a different hash when calculated again
+     * - the Block in which its subBlock is part results non-authentic (e.g. a non-authorized SubBlock (authentic) has been added to the block)
      *
-     * @return true if the current block is authentic, false otherwise
+     * @return a list of subBlocks with the tempered messages; the list is empty if there is none.
      */
-    @Override
-    public boolean isBlockAuthentic () {
-        boolean authentic = true;
+    public List<SubBlock<T, R>> getTemperedMessageIfAny() {
 
-        for (SubBlock<T,R> subBlock : this.transaction.values()) {
-            authentic = subBlock.isBlockAuthentic();
+        List<SubBlock<T, R>> temperedMessages = new ArrayList<>();
 
-            if (!authentic) {
-                break;
-            }
-        }
+        for(String key : this.transaction.keySet())
+            if(!this.transaction.get(key).isAuthentic() || !(key.equals(this.transaction.get(key).hashBlock)))
+                temperedMessages.add(this.transaction.get(key));
 
-        authentic = authentic && hashBlock.equals(calcHash());
+        if(temperedMessages.size() == 0)
+            if(!this.isAuthentic())
+                for(String key : this.transaction.keySet())
+                    temperedMessages.add(this.transaction.get(key));
 
-        return authentic;
+        return temperedMessages;
     }
 
     @Override

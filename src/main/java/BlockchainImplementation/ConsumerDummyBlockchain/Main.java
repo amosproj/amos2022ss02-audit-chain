@@ -7,13 +7,13 @@ import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.concurrent.TimeoutException;
 
+import ProducerDummy.Client.AbstractClient;
+
 public class Main {
 
     public static void main(String[] args) throws IOException, TimeoutException {
-
-        String filepath = Paths.get("src", "main", "resources","ProducerDummy").toString();
+        String filepath = Paths.get("src", "main", "resources","BlockchainImplementation").toString();
         String filename = "config.properties";
-
 
         Path config_path = Paths.get(System.getProperty("user.dir"), filepath, filename);
         Properties p = new Properties();
@@ -26,12 +26,11 @@ public class Main {
         String PASSWORD = p.getProperty("PASSWORD");
         String queue_name = "FAKE";
 
+        AbstractClient client = new ConsumerClientBlockchain(HOST,PORT,USER,PASSWORD,queue_name);
 
-        ConsumerClientBlockchain client = new ConsumerClientBlockchain(HOST, PORT, USER, PASSWORD, queue_name);
         client.start();
         return;
 
     }
-
 
 }
