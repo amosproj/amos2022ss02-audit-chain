@@ -37,7 +37,9 @@ public class main {
         String queue_name = "FAKE";
 
         String base_path = Paths.get(System.getProperty("user.dir"), filepath).toString();
-        DataGenerator dataGenerator = new FileDataReader(base_path, "household_power_consumption.txt");
+        //DataGenerator dataGenerator = new FileDataReader(base_path, "household_power_consumption.txt");
+        DataGenerator dataGenerator = new DynamicDataGenerator();
+
         PersistenceStrategy filePersistenceStrategy = new AggregateMessageFilePersistence(base_path, "last_messages.txt");
 
         Producer client = new AggregateClient(HOST, PORT, USER, PASSWORD, queue_name);
