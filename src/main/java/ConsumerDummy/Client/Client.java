@@ -14,14 +14,14 @@ import ProducerDummy.Client.AbstractClient;
 /**
  * Consumerclient implementation
  */
-public class ConsumerClient extends AbstractClient {
+public class Client extends AbstractClient {
     /**
      * Constructor for Client.AbstractClient. Initializes the filepath, the file reader and set information for the
      * connection factory. Call {@link #initFactory()} to initialize the connection factory.
      *
      * @throws IOException if the file cannot be read
      */
-    public ConsumerClient(String host, int port, String username, String password, String queue_name) throws IOException {
+    public Client(String host, int port, String username, String password, String queue_name) throws IOException {
         super(host, port, username, password, queue_name);
     }
 

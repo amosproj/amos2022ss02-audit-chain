@@ -1,7 +1,7 @@
 package ConsumerDummy.Client;
 
 import ProducerDummy.Messages.AggregateMessage;
-import ProducerDummy.Messages.JsonMessage;
+import ProducerDummy.Messages.SimpleMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -15,13 +15,13 @@ import java.util.concurrent.TimeoutException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AggregateConsumerClientTest {
+class AggregateClientTest {
 
     @Test
     @DisplayName("Testing localhost functionality")
     void localhost() {
         try {
-            AggregateConsumerClient c = new AggregateConsumerClient("localhost", 5672, "shouldn't be", "set in factory", "Fake");
+            AggregateClient c = new AggregateClient("localhost", 5672, "shouldn't be", "set in factory", "Fake");
             assertAll(
                     () -> assertEquals("localhost", c.factory.getHost()),
                     () -> assertEquals(5672, c.factory.getPort()),
@@ -41,7 +41,7 @@ class AggregateConsumerClientTest {
         f.delete();
 
         //Testing of messaging.txt is created
-        AggregateConsumerClient c = new AggregateConsumerClient("localhost", 5672, " ", " ", "Fake");
+        AggregateClient c = new AggregateClient("localhost", 5672, " ", " ", "Fake");
         assertTrue(f.exists());
         f.delete();
 
@@ -53,7 +53,7 @@ class AggregateConsumerClientTest {
 
         AggregateMessage m = new AggregateMessage(); // generate AggregateMessage
         for (int i = 0; i < 5; i++) {
-            m.addMessage(new JsonMessage(i, "Test " + i));  // adding 5 messages
+            m.addMessage(new SimpleMessage(i, "Test " + i));  // adding 5 messages
         }
 
         byte[] bytecode = null;
@@ -70,8 +70,8 @@ class AggregateConsumerClientTest {
         Vector messages = mDeserialized.getMessages(); //get messages
 
         for (int i = 0; i < 5; i++) {
-            assertEquals(i, ((JsonMessage) messages.get(i)).getSequence_number()); //check if sequence number is correct
-            assertEquals("Test " + i, ((JsonMessage) messages.get(i)).getMessage()); //check if message is correct
+            assertEquals(i, ((SimpleMessage) messages.get(i)).getSequence_number()); //check if sequence number is correct
+            assertEquals("Test " + i, ((SimpleMessage) messages.get(i)).getMessage()); //check if message is correct
         }
     }
 }

@@ -7,13 +7,13 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ConsumerClientTest {
+class ClientTest {
 
     @Test
     @DisplayName("Testing localhost functionality")
     void localhost() {
         try {
-            ConsumerClient c = new ConsumerClient("localhost", 5672, " ", " ", "Fake");
+            AggregateClient c = new AggregateClient("localhost", 5672, "shouldn't be", "set in factory", "Fake");
             assertAll(
                     () -> assertEquals("localhost", c.factory.getHost()),
                     () -> assertEquals(5672, c.factory.getPort()),

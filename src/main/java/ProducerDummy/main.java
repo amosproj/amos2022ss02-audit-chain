@@ -14,6 +14,7 @@ import java.util.concurrent.TimeoutException;
 import ProducerDummy.Client.AggregateClient;
 import ProducerDummy.Client.Producer;
 import ProducerDummy.DataGeneration.DataGenerator;
+import ProducerDummy.DataGeneration.DynamicDataGenerator;
 import ProducerDummy.DataGeneration.FileDataReader;
 import ProducerDummy.Persistence.AggregateMessageFilePersistence;
 import ProducerDummy.Persistence.PersistenceStrategy;

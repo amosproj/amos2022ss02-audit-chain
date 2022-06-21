@@ -30,4 +30,14 @@ public class Consumer extends AbstractClient {
         return objStream.readObject();
     }
 
+    @Override
+    public void initFactory() {
+        this.factory.setHost(this.HOST);
+        if(!HOST.equals("localhost")) {
+            this.factory.setUsername(this.USER);
+            this.factory.setPassword(this.PASSWORD);
+        }
+        this.factory.setPort(this.PORT);
+    }
+
 }
