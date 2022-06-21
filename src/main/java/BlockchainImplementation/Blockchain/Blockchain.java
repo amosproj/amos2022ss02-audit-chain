@@ -1,20 +1,27 @@
 package BlockchainImplementation.Blockchain;
 
-import BlockchainImplementation.Blockchain.Blocks.Block;
-import BlockchainImplementation.Blockchain.Blocks.SubBlock;
-
-import java.nio.file.Files;
-import java.util.*;
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
-import com.google.gson.Gson;
-
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.google.gson.Gson;
+
+import BlockchainImplementation.Blockchain.Blocks.Block;
+import BlockchainImplementation.Blockchain.Blocks.SubBlock;
 
 /**
  * Data structure that represents the blockchain. It contains a hashmap of Blocks in which transactions and their
@@ -50,9 +57,7 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
 
         blockchain.put(lastBlockHash, block);
 
-
     }
-
 
     @Override
     public String getLastBlockHash() {
@@ -225,6 +230,7 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
      * If the path is not found, a message is shown.
      */
     public void blockchainToJson(String path) {
+
         Gson gson = new Gson(); 
         String jsonBlockchain = gson.toJson(this);
         Path pathP = Paths.get(path);
@@ -236,7 +242,6 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
             System.out.println("Sorry, wrong path");
         }
 
-//        path.toFile().setReadOnly(); //creates problems
     }
 
     /**
@@ -246,6 +251,7 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
      * @param path represents the path where the json file is located
      */
     public void jsonToBlockchain(Path path) {
+
         Gson gson = new Gson();
         Blockchain<T, R> blockchainFromJson = new Blockchain<>();
 
@@ -260,8 +266,10 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
 
             fileReader.close();
 
-        } catch (IOException e) {
-            System.out.println("Blockchain does not exist yet or the path is wrong");
+        } catch(FileNotFoundException e){
+            System.out.println("The file was not found, please check the path again.");
+        }catch (IOException f){
+            System.out.println("Blockchain does not exist yet");
         }
 
         this.blockchain = blockchainFromJson.blockchain;

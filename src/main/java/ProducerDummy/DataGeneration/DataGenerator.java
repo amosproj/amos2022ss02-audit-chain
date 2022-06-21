@@ -1,7 +1,5 @@
 package ProducerDummy.DataGeneration;
 
-import java.io.IOException;
-
 /***
  * Data Generator interface.
  */

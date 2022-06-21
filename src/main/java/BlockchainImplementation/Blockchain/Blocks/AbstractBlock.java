@@ -1,10 +1,6 @@
 package BlockchainImplementation.Blockchain.Blocks;
 
-import BlockchainImplementation.Blockchain.Blockchain;
 import BlockchainImplementation.Blockchain.Hashing.Hasher;
-
-import java.io.IOException;
-import java.util.Date;
 
 /**
  * Abstract class for all type of blocks that belong to a blockchain. It is characterized by the fact that carries the
@@ -44,11 +40,9 @@ public abstract class AbstractBlock<T> {
 
     public T getTransaction () { return transaction; }
 
-
     public String calcHmacData () {
         return Hasher.hashSHA256(transaction.toString());
     }
-
 
     /**
      * Checks if the current block has been tempered or instead if it is still authentic.
@@ -59,5 +53,5 @@ public abstract class AbstractBlock<T> {
     public boolean isAuthentic () {
         return hashBlock.equals(calcHash());
     }
-
+    
 }

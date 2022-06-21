@@ -1,9 +1,8 @@
 package ProducerDummy.Persistence;
 
+import java.nio.file.Path;
 
 import ProducerDummy.Messages.Message;
-
-import java.nio.file.Path;
 
 /** Interface for the persistence strategy mechanisms */
 public interface PersistenceStrategy {
@@ -23,7 +22,6 @@ public interface PersistenceStrategy {
     /**
      * @return last AbstractMessage written in the persistence mechanism
      */
-
     public Message ReadLastMessage();
 
     public Path getFilePath();

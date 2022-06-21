@@ -1,12 +1,13 @@
 package BlockchainImplementation.ConsumerDummyBlockchain;
 
-import ProducerDummy.Client.AbstractClient;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.concurrent.TimeoutException;
+
+import ProducerDummy.Client.AbstractClient;
 
 public class Main {
 
@@ -31,6 +32,5 @@ public class Main {
         return;
 
     }
-
 
 }

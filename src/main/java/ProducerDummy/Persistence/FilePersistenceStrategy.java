@@ -1,13 +1,24 @@
 package ProducerDummy.Persistence;
 
-import ProducerDummy.Messages.*;
-import com.google.gson.Gson;
-import com.google.gson.*;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import ProducerDummy.Messages.Hmac_JsonMessage;
+import ProducerDummy.Messages.Hmac_SimpleMessage;
+import ProducerDummy.Messages.JsonMessage;
+import ProducerDummy.Messages.Message;
+import ProducerDummy.Messages.SimpleMessage;
 
 /***
  * This is one Implementation which is supposed to guarantee us that we never lose our current state of the Sequence Number.
@@ -38,6 +49,7 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
      */
     @Override
     public void StoreMessage(Message message) throws NullPointerException {
+
         try {
             // Open FileWrite and overwrite last Messages.Message
             this.fileWriter = new FileWriter(filepath.toString());
@@ -57,6 +69,7 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
      */
     @Override
     public void CreatePersistenceMechanism() {
+
         // Create the File for the last Messages.Message
         File file = new File(this.filepath.toString());
 
@@ -65,12 +78,10 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
                 System.out.println("File created: " + file.getName());
             } else {
                 System.out.println(String.format("File %s already exists", file.getName()));
-
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
 
     }
 
@@ -86,13 +97,17 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
         File file = new File(this.filepath.toString());
 
         try {
+
             JsonElement jsonElement = JsonParser.parseReader(new FileReader(file));
+
             //this should be the only valid state, since in the single Filemode only the last Message will be stored
             if (jsonElement.isJsonObject()) {
+
                 // every Message consists of at least sequence_number and message_string
                 JsonObject jsonObject = jsonElement.getAsJsonObject();
                 String message_string = jsonObject.getAsJsonPrimitive(JsonMessage.MESSAGE_KEY).getAsString();
                 int sequence_number = jsonObject.getAsJsonPrimitive(JsonMessage.SEQUENCE_NUMBER).getAsInt();
+
                 // if there is a Hmac key we know it is a Hmac Message else it is just a normal Message
                 try {
                     String hmac = jsonObject.getAsJsonPrimitive(Hmac_JsonMessage.HMAC_KEY).getAsString();
@@ -102,7 +117,6 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
                 }
 
             }
-
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -119,9 +133,9 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
         return this.filepath;
     }
 
-
     @Override
     public void cleanFile() {
+
         try {
             this.fileWriter.close();
         } catch (IOException e) {
@@ -138,10 +152,6 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
             throw new RuntimeException(e);
         }
 
-
-
     }
-
-
 
 }

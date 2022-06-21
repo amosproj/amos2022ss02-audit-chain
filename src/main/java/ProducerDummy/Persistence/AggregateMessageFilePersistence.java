@@ -1,15 +1,22 @@
 package ProducerDummy.Persistence;
 
 
-import ProducerDummy.Messages.*;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.apache.commons.codec.binary.StringUtils;
 
-import java.io.*;
-import java.nio.file.Files;
+import ProducerDummy.Messages.AggregateMessage;
+import ProducerDummy.Messages.Hmac_JsonMessage;
+import ProducerDummy.Messages.Hmac_SimpleMessage;
+import ProducerDummy.Messages.JsonMessage;
+import ProducerDummy.Messages.Message;
+import ProducerDummy.Messages.SimpleMessage;
 
 
 /***
@@ -19,7 +26,6 @@ import java.nio.file.Files;
 public class AggregateMessageFilePersistence extends FilePersistenceStrategy {
 
     private static final String fileName = "messages.txt";
-
 
     /**
      * Constructor for the FilePersistenceStrategy.
@@ -36,6 +42,7 @@ public class AggregateMessageFilePersistence extends FilePersistenceStrategy {
 
 
     public void StoreMessage(Message message) {
+
         try {
             this.fileWriter = new FileWriter(filepath.toString(), true);
             gson.toJson(message.toSimpleFormat(), this.fileWriter);
@@ -47,9 +54,7 @@ public class AggregateMessageFilePersistence extends FilePersistenceStrategy {
             throw new NullPointerException();
         }
 
-
     }
-
 
     @Override
     public Message ReadLastMessage() {
@@ -64,10 +69,12 @@ public class AggregateMessageFilePersistence extends FilePersistenceStrategy {
                 JsonArray jsonArray = jsonElement.getAsJsonArray();
                 // last index is always zero, adjust index in loop
                 for (int i = 1; i < jsonArray.size(); i++) {
+
                     JsonObject jsonObject = jsonArray.get(i-1).getAsJsonObject();
 
                     String message_string = jsonObject.getAsJsonPrimitive(JsonMessage.MESSAGE_KEY).getAsString();
                     int sequence_number = jsonObject.getAsJsonPrimitive(JsonMessage.SEQUENCE_NUMBER).getAsInt();
+                
                     // if there is a Hmac key we know it is a Hmac Message else it is just a normal Message
                     try {
                         String hmac = jsonObject.getAsJsonPrimitive(Hmac_JsonMessage.HMAC_KEY).getAsString();
@@ -75,9 +82,11 @@ public class AggregateMessageFilePersistence extends FilePersistenceStrategy {
                     } catch (NullPointerException e) {
                         messages.addMessage(new SimpleMessage(sequence_number, message_string));
                     }
+
                 }
                 return messages;
             }
+
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
@@ -86,9 +95,7 @@ public class AggregateMessageFilePersistence extends FilePersistenceStrategy {
             throw new NullPointerException();
         }
 
-
         return null;
     }
-
 
 }

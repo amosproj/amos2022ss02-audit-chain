@@ -1,11 +1,10 @@
 package ProducerDummy.Persistence;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import ProducerDummy.Messages.Message;
 import ProducerDummy.Messages.SimpleMessage;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 /***
  * This Implementation should be used for Debug purpose because you don´t want to write every message into your Hdd.
@@ -21,7 +20,6 @@ public class NullObjectPersistenceStrategy implements PersistenceStrategy {
     public void StoreMessage(Message message) {
         return;
     }
-
 
     @Override
     public void CreatePersistenceMechanism() {
@@ -42,4 +40,5 @@ public class NullObjectPersistenceStrategy implements PersistenceStrategy {
     public void cleanFile() {
         return;
     }
+    
 }

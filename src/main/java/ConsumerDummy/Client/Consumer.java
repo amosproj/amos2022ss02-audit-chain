@@ -1,13 +1,12 @@
 package ConsumerDummy.Client;
 
-import ProducerDummy.Client.AbstractClient;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
-public class Consumer extends AbstractClient {
+import ProducerDummy.Client.AbstractClient;
 
+public class Consumer extends AbstractClient {
 
     /**
      * Constructor for Client.AbstractClient. Initializes the filepath, the file reader and set information for the
@@ -30,4 +29,5 @@ public class Consumer extends AbstractClient {
 
         return objStream.readObject();
     }
+
 }
