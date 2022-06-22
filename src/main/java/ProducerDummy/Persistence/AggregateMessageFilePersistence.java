@@ -1,12 +1,22 @@
 package ProducerDummy.Persistence;
 
 
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import ProducerDummy.Messages.AggregateMessage;
+import ProducerDummy.Messages.Hmac_JsonMessage;
+import ProducerDummy.Messages.Hmac_SimpleMessage;
 import ProducerDummy.Messages.JsonMessage;
 import ProducerDummy.Messages.Message;
-
-import java.io.*;
-import java.nio.file.Files;
+import ProducerDummy.Messages.SimpleMessage;
 
 
 /***
@@ -16,9 +26,6 @@ import java.nio.file.Files;
 public class AggregateMessageFilePersistence extends FilePersistenceStrategy {
 
     private static final String fileName = "messages.txt";
-    private static int SIZE = 1024;
-
-
 
     /**
      * Constructor for the FilePersistenceStrategy.
@@ -34,69 +41,61 @@ public class AggregateMessageFilePersistence extends FilePersistenceStrategy {
     }
 
 
-
-
-
     public void StoreMessage(Message message) {
+
         try {
             this.fileWriter = new FileWriter(filepath.toString(), true);
-            this.fileWriter.write(message.getSequence_number() + "\r\n");
-            this.fileWriter.write(message.getMessage() + "\r\n");
-            this.fileWriter.close();
+            gson.toJson(message.toSimpleFormat(), this.fileWriter);
+            this.fileWriter.write(",");
+            fileWriter.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } catch (NullPointerException e){
+            throw new NullPointerException();
         }
 
-
     }
-
 
     @Override
     public Message ReadLastMessage() {
-        //TODO right now even if there are no Messages an empty Message will be returned, it should return NULL tho
 
         AggregateMessage messages = new AggregateMessage();
 
-        File file = new File(this.filepath.toString());
         try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            for (String line = br.readLine(); line != null; line = br.readLine()) {
-                int number = Integer.parseInt(line);
-                String message = br.readLine();
-                messages.addMessage(new JsonMessage(number,message));
+            // modify the file so gson can parse it
+            JsonElement jsonElement = JsonParser.parseString("["+Files.readString(getFilePath()).replaceAll(",$","") + "]");
+            if (jsonElement.isJsonArray()) {
+                //more than one Objects
+                JsonArray jsonArray = jsonElement.getAsJsonArray();
+                // last index is always zero, adjust index in loop
+                for (int i = 1; i < jsonArray.size(); i++) {
+
+                    JsonObject jsonObject = jsonArray.get(i-1).getAsJsonObject();
+
+                    String message_string = jsonObject.getAsJsonPrimitive(JsonMessage.MESSAGE_KEY).getAsString();
+                    int sequence_number = jsonObject.getAsJsonPrimitive(JsonMessage.SEQUENCE_NUMBER).getAsInt();
+                
+                    // if there is a Hmac key we know it is a Hmac Message else it is just a normal Message
+                    try {
+                        String hmac = jsonObject.getAsJsonPrimitive(Hmac_JsonMessage.HMAC_KEY).getAsString();
+                        messages.addMessage(new Hmac_SimpleMessage(sequence_number, message_string, hmac));
+                    } catch (NullPointerException e) {
+                        messages.addMessage(new SimpleMessage(sequence_number, message_string));
+                    }
+
+                }
+                return messages;
             }
-            br.close();
 
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
         } catch (IOException e) {
-            // there are no values in the file or the file is missing therefore we never did send a Messages.Message to the Broker
-            return null;
+            throw new RuntimeException(e);
+        }catch (NullPointerException e){
+            throw new NullPointerException();
         }
 
-        return messages;
-    }
-
-
-
-
-
-    public void cleanFile(){
-        try {
-            this.fileWriter.close();
-        } catch (IOException e) {
-            System.out.println("Already Closed");
-        }
-        File file = new File(this.filepath.toString());
-        file.delete();
-        this.CreatePersistenceMechanism();
-    }
-
-    public boolean isReadyToSend() throws IOException {
-        long bytes = Files.size(this.filepath);
-        if(bytes <= this.SIZE){
-            return false;
-        }else{
-            return true;
-        }
+        return null;
     }
 
 }

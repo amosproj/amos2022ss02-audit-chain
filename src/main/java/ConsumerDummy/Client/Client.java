@@ -1,25 +1,27 @@
-package ConsumerDummy;
+package ConsumerDummy.Client;
 
-import ProducerDummy.Client.AbstractClient;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.concurrent.TimeoutException;
+
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.DeliverCallback;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.concurrent.TimeoutException;
+import ProducerDummy.Client.AbstractClient;
 
 /**
  * Consumerclient implementation
  */
-public class ConsumerClient extends AbstractClient {
+public class Client extends AbstractClient {
     /**
      * Constructor for Client.AbstractClient. Initializes the filepath, the file reader and set information for the
      * connection factory. Call {@link #initFactory()} to initialize the connection factory.
      *
      * @throws IOException if the file cannot be read
      */
-    public ConsumerClient(String host, int port, String username, String password, String queue_name) throws IOException {
+    public Client(String host, int port, String username, String password, String queue_name) throws IOException {
         super(host, port, username, password, queue_name);
     }
 
@@ -32,7 +34,7 @@ public class ConsumerClient extends AbstractClient {
         System.out.println("Starting to receive Messages.");
         Connection connection = this.factory.newConnection();
         Channel channel = connection.createChannel();
-        channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+        channel.queueDeclare(QUEUE_NAME, true, false, false, Map.of("x-queue-type", "quorum"));
 
         System.out.println(" [*] Waiting for messages.");
 
@@ -42,5 +44,6 @@ public class ConsumerClient extends AbstractClient {
         };
         channel.basicConsume(QUEUE_NAME, true, deliverCallback, consumerTag -> { });
     }
+    
 }
 

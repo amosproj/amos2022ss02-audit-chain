@@ -14,30 +14,30 @@ public class SimpleMessage implements Message {
         this.message = json_message;
     }
 
+    @Override
+    public Message toSimpleFormat() {
+        return this;
+    }
+
     public String getMessage() {
         return this.message;
     }
 
-
     private int sequence_number;
     private String message;
-
 
     public SimpleMessage(int sequence_number, String message) {
         this.formatMessage(sequence_number,message);
     }
 
-
-    @Override
-    public Message getMessageObject() {
-        return (SimpleMessage) this;
-    }
-
     @Override
     public void formatMessage(int sequence_number, String message) {
+
         this.sequence_number = sequence_number;
         this.message = message;
+
         return;
+
     }
 
     public JsonMessage toJSONMessage(){
@@ -47,9 +47,5 @@ public class SimpleMessage implements Message {
     public String toString(){
         return Integer.toString(this.getSequence_number())+this.getMessage();
     }
-
-
-
-
-
+    
 }

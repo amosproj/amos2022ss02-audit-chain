@@ -1,5 +1,7 @@
 package ProducerDummy.Persistence;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import ProducerDummy.Messages.Message;
 import ProducerDummy.Messages.SimpleMessage;
@@ -19,7 +21,6 @@ public class NullObjectPersistenceStrategy implements PersistenceStrategy {
         return;
     }
 
-
     @Override
     public void CreatePersistenceMechanism() {
         return;
@@ -29,4 +30,15 @@ public class NullObjectPersistenceStrategy implements PersistenceStrategy {
     public Message ReadLastMessage() {
         return new SimpleMessage(0, "DEBUG");
     }
+
+    @Override
+    public Path getFilePath() {
+        return Paths.get(System.getProperty("user.dir"));
+    }
+
+    @Override
+    public void cleanFile() {
+        return;
+    }
+    
 }

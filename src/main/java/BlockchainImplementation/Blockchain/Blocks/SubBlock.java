@@ -2,8 +2,6 @@ package BlockchainImplementation.Blockchain.Blocks;
 
 import BlockchainImplementation.Blockchain.Hashing.Hasher;
 
-import java.util.Date;
-
 /**
  * A SubBlock is the smallest unit of a Block, it contains the clear information and points to its previous hashed SubBlock.
  *
@@ -12,43 +10,60 @@ import java.util.Date;
  * @param <R> The type of the information contained in the SubBlock.
  */
 
-public class SubBlock<T,R> {
+public class SubBlock<T,R> extends AbstractBlock<R>{
 
-    private final String previousHashBlock; /** contains the hash of the previous block */
-    private String hashBlock; /** contains the hash of the current block */
-    private final long timestamp; /** contains the date and time of when the block was created */
-    private final T meta_data; /** contains the sequence number of the message */
-    private final R content; /** content of the current block */
+    private final T meta_data; /** contains the meta data of the message */
 
-
-    public SubBlock(String previousHashBlock, T sequence_number, R message) {
-        this.previousHashBlock = previousHashBlock;
-        this.meta_data = sequence_number;
-        this.content = message;
-        this.timestamp = new Date().getTime();
+    public SubBlock(String previousHashBlock, T meta_data, R content) {
+        super(previousHashBlock, content);
+        this.meta_data = meta_data;
         this.hashBlock = calcHash();
     }
-
 
     /**
      * Calculates the hash of the current SubBlock just putting all its a properties together
      *
      * @return the hash of the current SubBlock
      */
-    private String calcHash() {
-        return Hasher.hashSHA256(previousHashBlock, Long.toString(timestamp), meta_data.toString(), content.toString());
+    @Override
+    protected String calcHash() {
+        return Hasher.hashSHA256(this.getPreviousHashBlock(), meta_data.toString(), transaction.toString());
     }
 
-    public String getHashBlock () {
-        return hashBlock;
+    @Override
+    public String calcHmacData () {
+        return Hasher.hashSHA256( meta_data.toString(), transaction.toString());
     }
-
-    public String getPreviousHashBlock () { return previousHashBlock; }
 
     public T getMeta_Data () { return meta_data; }
 
-    public R getContent() { return content; }
+    /**
+     * @return the information of the SubBlock as [transaction;meta]
+     */
+    @Override
+    public String toString() {
+        return "[" + meta_data.toString() + ";" + transaction.toString() + "]";
+    }
 
-    public long getTimestamp () { return timestamp; }
+    @Override
+    public boolean equals (Object obj) {
+
+        if(!(obj instanceof SubBlock)) {
+            return false;
+        }
+
+        SubBlock<T, R> block = (SubBlock<T, R>) obj;
+
+        if(!this.transaction.equals(block.transaction) || !this.meta_data.equals(block.meta_data))
+            return false;
+
+        if(!hashBlock.equals(block.getHashBlock()))
+            return false;
+
+        if(!getPreviousHashBlock().equals(block.getPreviousHashBlock()))
+            return false;
+
+        return true;
+    }
 
 }

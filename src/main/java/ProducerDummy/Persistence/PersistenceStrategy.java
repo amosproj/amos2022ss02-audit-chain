@@ -1,5 +1,6 @@
 package ProducerDummy.Persistence;
 
+import java.nio.file.Path;
 
 import ProducerDummy.Messages.Message;
 
@@ -9,10 +10,9 @@ public interface PersistenceStrategy {
     /***
      * Store the Messages.Message into your Persistence Mechanism e.g File or Database.
      *
-     * @param sequenceNumber the sequence number of the message
      * @param message message to be stored as a string
      */
-    public void StoreMessage(Message message);
+    public void StoreMessage(Message message) throws NullPointerException;
 
     /**
      * Create a persistence mechanism, e.g create the File or the Database.
@@ -22,7 +22,10 @@ public interface PersistenceStrategy {
     /**
      * @return last AbstractMessage written in the persistence mechanism
      */
-
     public Message ReadLastMessage();
+
+    public Path getFilePath();
+
+    public void cleanFile();
 
 }
