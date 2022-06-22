@@ -139,7 +139,6 @@ JUnit is a unit testing open-source framework for the Java programming language.
 ### Testing
 The applications of our project contains unittests that can be used to test the individual components. To run them locally just execute the following command:
 
-- Run Test
   ```
   mvn clean compile test
   ```
