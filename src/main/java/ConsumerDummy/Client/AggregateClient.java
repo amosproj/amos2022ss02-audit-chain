@@ -13,7 +13,7 @@ import com.rabbitmq.client.DeliverCallback;
 import ProducerDummy.Messages.JsonMessage;
 import ProducerDummy.Persistence.AggregateMessageFilePersistence;
 
-public class AggregateConsumerClient extends Consumer {
+public class AggregateClient extends Consumer {
 
     static int sequence_number = 0;
     private final AggregateMessageFilePersistence persistenceStrategy;
@@ -27,19 +27,9 @@ public class AggregateConsumerClient extends Consumer {
      *
      * @throws IOException if the file cannot be read
      */
-    public AggregateConsumerClient(String host, int port, String username, String password, String queue_name) throws IOException {
+    public AggregateClient(String host, int port, String username, String password, String queue_name) throws IOException {
         super(host, port, username, password, queue_name);
         this.persistenceStrategy = new AggregateMessageFilePersistence(path, "messages.txt");
-    }
-
-    @Override
-    public void initFactory() {
-        this.factory.setHost(this.HOST);
-        if(!HOST.equals("localhost")) {
-            this.factory.setUsername(this.USER);
-            this.factory.setPassword(this.PASSWORD);
-        }
-        this.factory.setPort(this.PORT);
     }
 
     public void start() throws IOException, TimeoutException {
@@ -67,8 +57,8 @@ public class AggregateConsumerClient extends Consumer {
             channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
         };
 
-        channel.basicConsume(QUEUE_NAME, false, deliverCallback, consumerTag -> {
-        });
+            channel.basicConsume(QUEUE_NAME, false, deliverCallback, consumerTag -> {
+            });
     }
 
 }

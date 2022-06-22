@@ -7,7 +7,7 @@ import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.concurrent.TimeoutException;
 
-import ConsumerDummy.Client.AggregateConsumerClient;
+import ConsumerDummy.Client.AggregateClient;
 
 public class main {
 
@@ -26,7 +26,7 @@ public class main {
         String PASSWORD = p.getProperty("PASSWORD");
         String queue_name = "FAKE";
 
-        AggregateConsumerClient client = new AggregateConsumerClient(HOST,PORT,USER,PASSWORD,queue_name);
+        AggregateClient client = new AggregateClient(HOST,PORT,USER,PASSWORD,queue_name);
         client.start();
         return;
     }
