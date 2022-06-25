@@ -8,6 +8,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,6 +19,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
 
@@ -32,10 +35,12 @@ import BlockchainImplementation.Blockchain.Blocks.SubBlock;
  */
 public class Blockchain<T,R> implements BlockchainInterface<T,R> {
 
+    private int numberBlockchain; /** Number which indicates which part of the blockchain this is */
     private Map<String, Block<T,R>> blockchain; /** Map of blocks and their hash */
     private String lastBlockHash; /** The hash of the last block of the blockchain */
 
     public Blockchain() {
+        numberBlockchain = 1;
         lastBlockHash = "0";
 
         this.blockchain = new HashMap<>();
@@ -226,39 +231,74 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
 
 
     /**
+     * RIFAIIIIIIIIIII
+     * POI METTI NEL CONSUMER DUMMY CHE SALVA AD OGNI ADDBLCOK
+     *
      * Parses the blockchain and saves it in a JSON file. The file will be saved in the current directory.
      * If the path is not found, a message is shown.
      */
-    public void blockchainToJson(String path) {
+    public void blockchainToJson(String pathDirectory, long limitByteSize) {
 
-        Gson gson = new Gson(); 
+        Gson gson = new Gson();
+
+        String pathDirectory1 = pathDirectory + "/blockchain" + numberBlockchain + ".json";
+        String pathDirectory2 = pathDirectory + "/lastBlockchain.txt";
+
         String jsonBlockchain = gson.toJson(this);
-        Path pathP = Paths.get(path);
+        Path path = Paths.get(pathDirectory1);
+        Path path2 = Paths.get(pathDirectory2);
 
         try{
-            pathP = Files.writeString(pathP, jsonBlockchain, StandardCharsets.UTF_8, CREATE, TRUNCATE_EXISTING);
+            Files.writeString(path, jsonBlockchain, StandardCharsets.UTF_8, CREATE, TRUNCATE_EXISTING);
+            Files.writeString(path2, String.valueOf(numberBlockchain), StandardCharsets.UTF_8, CREATE, TRUNCATE_EXISTING);
+
+            long bytes = Files.size(path);
+
+            if(bytes > limitByteSize) {
+                numberBlockchain++;
+                lastBlockHash = "0";
+                blockchain = new HashMap<>();
+            }
         } 
-        catch(IOException e){//maybe we need to add an Exception e
+        catch(IOException e){
             System.out.println("Sorry, wrong path");
         }
 
     }
 
     /**
+     * RIDAIIII
+     *
      * Takes the json file contained in the path and parses it into a blockchain.
      * If the file is not found, a message is shown and it means that is the first time that the blockchain has been saved
      *
-     * @param path represents the path where the json file is located
+     * @param pathDirectory represents the path where the json file is located
      */
-    public void jsonToBlockchain(Path path) {
+    public void jsonToBlockchain(String pathDirectory) {
 
         Gson gson = new Gson();
         Blockchain<T, R> blockchainFromJson = new Blockchain<>();
-
         FileReader fileReader = null;
-        try {
+        String lastBlockchain = "";
+        int nLastBlockchain = 1;
 
-            fileReader = new FileReader(path.toFile());
+        try {
+            Path path = Path.of(pathDirectory + "/lastBlockchain.txt");
+            List<String> content = Files.readAllLines(path, StandardCharsets.UTF_8);
+            lastBlockchain =  content.stream().collect(Collectors.joining());
+            nLastBlockchain = Integer.parseInt(lastBlockchain);
+        } catch (FileNotFoundException e) {
+            System.out.println("No previous blockchains have been found");
+            return;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        pathDirectory += "/blockchain" + nLastBlockchain + ".json";
+
+
+        try {
+            fileReader = new FileReader(pathDirectory);
 
             // Convert JSON File to Java Object
             Object obj = gson.fromJson(fileReader, Blockchain.class);
@@ -267,13 +307,14 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
             fileReader.close();
 
         } catch(FileNotFoundException e){
-            System.out.println("The file was not found, please check the path again.");
+            System.out.println("Errors trying to find the part " + nLastBlockchain + " of the Blockchain");
         }catch (IOException f){
-            System.out.println("Blockchain does not exist yet");
+            System.out.println("Error reading the file");
         }
 
         this.blockchain = blockchainFromJson.blockchain;
         this.lastBlockHash = blockchainFromJson.lastBlockHash;
+        this.numberBlockchain = nLastBlockchain;
 
     }
 
