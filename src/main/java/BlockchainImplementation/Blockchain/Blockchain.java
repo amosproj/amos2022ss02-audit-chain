@@ -239,6 +239,11 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
      */
     public void blockchainToJson(String pathDirectory, long limitByteSize) {
 
+        if(lastBlockHash.equals("0")) {
+            System.out.println("The Blockchain is still to empty to be saved");
+            return;
+        }
+
         Gson gson = new Gson();
 
         String pathDirectory1 = pathDirectory + "/blockchain" + numberBlockchain + ".json";
