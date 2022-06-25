@@ -38,10 +38,12 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
     private int numberBlockchain; /** Number which indicates which part of the blockchain this is */
     private Map<String, Block<T,R>> blockchain; /** Map of blocks and their hash */
     private String lastBlockHash; /** The hash of the last block of the blockchain */
+    private boolean locked; /** It is false if the current part of the blockchain can be modified, true otherwise */
 
     public Blockchain() {
         numberBlockchain = 1;
         lastBlockHash = "0";
+        locked = false;
 
         this.blockchain = new HashMap<>();
     }
@@ -49,11 +51,17 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
     /**
      * Adds a block to the blockchain. If it is the first, it will be he genesys block and will point to "0".
      *
+     * @throws RuntimeException if the blockchain is locked and someone tries to edit it
+     *
      * @param meta_data the meta_data of the transactions in the block
      * @param content the content of the transactions in the block
      */
     @Override
     public void addABlock(T[] meta_data, R[] content) {
+
+        if(locked)
+            throw new RuntimeException("The current part of the blockchain is locked because it is not the latest part of it");
+
         Block<T,R> block;
 
         block = new Block<>(this.getLastBlockHash(), meta_data, content);
@@ -229,18 +237,81 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
 
     }
 
+    /**
+     * It finds the number of the last part of the blockchain reached which is saved in /lastBlockchain.txt
+     *
+     * @param pathDirectory part of directories in which /lastBlockchain.txt is contained
+     */
+    private int findLastBlockchainNumber (String pathDirectory) {
+
+        String lastBlockchain = "";
+        int nLastBlockchain = 1;
+
+        try {
+            Path path = Path.of(pathDirectory + "/lastBlockchain.txt");
+            List<String> content = Files.readAllLines(path, StandardCharsets.UTF_8);
+            lastBlockchain =  content.stream().collect(Collectors.joining());
+            nLastBlockchain = Integer.parseInt(lastBlockchain);
+        } catch (FileNotFoundException e) {
+            System.out.println("No previous blockchains have been found");
+            return 0;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return nLastBlockchain;
+    }
 
     /**
-     * RIFAIIIIIIIIIII
-     * POI METTI NEL CONSUMER DUMMY CHE SALVA AD OGNI ADDBLCOK
+     * It loads the previous part of the blockchain (current number part - 1)
      *
-     * Parses the blockchain and saves it in a JSON file. The file will be saved in the current directory.
-     * If the path is not found, a message is shown.
+     * @throws RuntimeException if it has already reached the beginning
+     *
+     * @param pathDirectory part of directories in which the parts of the blockchain are stored
+     */
+    public void loadPreviousPartBlockchain (String pathDirectory) throws RuntimeException {
+        if(numberBlockchain != 1)
+            jsonToBlockchain(pathDirectory, numberBlockchain-1);
+        else
+            throw new RuntimeException("The beginning of the blockchain has been reached");
+    }
+
+    /**
+     * It loads the next part of the blockchain (current number part + 1)
+     *
+     * @throws RuntimeException if it has already reached the end
+     *
+     * @param pathDirectory part of directories in which the parts of the blockchain are stored
+     */
+    public void loadNextPartBlockchain (String pathDirectory) throws RuntimeException{
+
+        int nLastBlockchain = findLastBlockchainNumber(pathDirectory);
+
+        if(nLastBlockchain == 0) {
+            System.out.println("No previous blockchains have been found");
+            return;
+        }
+
+        if(numberBlockchain != nLastBlockchain)
+            jsonToBlockchain(pathDirectory, numberBlockchain+1);
+        else
+            throw new RuntimeException("The end of the blockchain has already been reached");
+    }
+
+
+    /**
+     * Parses the blockchain and saves it in a JSON file. The file will be saved in the current directory described by
+     * pathDirectory and if the size of the file is bigger than limitBySize, a new part of the blockchain will be created to
+     * work on. If the path is not found, a message is shown.
+     *
+     * @param pathDirectory part of directories in which the blockchain has to be stored
+     * @param limitByteSize limit in byte of the size of the file of the blockchain that can reach. It will for sure exceeded
+     *                      but after it a new part for the blockchain to work on will be created.
      */
     public void blockchainToJson(String pathDirectory, long limitByteSize) {
 
         if(lastBlockHash.equals("0")) {
-            System.out.println("The Blockchain is still to empty to be saved");
+            System.out.println("The Blockchain is still too empty to be saved");
             return;
         }
 
@@ -260,9 +331,14 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
             long bytes = Files.size(path);
 
             if(bytes > limitByteSize) {
+                this.locked = true;
+                jsonBlockchain = gson.toJson(this);
+                Files.writeString(path, jsonBlockchain, StandardCharsets.UTF_8, CREATE, TRUNCATE_EXISTING);
+
                 numberBlockchain++;
                 lastBlockHash = "0";
                 blockchain = new HashMap<>();
+                this.locked = false;
             }
         } 
         catch(IOException e){
@@ -272,32 +348,37 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
     }
 
     /**
-     * RIDAIIII
+     * Takes the last part of the blockchain contained in a json file and load it.
+     * If the file is not found, a message is shown (it could also be that no blockchains have already been stored there before)
      *
-     * Takes the json file contained in the path and parses it into a blockchain.
-     * If the file is not found, a message is shown and it means that is the first time that the blockchain has been saved
-     *
-     * @param pathDirectory represents the path where the json file is located
+     * @param pathDirectory represents the path where the json files are located
      */
     public void jsonToBlockchain(String pathDirectory) {
+
+        int nLastBlockchain = findLastBlockchainNumber(pathDirectory);
+
+        if(nLastBlockchain == 0) {
+            System.out.println("No previous blockchains have been found");
+            return;
+        }
+
+        jsonToBlockchain(pathDirectory, nLastBlockchain);
+
+    }
+
+    /**
+     * Takes the nLastBlockchain-th part of the blockchain contained in a json file and load it.
+     * If the file is not found, a message is shown (it could also be that no blockchains have already been stored there before)
+     *
+     * @param pathDirectory represents the path where the json files are located
+     * @param nLastBlockchain represents the n-th part of the blockchain that it is needed to load
+     */
+    public void jsonToBlockchain(String pathDirectory, int nLastBlockchain) {
 
         Gson gson = new Gson();
         Blockchain<T, R> blockchainFromJson = new Blockchain<>();
         FileReader fileReader = null;
-        String lastBlockchain = "";
-        int nLastBlockchain = 1;
-
-        try {
-            Path path = Path.of(pathDirectory + "/lastBlockchain.txt");
-            List<String> content = Files.readAllLines(path, StandardCharsets.UTF_8);
-            lastBlockchain =  content.stream().collect(Collectors.joining());
-            nLastBlockchain = Integer.parseInt(lastBlockchain);
-        } catch (FileNotFoundException e) {
-            System.out.println("No previous blockchains have been found");
-            return;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        String pathDirectoryOriginal = pathDirectory;
 
         pathDirectory += "/blockchain" + nLastBlockchain + ".json";
 
@@ -319,6 +400,7 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
 
         this.blockchain = blockchainFromJson.blockchain;
         this.lastBlockHash = blockchainFromJson.lastBlockHash;
+        this.locked = blockchainFromJson.locked;
         this.numberBlockchain = nLastBlockchain;
 
     }
