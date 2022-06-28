@@ -378,7 +378,6 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
         Gson gson = new Gson();
         Blockchain<T, R> blockchainFromJson = new Blockchain<>();
         FileReader fileReader = null;
-        String pathDirectoryOriginal = pathDirectory;
 
         pathDirectory += "/blockchain" + nLastBlockchain + ".json";
 
