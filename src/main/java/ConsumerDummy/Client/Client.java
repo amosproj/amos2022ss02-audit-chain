@@ -9,12 +9,11 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.DeliverCallback;
 
-import ProducerDummy.Client.AbstractClient;
 
 /**
  * Consumerclient implementation
  */
-public class Client extends AbstractClient {
+public class Client extends Consumer {
     /**
      * Constructor for Client.AbstractClient. Initializes the filepath, the file reader and set information for the
      * connection factory. Call {@link #initFactory()} to initialize the connection factory.
@@ -25,6 +24,8 @@ public class Client extends AbstractClient {
         super(host, port, username, password, queue_name);
     }
 
+
+
     /***
      * Start receiving Messages from the RabbitMQ Server.
      * @throws IOException if an I/O error occurs
@@ -32,18 +33,13 @@ public class Client extends AbstractClient {
      */
     public void start() throws IOException, TimeoutException {
         System.out.println("Starting to receive Messages.");
-        Connection connection = this.factory.newConnection();
-        Channel channel = connection.createChannel();
-        channel.queueDeclare(QUEUE_NAME, true, false, false, Map.of("x-queue-type", "quorum"));
-
+        Channel channel = generateChannel();
         System.out.println(" [*] Waiting for messages.");
 
-        DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-            String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
-            System.out.println(" [x] Received '" + message + "'");
-        };
+        DeliverCallback deliverCallback = DeliveryCallback(null);
         channel.basicConsume(QUEUE_NAME, true, deliverCallback, consumerTag -> { });
     }
-    
+
+
 }
 

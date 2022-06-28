@@ -39,6 +39,14 @@ public class AggregateClient extends Consumer {
         Channel channel = connection.createChannel();
         channel.queueDeclare(QUEUE_NAME, true, false, false, Map.of("x-queue-type", "quorum"));
 
+        DeliverCallback deliverCallback = DeliveryCallback(channel);
+
+            channel.basicConsume(QUEUE_NAME, false, deliverCallback, consumerTag -> {
+            });
+    }
+
+    @Override
+    public DeliverCallback DeliveryCallback(Channel channel) {
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
             ProducerDummy.Messages.AggregateMessage message;
             try {
@@ -56,11 +64,8 @@ public class AggregateClient extends Consumer {
 
             channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
         };
-
-            channel.basicConsume(QUEUE_NAME, false, deliverCallback, consumerTag -> {
-            });
+        return deliverCallback;
     }
-
 }
 
 

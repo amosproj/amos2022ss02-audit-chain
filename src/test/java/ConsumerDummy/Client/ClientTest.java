@@ -4,24 +4,27 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ClientTest {
-
     @Test
-    @DisplayName("Testing localhost functionality")
-    void localhost() {
+    @DisplayName("Testing constructor")
+    void constructor() {
         try {
-            AggregateClient c = new AggregateClient("localhost", 5672, "shouldn't be", "set in factory", "Fake");
-            assertAll(
-                    () -> assertEquals("localhost", c.factory.getHost()),
-                    () -> assertEquals(5672, c.factory.getPort()),
-                    () -> assertEquals("guest", c.factory.getUsername()),  //should be guest in localhost
-                    () -> assertEquals("guest", c.factory.getPassword())); //should be guest in localhost
+            Client c = new Client("localhost", 5672, "shouldn't be", "set in factory", "Fake");
+            assertNotNull(c);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Test
+    @DisplayName("Test functionallity")
+    void start() throws IOException {
+        Client c = new Client("localhost", 5672, "shouldn't be", "set in factory", "Fake");
+        assertDoesNotThrow(() -> c.start());
     }
 
 }
