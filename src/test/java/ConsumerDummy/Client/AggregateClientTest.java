@@ -2,6 +2,8 @@ package ConsumerDummy.Client;
 
 import ProducerDummy.Messages.AggregateMessage;
 import ProducerDummy.Messages.SimpleMessage;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.DeliverCallback;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +36,7 @@ class AggregateClientTest {
 
     @Test
     @DisplayName("Test basic functions")
-    void start() throws IOException, TimeoutException {
+    void files() throws IOException {
         String path = Paths.get(System.getProperty("user.dir"), "src", "main", "resources", "ConsumerDummy", "messages.txt").toString();
         //Deleting file if it already exists
         File f = new File(path);
@@ -74,4 +76,12 @@ class AggregateClientTest {
             assertEquals("Test " + i, ((SimpleMessage) messages.get(i)).getMessage()); //check if message is correct
         }
     }
+
+    @Test
+    @DisplayName("Test functionallity")
+    void start() throws IOException {
+        AggregateClient c = new AggregateClient("localhost", 5672, "shouldn't be", "set in factory", "Fake");
+        assertDoesNotThrow(() -> c.start());
+    }
+
 }
