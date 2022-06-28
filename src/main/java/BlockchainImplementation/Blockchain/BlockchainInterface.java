@@ -31,8 +31,10 @@ public interface BlockchainInterface<T,R> {
 
     public List<SubBlock<T, R>> getTemperedMessageFromABlockIfAny (String path);
 
-    public void blockchainToJson(String path);
+    public void blockchainToJson(long limitByteSize);
 
-    public void jsonToBlockchain(Path path);
+    public void blockchainToJson();
+
+    public void jsonToBlockchain();
 
 }
