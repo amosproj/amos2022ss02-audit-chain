@@ -20,7 +20,7 @@ public class BlockchainTest {
 
     private static Blockchain<String, String> setupBlockchain() {
 
-        Blockchain<String, String> blockchain = new Blockchain<>();
+        Blockchain<String, String> blockchain = new Blockchain<>("src/test/resources/testOutput/", Long.MAX_VALUE);
         blockchain.addABlock(new String[]{"1", "2", "3"},
                 new String[]{"a", "b", "c"});
 
@@ -45,7 +45,7 @@ public class BlockchainTest {
     @Test
     @DisplayName("A new Blockchain should have as its last block '0'")
     public void aNewBlockchainMustHaveItsLatBlockAs0() {
-        Blockchain<String, String> blockchain = new Blockchain<>();
+        Blockchain<String, String> blockchain = new Blockchain<>("src/test/resources/testOutput/", Long.MAX_VALUE);
 
         assertThat(blockchain.getLastBlockHash()).isEqualTo("0");
     }
@@ -54,7 +54,7 @@ public class BlockchainTest {
     @Test
     @DisplayName("A Blockchain with a block should not have as its last block '0'")
     public void aBlockchainWithABlockShouldNotHaveItsLastBlockAs0() {
-        Blockchain<String, String> blockchain = new Blockchain<>();
+        Blockchain<String, String> blockchain = new Blockchain<>("src/test/resources/testOutput/", Long.MAX_VALUE);
         blockchain.addABlock(new String[]{"1", "2", "3"},
                             new String[]{"a", "b", "c"});
 
@@ -466,10 +466,10 @@ public class BlockchainTest {
     public void blockchainToJsonShouldSaveinAFileTheJsonOfTheBlockchainAndPut1AsLastNumberOfBlockchain() throws IOException {
         Blockchain<String, String> blockchain = setupBlockchain();
 
-        blockchain.blockchainToJson("src/test/resources/testOutput", Long.MAX_VALUE);
+        blockchain.blockchainToJson(Long.MAX_VALUE);
         String fileAlist = Files.readString(Paths.get("src/test/resources/testOutput/blockchain1.json"));
 
-        String blockchainString = "{\"numberBlockchain\":1,\"blockchain\":{\"4b84df364bacbe8f6bb756ae85607051950121fb1c257a35e74d254f2e37051a\":{\"lastSubBlockHash\":\"1274709047133e3e49d841f9f03324646df9cc0ffbc0437d345d556434e6e36d\",\"previousHashBlock\":\"02f25b9d7235c4bd3745a1292c30f10c57abd802b4fe323a9e0b3e1d20bb3b30\",\"hashBlock\":\"4b84df364bacbe8f6bb756ae85607051950121fb1c257a35e74d254f2e37051a\",\"transaction\":{\"1274709047133e3e49d841f9f03324646df9cc0ffbc0437d345d556434e6e36d\":{\"meta_data\":\"6\",\"previousHashBlock\":\"36a0b872fbe8131912374546862e72f40fce75efba29010854851c23a22de654\",\"hashBlock\":\"1274709047133e3e49d841f9f03324646df9cc0ffbc0437d345d556434e6e36d\",\"transaction\":\"f\"},\"36a0b872fbe8131912374546862e72f40fce75efba29010854851c23a22de654\":{\"meta_data\":\"5\",\"previousHashBlock\":\"4322a200078aa064d7b95a0f689c775d1ec7c9dd9cb71133a1b54ad344d47d84\",\"hashBlock\":\"36a0b872fbe8131912374546862e72f40fce75efba29010854851c23a22de654\",\"transaction\":\"e\"},\"4322a200078aa064d7b95a0f689c775d1ec7c9dd9cb71133a1b54ad344d47d84\":{\"meta_data\":\"4\",\"previousHashBlock\":\"0\",\"hashBlock\":\"4322a200078aa064d7b95a0f689c775d1ec7c9dd9cb71133a1b54ad344d47d84\",\"transaction\":\"d\"}}},\"b1eeb2de18a4520f43875bc81d8e1b41d211c85bbd2aaef04348dd370f05813a\":{\"lastSubBlockHash\":\"629897848ac7c45379bc8a0ed0bc2c9aec3a2392a630a929d910fb7f0a44b2f1\",\"previousHashBlock\":\"4b84df364bacbe8f6bb756ae85607051950121fb1c257a35e74d254f2e37051a\",\"hashBlock\":\"b1eeb2de18a4520f43875bc81d8e1b41d211c85bbd2aaef04348dd370f05813a\",\"transaction\":{\"40781e6fb5728e3eaab753d2ce0841182690062f305499663aae8299571f7b42\":{\"meta_data\":\"8\",\"previousHashBlock\":\"ba71216589005be8e99cb6027e3fcf3e7855577fc6f35d8559853b97329b9c29\",\"hashBlock\":\"40781e6fb5728e3eaab753d2ce0841182690062f305499663aae8299571f7b42\",\"transaction\":\"h\"},\"629897848ac7c45379bc8a0ed0bc2c9aec3a2392a630a929d910fb7f0a44b2f1\":{\"meta_data\":\"9\",\"previousHashBlock\":\"40781e6fb5728e3eaab753d2ce0841182690062f305499663aae8299571f7b42\",\"hashBlock\":\"629897848ac7c45379bc8a0ed0bc2c9aec3a2392a630a929d910fb7f0a44b2f1\",\"transaction\":\"i\"},\"ba71216589005be8e99cb6027e3fcf3e7855577fc6f35d8559853b97329b9c29\":{\"meta_data\":\"7\",\"previousHashBlock\":\"0\",\"hashBlock\":\"ba71216589005be8e99cb6027e3fcf3e7855577fc6f35d8559853b97329b9c29\",\"transaction\":\"g\"}}},\"02f25b9d7235c4bd3745a1292c30f10c57abd802b4fe323a9e0b3e1d20bb3b30\":{\"lastSubBlockHash\":\"41c445c80c4dc74660a0fb413010aa0432ecf24d9415403813f6485c21f9ff63\",\"previousHashBlock\":\"0\",\"hashBlock\":\"02f25b9d7235c4bd3745a1292c30f10c57abd802b4fe323a9e0b3e1d20bb3b30\",\"transaction\":{\"7e9126291e5726457a38b262760c0b58624977f2798029e8e5550bf1bdbcb12c\":{\"meta_data\":\"2\",\"previousHashBlock\":\"8b1bf74ad28fc10cce5cc14966f38e4ffd0a493385c9855ce4d5677b7157a6fb\",\"hashBlock\":\"7e9126291e5726457a38b262760c0b58624977f2798029e8e5550bf1bdbcb12c\",\"transaction\":\"b\"},\"8b1bf74ad28fc10cce5cc14966f38e4ffd0a493385c9855ce4d5677b7157a6fb\":{\"meta_data\":\"1\",\"previousHashBlock\":\"0\",\"hashBlock\":\"8b1bf74ad28fc10cce5cc14966f38e4ffd0a493385c9855ce4d5677b7157a6fb\",\"transaction\":\"a\"},\"41c445c80c4dc74660a0fb413010aa0432ecf24d9415403813f6485c21f9ff63\":{\"meta_data\":\"3\",\"previousHashBlock\":\"7e9126291e5726457a38b262760c0b58624977f2798029e8e5550bf1bdbcb12c\",\"hashBlock\":\"41c445c80c4dc74660a0fb413010aa0432ecf24d9415403813f6485c21f9ff63\",\"transaction\":\"c\"}}}},\"lastBlockHash\":\"b1eeb2de18a4520f43875bc81d8e1b41d211c85bbd2aaef04348dd370f05813a\",\"locked\":false}";
+        String blockchainString = "{\"numberBlockchain\":1,\"blockchain\":{\"4b84df364bacbe8f6bb756ae85607051950121fb1c257a35e74d254f2e37051a\":{\"lastSubBlockHash\":\"1274709047133e3e49d841f9f03324646df9cc0ffbc0437d345d556434e6e36d\",\"previousHashBlock\":\"02f25b9d7235c4bd3745a1292c30f10c57abd802b4fe323a9e0b3e1d20bb3b30\",\"hashBlock\":\"4b84df364bacbe8f6bb756ae85607051950121fb1c257a35e74d254f2e37051a\",\"transaction\":{\"1274709047133e3e49d841f9f03324646df9cc0ffbc0437d345d556434e6e36d\":{\"meta_data\":\"6\",\"previousHashBlock\":\"36a0b872fbe8131912374546862e72f40fce75efba29010854851c23a22de654\",\"hashBlock\":\"1274709047133e3e49d841f9f03324646df9cc0ffbc0437d345d556434e6e36d\",\"transaction\":\"f\"},\"36a0b872fbe8131912374546862e72f40fce75efba29010854851c23a22de654\":{\"meta_data\":\"5\",\"previousHashBlock\":\"4322a200078aa064d7b95a0f689c775d1ec7c9dd9cb71133a1b54ad344d47d84\",\"hashBlock\":\"36a0b872fbe8131912374546862e72f40fce75efba29010854851c23a22de654\",\"transaction\":\"e\"},\"4322a200078aa064d7b95a0f689c775d1ec7c9dd9cb71133a1b54ad344d47d84\":{\"meta_data\":\"4\",\"previousHashBlock\":\"0\",\"hashBlock\":\"4322a200078aa064d7b95a0f689c775d1ec7c9dd9cb71133a1b54ad344d47d84\",\"transaction\":\"d\"}}},\"b1eeb2de18a4520f43875bc81d8e1b41d211c85bbd2aaef04348dd370f05813a\":{\"lastSubBlockHash\":\"629897848ac7c45379bc8a0ed0bc2c9aec3a2392a630a929d910fb7f0a44b2f1\",\"previousHashBlock\":\"4b84df364bacbe8f6bb756ae85607051950121fb1c257a35e74d254f2e37051a\",\"hashBlock\":\"b1eeb2de18a4520f43875bc81d8e1b41d211c85bbd2aaef04348dd370f05813a\",\"transaction\":{\"40781e6fb5728e3eaab753d2ce0841182690062f305499663aae8299571f7b42\":{\"meta_data\":\"8\",\"previousHashBlock\":\"ba71216589005be8e99cb6027e3fcf3e7855577fc6f35d8559853b97329b9c29\",\"hashBlock\":\"40781e6fb5728e3eaab753d2ce0841182690062f305499663aae8299571f7b42\",\"transaction\":\"h\"},\"629897848ac7c45379bc8a0ed0bc2c9aec3a2392a630a929d910fb7f0a44b2f1\":{\"meta_data\":\"9\",\"previousHashBlock\":\"40781e6fb5728e3eaab753d2ce0841182690062f305499663aae8299571f7b42\",\"hashBlock\":\"629897848ac7c45379bc8a0ed0bc2c9aec3a2392a630a929d910fb7f0a44b2f1\",\"transaction\":\"i\"},\"ba71216589005be8e99cb6027e3fcf3e7855577fc6f35d8559853b97329b9c29\":{\"meta_data\":\"7\",\"previousHashBlock\":\"0\",\"hashBlock\":\"ba71216589005be8e99cb6027e3fcf3e7855577fc6f35d8559853b97329b9c29\",\"transaction\":\"g\"}}},\"02f25b9d7235c4bd3745a1292c30f10c57abd802b4fe323a9e0b3e1d20bb3b30\":{\"lastSubBlockHash\":\"41c445c80c4dc74660a0fb413010aa0432ecf24d9415403813f6485c21f9ff63\",\"previousHashBlock\":\"0\",\"hashBlock\":\"02f25b9d7235c4bd3745a1292c30f10c57abd802b4fe323a9e0b3e1d20bb3b30\",\"transaction\":{\"7e9126291e5726457a38b262760c0b58624977f2798029e8e5550bf1bdbcb12c\":{\"meta_data\":\"2\",\"previousHashBlock\":\"8b1bf74ad28fc10cce5cc14966f38e4ffd0a493385c9855ce4d5677b7157a6fb\",\"hashBlock\":\"7e9126291e5726457a38b262760c0b58624977f2798029e8e5550bf1bdbcb12c\",\"transaction\":\"b\"},\"8b1bf74ad28fc10cce5cc14966f38e4ffd0a493385c9855ce4d5677b7157a6fb\":{\"meta_data\":\"1\",\"previousHashBlock\":\"0\",\"hashBlock\":\"8b1bf74ad28fc10cce5cc14966f38e4ffd0a493385c9855ce4d5677b7157a6fb\",\"transaction\":\"a\"},\"41c445c80c4dc74660a0fb413010aa0432ecf24d9415403813f6485c21f9ff63\":{\"meta_data\":\"3\",\"previousHashBlock\":\"7e9126291e5726457a38b262760c0b58624977f2798029e8e5550bf1bdbcb12c\",\"hashBlock\":\"41c445c80c4dc74660a0fb413010aa0432ecf24d9415403813f6485c21f9ff63\",\"transaction\":\"c\"}}}},\"lastBlockHash\":\"b1eeb2de18a4520f43875bc81d8e1b41d211c85bbd2aaef04348dd370f05813a\",\"locked\":false,\"path\":\"src/test/resources/testOutput/\",\"maxByte\":9223372036854775807}";
 
         String nBlockchain = Files.readString(Paths.get("src/test/resources/testOutput/lastBlockchain.txt"));
         int iNBlockchain = Integer.parseInt(nBlockchain);
@@ -486,11 +486,11 @@ public class BlockchainTest {
     public void jsonToBlockchainShouldTakeBackTheRightBlockchain() {
         Blockchain<String, String> blockchain = setupBlockchain();
 
-        blockchain.blockchainToJson("src/test/resources/testOutput", Long.MAX_VALUE);
+        blockchain.blockchainToJson(Long.MAX_VALUE);
 
-        Blockchain<String, String> blockchain2 = new Blockchain<>();
+        Blockchain<String, String> blockchain2 = new Blockchain<>("src/test/resources/testOutput/", Long.MAX_VALUE);
 
-        blockchain2.jsonToBlockchain("src/test/resources/testOutput");
+        blockchain2.jsonToBlockchain();
 
         assertThat(blockchain2).isEqualTo(blockchain);
     }
@@ -500,19 +500,19 @@ public class BlockchainTest {
     public void blockchainToJsonShouldSaveInTwoFilesABlockchainThatExceedsInSize() throws IOException {
         Blockchain<String, String> blockchain = setupBlockchain();
 
-        blockchain.blockchainToJson("src/test/resources/testOutput", 1);
+        blockchain.blockchainToJson( 1);
 
         blockchain.addABlock(new String[]{"10", "11", "12"},
                 new String[]{"l", "m", "n"});
 
-        blockchain.blockchainToJson("src/test/resources/testOutput", Long.MAX_VALUE);
+        blockchain.blockchainToJson( Long.MAX_VALUE);
 
 
         String fileAlist = Files.readString(Paths.get("src/test/resources/testOutput/blockchain1.json"));
         String fileAlist2 = Files.readString(Paths.get("src/test/resources/testOutput/blockchain2.json"));
 
-        String blockchainString = "{\"numberBlockchain\":1,\"blockchain\":{\"4b84df364bacbe8f6bb756ae85607051950121fb1c257a35e74d254f2e37051a\":{\"lastSubBlockHash\":\"1274709047133e3e49d841f9f03324646df9cc0ffbc0437d345d556434e6e36d\",\"previousHashBlock\":\"02f25b9d7235c4bd3745a1292c30f10c57abd802b4fe323a9e0b3e1d20bb3b30\",\"hashBlock\":\"4b84df364bacbe8f6bb756ae85607051950121fb1c257a35e74d254f2e37051a\",\"transaction\":{\"1274709047133e3e49d841f9f03324646df9cc0ffbc0437d345d556434e6e36d\":{\"meta_data\":\"6\",\"previousHashBlock\":\"36a0b872fbe8131912374546862e72f40fce75efba29010854851c23a22de654\",\"hashBlock\":\"1274709047133e3e49d841f9f03324646df9cc0ffbc0437d345d556434e6e36d\",\"transaction\":\"f\"},\"36a0b872fbe8131912374546862e72f40fce75efba29010854851c23a22de654\":{\"meta_data\":\"5\",\"previousHashBlock\":\"4322a200078aa064d7b95a0f689c775d1ec7c9dd9cb71133a1b54ad344d47d84\",\"hashBlock\":\"36a0b872fbe8131912374546862e72f40fce75efba29010854851c23a22de654\",\"transaction\":\"e\"},\"4322a200078aa064d7b95a0f689c775d1ec7c9dd9cb71133a1b54ad344d47d84\":{\"meta_data\":\"4\",\"previousHashBlock\":\"0\",\"hashBlock\":\"4322a200078aa064d7b95a0f689c775d1ec7c9dd9cb71133a1b54ad344d47d84\",\"transaction\":\"d\"}}},\"b1eeb2de18a4520f43875bc81d8e1b41d211c85bbd2aaef04348dd370f05813a\":{\"lastSubBlockHash\":\"629897848ac7c45379bc8a0ed0bc2c9aec3a2392a630a929d910fb7f0a44b2f1\",\"previousHashBlock\":\"4b84df364bacbe8f6bb756ae85607051950121fb1c257a35e74d254f2e37051a\",\"hashBlock\":\"b1eeb2de18a4520f43875bc81d8e1b41d211c85bbd2aaef04348dd370f05813a\",\"transaction\":{\"40781e6fb5728e3eaab753d2ce0841182690062f305499663aae8299571f7b42\":{\"meta_data\":\"8\",\"previousHashBlock\":\"ba71216589005be8e99cb6027e3fcf3e7855577fc6f35d8559853b97329b9c29\",\"hashBlock\":\"40781e6fb5728e3eaab753d2ce0841182690062f305499663aae8299571f7b42\",\"transaction\":\"h\"},\"629897848ac7c45379bc8a0ed0bc2c9aec3a2392a630a929d910fb7f0a44b2f1\":{\"meta_data\":\"9\",\"previousHashBlock\":\"40781e6fb5728e3eaab753d2ce0841182690062f305499663aae8299571f7b42\",\"hashBlock\":\"629897848ac7c45379bc8a0ed0bc2c9aec3a2392a630a929d910fb7f0a44b2f1\",\"transaction\":\"i\"},\"ba71216589005be8e99cb6027e3fcf3e7855577fc6f35d8559853b97329b9c29\":{\"meta_data\":\"7\",\"previousHashBlock\":\"0\",\"hashBlock\":\"ba71216589005be8e99cb6027e3fcf3e7855577fc6f35d8559853b97329b9c29\",\"transaction\":\"g\"}}},\"02f25b9d7235c4bd3745a1292c30f10c57abd802b4fe323a9e0b3e1d20bb3b30\":{\"lastSubBlockHash\":\"41c445c80c4dc74660a0fb413010aa0432ecf24d9415403813f6485c21f9ff63\",\"previousHashBlock\":\"0\",\"hashBlock\":\"02f25b9d7235c4bd3745a1292c30f10c57abd802b4fe323a9e0b3e1d20bb3b30\",\"transaction\":{\"7e9126291e5726457a38b262760c0b58624977f2798029e8e5550bf1bdbcb12c\":{\"meta_data\":\"2\",\"previousHashBlock\":\"8b1bf74ad28fc10cce5cc14966f38e4ffd0a493385c9855ce4d5677b7157a6fb\",\"hashBlock\":\"7e9126291e5726457a38b262760c0b58624977f2798029e8e5550bf1bdbcb12c\",\"transaction\":\"b\"},\"8b1bf74ad28fc10cce5cc14966f38e4ffd0a493385c9855ce4d5677b7157a6fb\":{\"meta_data\":\"1\",\"previousHashBlock\":\"0\",\"hashBlock\":\"8b1bf74ad28fc10cce5cc14966f38e4ffd0a493385c9855ce4d5677b7157a6fb\",\"transaction\":\"a\"},\"41c445c80c4dc74660a0fb413010aa0432ecf24d9415403813f6485c21f9ff63\":{\"meta_data\":\"3\",\"previousHashBlock\":\"7e9126291e5726457a38b262760c0b58624977f2798029e8e5550bf1bdbcb12c\",\"hashBlock\":\"41c445c80c4dc74660a0fb413010aa0432ecf24d9415403813f6485c21f9ff63\",\"transaction\":\"c\"}}}},\"lastBlockHash\":\"b1eeb2de18a4520f43875bc81d8e1b41d211c85bbd2aaef04348dd370f05813a\",\"locked\":true}";
-        String blockchainString2 = "{\"numberBlockchain\":2,\"blockchain\":{\"f7a8936471a53c5222de3a331fcdeaca7fb6e96065a1f2f64d83739df9616070\":{\"lastSubBlockHash\":\"bf70918e2c16e83dc7668333b89ba9a5c1f60ea8207d84bd19e902e4bb510327\",\"previousHashBlock\":\"0\",\"hashBlock\":\"f7a8936471a53c5222de3a331fcdeaca7fb6e96065a1f2f64d83739df9616070\",\"transaction\":{\"acfa5879c368891ccc18961fcf6a24b80cc96ad0708bafdbb2b6470dc2e76b18\":{\"meta_data\":\"10\",\"previousHashBlock\":\"0\",\"hashBlock\":\"acfa5879c368891ccc18961fcf6a24b80cc96ad0708bafdbb2b6470dc2e76b18\",\"transaction\":\"l\"},\"a6e0e166f4dda8a6ab16d6ca45b8486c8e436c5b3e8ed2430742864ef047d11c\":{\"meta_data\":\"11\",\"previousHashBlock\":\"acfa5879c368891ccc18961fcf6a24b80cc96ad0708bafdbb2b6470dc2e76b18\",\"hashBlock\":\"a6e0e166f4dda8a6ab16d6ca45b8486c8e436c5b3e8ed2430742864ef047d11c\",\"transaction\":\"m\"},\"bf70918e2c16e83dc7668333b89ba9a5c1f60ea8207d84bd19e902e4bb510327\":{\"meta_data\":\"12\",\"previousHashBlock\":\"a6e0e166f4dda8a6ab16d6ca45b8486c8e436c5b3e8ed2430742864ef047d11c\",\"hashBlock\":\"bf70918e2c16e83dc7668333b89ba9a5c1f60ea8207d84bd19e902e4bb510327\",\"transaction\":\"n\"}}}},\"lastBlockHash\":\"f7a8936471a53c5222de3a331fcdeaca7fb6e96065a1f2f64d83739df9616070\",\"locked\":false}";
+        String blockchainString = "{\"numberBlockchain\":1,\"blockchain\":{\"4b84df364bacbe8f6bb756ae85607051950121fb1c257a35e74d254f2e37051a\":{\"lastSubBlockHash\":\"1274709047133e3e49d841f9f03324646df9cc0ffbc0437d345d556434e6e36d\",\"previousHashBlock\":\"02f25b9d7235c4bd3745a1292c30f10c57abd802b4fe323a9e0b3e1d20bb3b30\",\"hashBlock\":\"4b84df364bacbe8f6bb756ae85607051950121fb1c257a35e74d254f2e37051a\",\"transaction\":{\"1274709047133e3e49d841f9f03324646df9cc0ffbc0437d345d556434e6e36d\":{\"meta_data\":\"6\",\"previousHashBlock\":\"36a0b872fbe8131912374546862e72f40fce75efba29010854851c23a22de654\",\"hashBlock\":\"1274709047133e3e49d841f9f03324646df9cc0ffbc0437d345d556434e6e36d\",\"transaction\":\"f\"},\"36a0b872fbe8131912374546862e72f40fce75efba29010854851c23a22de654\":{\"meta_data\":\"5\",\"previousHashBlock\":\"4322a200078aa064d7b95a0f689c775d1ec7c9dd9cb71133a1b54ad344d47d84\",\"hashBlock\":\"36a0b872fbe8131912374546862e72f40fce75efba29010854851c23a22de654\",\"transaction\":\"e\"},\"4322a200078aa064d7b95a0f689c775d1ec7c9dd9cb71133a1b54ad344d47d84\":{\"meta_data\":\"4\",\"previousHashBlock\":\"0\",\"hashBlock\":\"4322a200078aa064d7b95a0f689c775d1ec7c9dd9cb71133a1b54ad344d47d84\",\"transaction\":\"d\"}}},\"b1eeb2de18a4520f43875bc81d8e1b41d211c85bbd2aaef04348dd370f05813a\":{\"lastSubBlockHash\":\"629897848ac7c45379bc8a0ed0bc2c9aec3a2392a630a929d910fb7f0a44b2f1\",\"previousHashBlock\":\"4b84df364bacbe8f6bb756ae85607051950121fb1c257a35e74d254f2e37051a\",\"hashBlock\":\"b1eeb2de18a4520f43875bc81d8e1b41d211c85bbd2aaef04348dd370f05813a\",\"transaction\":{\"40781e6fb5728e3eaab753d2ce0841182690062f305499663aae8299571f7b42\":{\"meta_data\":\"8\",\"previousHashBlock\":\"ba71216589005be8e99cb6027e3fcf3e7855577fc6f35d8559853b97329b9c29\",\"hashBlock\":\"40781e6fb5728e3eaab753d2ce0841182690062f305499663aae8299571f7b42\",\"transaction\":\"h\"},\"629897848ac7c45379bc8a0ed0bc2c9aec3a2392a630a929d910fb7f0a44b2f1\":{\"meta_data\":\"9\",\"previousHashBlock\":\"40781e6fb5728e3eaab753d2ce0841182690062f305499663aae8299571f7b42\",\"hashBlock\":\"629897848ac7c45379bc8a0ed0bc2c9aec3a2392a630a929d910fb7f0a44b2f1\",\"transaction\":\"i\"},\"ba71216589005be8e99cb6027e3fcf3e7855577fc6f35d8559853b97329b9c29\":{\"meta_data\":\"7\",\"previousHashBlock\":\"0\",\"hashBlock\":\"ba71216589005be8e99cb6027e3fcf3e7855577fc6f35d8559853b97329b9c29\",\"transaction\":\"g\"}}},\"02f25b9d7235c4bd3745a1292c30f10c57abd802b4fe323a9e0b3e1d20bb3b30\":{\"lastSubBlockHash\":\"41c445c80c4dc74660a0fb413010aa0432ecf24d9415403813f6485c21f9ff63\",\"previousHashBlock\":\"0\",\"hashBlock\":\"02f25b9d7235c4bd3745a1292c30f10c57abd802b4fe323a9e0b3e1d20bb3b30\",\"transaction\":{\"7e9126291e5726457a38b262760c0b58624977f2798029e8e5550bf1bdbcb12c\":{\"meta_data\":\"2\",\"previousHashBlock\":\"8b1bf74ad28fc10cce5cc14966f38e4ffd0a493385c9855ce4d5677b7157a6fb\",\"hashBlock\":\"7e9126291e5726457a38b262760c0b58624977f2798029e8e5550bf1bdbcb12c\",\"transaction\":\"b\"},\"8b1bf74ad28fc10cce5cc14966f38e4ffd0a493385c9855ce4d5677b7157a6fb\":{\"meta_data\":\"1\",\"previousHashBlock\":\"0\",\"hashBlock\":\"8b1bf74ad28fc10cce5cc14966f38e4ffd0a493385c9855ce4d5677b7157a6fb\",\"transaction\":\"a\"},\"41c445c80c4dc74660a0fb413010aa0432ecf24d9415403813f6485c21f9ff63\":{\"meta_data\":\"3\",\"previousHashBlock\":\"7e9126291e5726457a38b262760c0b58624977f2798029e8e5550bf1bdbcb12c\",\"hashBlock\":\"41c445c80c4dc74660a0fb413010aa0432ecf24d9415403813f6485c21f9ff63\",\"transaction\":\"c\"}}}},\"lastBlockHash\":\"b1eeb2de18a4520f43875bc81d8e1b41d211c85bbd2aaef04348dd370f05813a\",\"locked\":true,\"path\":\"src/test/resources/testOutput/\",\"maxByte\":9223372036854775807}";
+        String blockchainString2 = "{\"numberBlockchain\":2,\"blockchain\":{\"f7a8936471a53c5222de3a331fcdeaca7fb6e96065a1f2f64d83739df9616070\":{\"lastSubBlockHash\":\"bf70918e2c16e83dc7668333b89ba9a5c1f60ea8207d84bd19e902e4bb510327\",\"previousHashBlock\":\"0\",\"hashBlock\":\"f7a8936471a53c5222de3a331fcdeaca7fb6e96065a1f2f64d83739df9616070\",\"transaction\":{\"acfa5879c368891ccc18961fcf6a24b80cc96ad0708bafdbb2b6470dc2e76b18\":{\"meta_data\":\"10\",\"previousHashBlock\":\"0\",\"hashBlock\":\"acfa5879c368891ccc18961fcf6a24b80cc96ad0708bafdbb2b6470dc2e76b18\",\"transaction\":\"l\"},\"a6e0e166f4dda8a6ab16d6ca45b8486c8e436c5b3e8ed2430742864ef047d11c\":{\"meta_data\":\"11\",\"previousHashBlock\":\"acfa5879c368891ccc18961fcf6a24b80cc96ad0708bafdbb2b6470dc2e76b18\",\"hashBlock\":\"a6e0e166f4dda8a6ab16d6ca45b8486c8e436c5b3e8ed2430742864ef047d11c\",\"transaction\":\"m\"},\"bf70918e2c16e83dc7668333b89ba9a5c1f60ea8207d84bd19e902e4bb510327\":{\"meta_data\":\"12\",\"previousHashBlock\":\"a6e0e166f4dda8a6ab16d6ca45b8486c8e436c5b3e8ed2430742864ef047d11c\",\"hashBlock\":\"bf70918e2c16e83dc7668333b89ba9a5c1f60ea8207d84bd19e902e4bb510327\",\"transaction\":\"n\"}}}},\"lastBlockHash\":\"f7a8936471a53c5222de3a331fcdeaca7fb6e96065a1f2f64d83739df9616070\",\"locked\":false,\"path\":\"src/test/resources/testOutput/\",\"maxByte\":9223372036854775807}";
 
         assertAll(
                 () -> assertThat(fileAlist).isEqualTo(blockchainString),
@@ -527,17 +527,17 @@ public class BlockchainTest {
 
         Blockchain<String, String> blockchain = setupBlockchain();
 
-        blockchain.blockchainToJson("src/test/resources/testOutput", 1);
+        blockchain.blockchainToJson(1);
 
         blockchain.addABlock(new String[]{"10", "11", "12"},
                 new String[]{"l", "m", "n"});
 
-        blockchain.blockchainToJson("src/test/resources/testOutput", Long.MAX_VALUE);
+        blockchain.blockchainToJson( Long.MAX_VALUE);
 
 
-        Blockchain<String, String> blockchain2 = new Blockchain<>();
+        Blockchain<String, String> blockchain2 = new Blockchain<>("src/test/resources/testOutput/", Long.MAX_VALUE);
 
-        blockchain2.jsonToBlockchain("src/test/resources/testOutput");
+        blockchain2.jsonToBlockchain();
 
         assertThat(blockchain2).isEqualTo(blockchain);
     }
@@ -549,14 +549,14 @@ public class BlockchainTest {
         Blockchain<String, String> blockchain = setupBlockchain();
         Blockchain<String, String> blockchain2 = setupBlockchain();
 
-        blockchain.blockchainToJson("src/test/resources/testOutput", 1);
+        blockchain.blockchainToJson(1);
 
         blockchain.addABlock(new String[]{"10", "11", "12"},
                 new String[]{"l", "m", "n"});
 
-        blockchain.blockchainToJson("src/test/resources/testOutput", Long.MAX_VALUE);
+        blockchain.blockchainToJson(Long.MAX_VALUE);
 
-        blockchain.loadPreviousPartBlockchain("src/test/resources/testOutput");
+        blockchain.loadPreviousPartBlockchain();
 
         assertThat(blockchain).isEqualTo(blockchain2);
     }
@@ -568,16 +568,16 @@ public class BlockchainTest {
 
         Blockchain<String, String> blockchain = setupBlockchain();
 
-        blockchain.blockchainToJson("src/test/resources/testOutput", 1);
+        blockchain.blockchainToJson(1);
 
         blockchain.addABlock(new String[]{"10", "11", "12"},
                 new String[]{"l", "m", "n"});
 
-        blockchain.blockchainToJson("src/test/resources/testOutput", Long.MAX_VALUE);
+        blockchain.blockchainToJson(Long.MAX_VALUE);
 
-        blockchain.loadPreviousPartBlockchain("src/test/resources/testOutput");
+        blockchain.loadPreviousPartBlockchain();
 
-        assertThrows(RuntimeException.class, () -> blockchain.loadPreviousPartBlockchain("src/test/resources/testOutput"));
+        assertThrows(RuntimeException.class, () -> blockchain.loadPreviousPartBlockchain());
 
     }
 
@@ -586,20 +586,20 @@ public class BlockchainTest {
     public void loadNextPartBlockchainInAMultipleFileBlockchainFromFirstShouldLoadSecondPart() {
 
         Blockchain<String, String> blockchain = setupBlockchain();
-        Blockchain<String, String> blockchain2 = new Blockchain<>();
+        Blockchain<String, String> blockchain2 = new Blockchain<>("src/test/resources/testOutput/", Long.MAX_VALUE);
         blockchain2.addABlock(new String[]{"10", "11", "12"},
                 new String[]{"l", "m", "n"});
 
-        blockchain.blockchainToJson("src/test/resources/testOutput", 1);
+        blockchain.blockchainToJson(1);
 
         blockchain.addABlock(new String[]{"10", "11", "12"},
                 new String[]{"l", "m", "n"});
 
-        blockchain.blockchainToJson("src/test/resources/testOutput", Long.MAX_VALUE);
+        blockchain.blockchainToJson( Long.MAX_VALUE);
 
-        blockchain.loadPreviousPartBlockchain("src/test/resources/testOutput");
+        blockchain.loadPreviousPartBlockchain();
 
-        blockchain.loadNextPartBlockchain("src/test/resources/testOutput");
+        blockchain.loadNextPartBlockchain();
 
         assertThat(blockchain).isEqualTo(blockchain2);
     }
@@ -611,14 +611,14 @@ public class BlockchainTest {
 
         Blockchain<String, String> blockchain = setupBlockchain();
 
-        blockchain.blockchainToJson("src/test/resources/testOutput", 1);
+        blockchain.blockchainToJson( 1);
 
         blockchain.addABlock(new String[]{"10", "11", "12"},
                 new String[]{"l", "m", "n"});
 
-        blockchain.blockchainToJson("src/test/resources/testOutput", Long.MAX_VALUE);
+        blockchain.blockchainToJson( Long.MAX_VALUE);
 
-        assertThrows(RuntimeException.class, () -> blockchain.loadNextPartBlockchain("src/test/resources/testOutput"));
+        assertThrows(RuntimeException.class, () -> blockchain.loadNextPartBlockchain());
 
     }
 
@@ -628,14 +628,14 @@ public class BlockchainTest {
 
         Blockchain<String, String> blockchain = setupBlockchain();
 
-        blockchain.blockchainToJson("src/test/resources/testOutput", 1);
+        blockchain.blockchainToJson( 1);
 
         blockchain.addABlock(new String[]{"10", "11", "12"},
                 new String[]{"l", "m", "n"});
 
-        blockchain.blockchainToJson("src/test/resources/testOutput", Long.MAX_VALUE);
+        blockchain.blockchainToJson( Long.MAX_VALUE);
 
-        blockchain.loadPreviousPartBlockchain("src/test/resources/testOutput");
+        blockchain.loadPreviousPartBlockchain();
 
         assertThrows(RuntimeException.class, () -> blockchain.addABlock(new String[]{"13", "14", "15"},
                                             new String[]{"o", "p", "q"}));
@@ -648,15 +648,92 @@ public class BlockchainTest {
 
         Blockchain<String, String> blockchain = setupBlockchain();
 
-        blockchain.blockchainToJson("src/test/resources/testOutput", 1);
+        blockchain.blockchainToJson(1);
 
         blockchain.addABlock(new String[]{"10", "11", "12"},
                 new String[]{"l", "m", "n"});
 
-        blockchain.blockchainToJson("src/test/resources/testOutput", Long.MAX_VALUE);
+        blockchain.blockchainToJson( Long.MAX_VALUE);
 
         assertDoesNotThrow(() -> blockchain.addABlock(new String[]{"13", "14", "15"},
                                                       new String[]{"o", "p", "q"}));
 
     }
+
+
+    @Test
+    @DisplayName("getTemperedMessageIfAny() on a multi-file Blockchain should give back tempered messages")
+    public void getTemperedMessageIfAnyOnAMultiFileBlockchainShouldGiveBackTemperedMessages() {
+
+        Blockchain<String, String> blockchain = setupBlockchain();
+
+        Block<String, String> last = blockchain.getBlockFromHash(blockchain.getLastBlockHash());
+        Map<String, SubBlock<String,String>> transactions = last.getTransaction();
+        transactions.put("0000000", last.getTransaction().get(last.getLastSubBlockHash()));
+
+        blockchain.blockchainToJson( 1);
+
+        blockchain.addABlock(new String[]{"10", "11", "12"},
+                new String[]{"l", "m", "n"});
+
+        blockchain.blockchainToJson( Long.MAX_VALUE);
+
+        List<SubBlock<String, String>> temperedTransaction = blockchain.getTemperedMessageIfAny();
+
+        assertThat(temperedTransaction.get(0)).isEqualTo(last.getTransaction().get(last.getLastSubBlockHash()));
+    }
+
+    @Test
+    @DisplayName("getTemperedMessageIfAny() on a multi-file Blockchain but with temp message in last file should give back tempered messages")
+    public void getTemperedMessageIfAnyOnAMultiFileBlockchainWithTempMessageInLastFileShouldGiveBackTemperedMessages() {
+
+        Blockchain<String, String> blockchain = setupBlockchain();
+
+        blockchain.blockchainToJson( 1);
+
+        blockchain.addABlock(new String[]{"10", "11", "12"},
+                new String[]{"l", "m", "n"});
+
+        Block<String, String> last = blockchain.getBlockFromHash(blockchain.getLastBlockHash());
+        Map<String, SubBlock<String,String>> transactions = last.getTransaction();
+        transactions.put("0000000", last.getTransaction().get(last.getLastSubBlockHash()));
+
+        blockchain.blockchainToJson( Long.MAX_VALUE);
+
+        List<SubBlock<String, String>> temperedTransaction = blockchain.getTemperedMessageIfAny();
+
+        assertThat(temperedTransaction.get(0)).isEqualTo(last.getTransaction().get(last.getLastSubBlockHash()));
+    }
+
+    @Test
+    @DisplayName("getTemperedMessageFromABlockIfAny() passing a tempered block in a tempered multi-file blockchain should return tempered SubBlock ")
+    public void getTemperedMessageFromABlockIfAnyPassingATemperedBlockInTemperedMultiFileBlockchainShouldReturnTemperedSubBlock() {
+
+        Blockchain<String, String> blockchain = setupBlockchain();
+
+        Block<String, String> last = blockchain.getBlockFromHash(
+                blockchain.getBlockFromHash(blockchain.getLastBlockHash()).getPreviousHashBlock());
+        Map<String, SubBlock<String,String>> transactions = last.getTransaction();
+        transactions.put(last.getLastSubBlockHash(), new SubBlock<>("dasdasd", "6", "f"));
+
+        blockchain.blockchainToJson( 1);
+
+        blockchain.addABlock(new String[]{"10", "11", "12"},
+                new String[]{"l", "m", "n"});
+
+        blockchain.blockchainToJson( Long.MAX_VALUE);
+
+
+        List<SubBlock<String, String>> temperedTransaction = blockchain.
+                getTemperedMessageFromABlockIfAny(new String[]{"4", "5", "6"},new String[]{"d", "e", "f"});
+
+        SubBlock<String, String> supposedResult = new SubBlock<>("dasdasd", "6", "f");
+
+        assertAll (
+                () -> assertThat(temperedTransaction.get(0)).isEqualTo(supposedResult),
+                () -> assertThat(temperedTransaction.size()).isEqualTo(1)
+        );
+
+    }
+
 }
