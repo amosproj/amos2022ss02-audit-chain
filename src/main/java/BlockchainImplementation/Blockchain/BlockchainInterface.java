@@ -33,6 +33,8 @@ public interface BlockchainInterface<T,R> {
 
     public void blockchainToJson(long limitByteSize);
 
+    public void blockchainToJson();
+
     public void jsonToBlockchain();
 
 }
