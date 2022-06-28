@@ -27,10 +27,10 @@ public class ConsumerClientBlockchain extends Consumer {
      *
      * @throws IOException if the file cannot be read
      */
-    public ConsumerClientBlockchain(String host, int port, String username, String password, String queue_name) throws IOException {
+    public ConsumerClientBlockchain(String host, int port, String username, String password, String queue_name, String path, long maxSizeByte) throws IOException {
 
         super(host, port, username, password, queue_name);
-        this.blockchain = new Blockchain<>();
+        this.blockchain = new Blockchain<>(path, maxSizeByte);
 
     }
 
