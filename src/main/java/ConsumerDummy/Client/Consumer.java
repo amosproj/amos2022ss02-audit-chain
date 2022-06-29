@@ -3,8 +3,15 @@ package ConsumerDummy.Client;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
 import ProducerDummy.Client.AbstractClient;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.DeliverCallback;
 
 public class Consumer extends AbstractClient {
 
@@ -38,6 +45,25 @@ public class Consumer extends AbstractClient {
             this.factory.setPassword(this.PASSWORD);
         }
         this.factory.setPort(this.PORT);
+    }
+
+    public ConnectionFactory getFactory(){
+        return this.factory;
+    }
+
+    public Channel generateChannel() throws IOException, TimeoutException {
+        Connection connection = this.factory.newConnection();
+        Channel channel = connection.createChannel();
+        channel.queueDeclare(QUEUE_NAME, true, false, false, Map.of("x-queue-type", "quorum"));
+        return channel;
+    }
+
+    public DeliverCallback DeliveryCallback(Channel channel){
+        DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+            String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
+            System.out.println(" [x] Received '" + message + "'");
+        };
+        return deliverCallback;
     }
 
 }
