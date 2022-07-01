@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 import ProducerDummy.Client.AbstractClient;
+import ProducerDummy.Persistence.NullObjectPersistenceStrategy;
+import ProducerDummy.Persistence.PersistenceStrategy;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -15,7 +17,6 @@ import com.rabbitmq.client.DeliverCallback;
 
 public class Consumer extends AbstractClient {
 
-    static String QUEUE_NAME = "WORKAROUND";
     /**
      * Constructor for Client.AbstractClient. Initializes the filepath, the file reader and set information for the
      * connection factory. Call {@link #initFactory()} to initialize the connection factory.
@@ -26,6 +27,8 @@ public class Consumer extends AbstractClient {
      * @param password
      * @throws IOException if the file cannot be read
      */
+    protected PersistenceStrategy persistenceStrategy = new NullObjectPersistenceStrategy("","");
+
     public Consumer(String host, int port, String username, String password) {
         super(host, port, username, password);
     }
@@ -36,6 +39,10 @@ public class Consumer extends AbstractClient {
 
         return objStream.readObject();
 
+    }
+
+    public void setPersistenceStrategy(PersistenceStrategy persistenceStrategy){
+        this.persistenceStrategy = persistenceStrategy;
     }
 
 

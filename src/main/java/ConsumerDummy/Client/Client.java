@@ -29,7 +29,6 @@ public class Client extends Consumer {
     }
 
 
-
     /***
      * Start receiving Messages from the RabbitMQ Server.
      * @throws IOException if an I/O error occurs
@@ -37,7 +36,6 @@ public class Client extends Consumer {
      */
     public void start() throws IOException, TimeoutException {
 
-        Connection connection = this.factory.newConnection();
         Channel channel = this.getChannel();
         channel.basicQos(100); // QoS must be specified
         channel.confirmSelect();
@@ -48,25 +46,19 @@ public class Client extends Consumer {
                 (consumerTag, message) -> {
                     try {
                         ArrayList<Message> messages = (ArrayList<Message>) Consumer.deserialize(message.getBody());
-                        for(int i = 0;i<messages.size();i++){
-                            System.out.println(messages.get(i).getSequence_number());
+                        for (int i = 0; i < messages.size(); i++) {
+                            Message m = messages.get(i);
+                            this.persistenceStrategy.StoreMessage(m);
+                            System.out.println(String.format("Message received with event Number: %d",m.getSequence_number() ));
                         }
-
 
                     } catch (ClassNotFoundException e) {
                         throw new RuntimeException(e);
                     }
                     channel.basicAck(message.getEnvelope().getDeliveryTag(), false); // ack is required
                 },
-                consumerTag -> {
-                    System.out.println("Called");
-
-
-                });
-
-
+                consumerTag -> {});
     }
-
 
 }
 

@@ -43,7 +43,7 @@ public class main {
 
         String base_path = Paths.get(System.getProperty("user.dir"), filepath).toString();
 
-        String queue_name = "TEST";
+        String queue_name = "TEST_STANDARD";
         // create components for Client
         DataGenerator dataGenerator = new DynamicDataGenerator();
         PersistenceStrategy filePersistenceStrategy = new NullObjectPersistenceStrategy(base_path, "last_messages.txt");
