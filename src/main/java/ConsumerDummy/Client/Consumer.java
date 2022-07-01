@@ -30,11 +30,12 @@ public class Consumer extends AbstractClient {
         super(host, port, username, password);
     }
 
-    public Object deserialize(byte[] bytes) throws IOException, ClassNotFoundException {
+    public static Object deserialize(byte[] bytes) throws IOException, ClassNotFoundException {
         ByteArrayInputStream byteStream = new ByteArrayInputStream(bytes);
         ObjectInputStream objStream = new ObjectInputStream(byteStream);
 
         return objStream.readObject();
+
     }
 
 

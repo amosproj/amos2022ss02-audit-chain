@@ -20,6 +20,7 @@ import ProducerDummy.DataGeneration.DataGenerator;
 import ProducerDummy.DataGeneration.DynamicDataGenerator;
 import ProducerDummy.DataGeneration.FileDataReader;
 import ProducerDummy.Persistence.AggregateMessageFilePersistence;
+import ProducerDummy.Persistence.NullObjectPersistenceStrategy;
 import ProducerDummy.Persistence.PersistenceStrategy;
 
 public class main {
@@ -42,13 +43,14 @@ public class main {
 
         String base_path = Paths.get(System.getProperty("user.dir"), filepath).toString();
 
-        String queue_name = "stream";
+        String queue_name = "TEST";
         // create components for Client
         DataGenerator dataGenerator = new DynamicDataGenerator();
-        PersistenceStrategy filePersistenceStrategy = new AggregateMessageFilePersistence(base_path, "last_messages.txt");
+        PersistenceStrategy filePersistenceStrategy = new NullObjectPersistenceStrategy(base_path, "last_messages.txt");
         RabbitMQChannel channel = new Stream(queue_name);
 
-        Producer client = new SecurityClient(HOST, PORT, USER, PASSWORD,KEY,ALGORITHM);
+        //Producer client = new Client(HOST, PORT, USER, PASSWORD,KEY,ALGORITHM);
+        Producer client = new Client(HOST, PORT, USER, PASSWORD);
         client.setDataGenerator(dataGenerator);
         client.setPersistenceStrategy(filePersistenceStrategy);
         client.setChannel(channel);
@@ -56,19 +58,6 @@ public class main {
 
         return;
     }
-
-    public static byte[] serialize(Object object) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        try {
-            ObjectOutputStream os = new ObjectOutputStream(out);
-            os.writeObject(object);
-            return out.toByteArray();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
 
 }
 

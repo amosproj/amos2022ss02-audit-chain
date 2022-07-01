@@ -31,7 +31,7 @@ public class main {
         int PORT = Integer.parseInt(p.getProperty("PORT"));
         String USER = p.getProperty("USERNAME");
         String PASSWORD = p.getProperty("PASSWORD");
-        String queue_name = "3";
+        String queue_name = "TEST";
 
         RabbitMQChannel channel = new Stream(queue_name);
 

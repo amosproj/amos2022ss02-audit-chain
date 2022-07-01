@@ -14,12 +14,19 @@ import ProducerDummy.Messages.SimpleMessage;
 
 public class NullObjectPersistenceStrategy implements PersistenceStrategy {
 
-
+    int size = 0;
+    int current_size = 0;
     public NullObjectPersistenceStrategy(String filepath,String fileName){
+        return;
+    }
+    public NullObjectPersistenceStrategy(String filepath,String fileName,int size){
+        this.size = size;
         return;
     }
     @Override
     public void StoreMessage(Message message) {
+        // only length of String is interesting
+        this.current_size += message.getMessage().getBytes().length;
         return;
     }
 
@@ -30,7 +37,7 @@ public class NullObjectPersistenceStrategy implements PersistenceStrategy {
 
     @Override
     public ArrayList<Message> ReadLastMessage() {
-        return new ArrayList<>(0);
+        return new ArrayList<Message>(0);
     }
 
     @Override
@@ -42,5 +49,6 @@ public class NullObjectPersistenceStrategy implements PersistenceStrategy {
     public void cleanFile() {
         return;
     }
-    
+
+
 }

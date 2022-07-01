@@ -2,6 +2,7 @@ package ConsumerDummy.Client;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Vector;
@@ -46,7 +47,12 @@ public class Client extends Consumer {
                 Collections.singletonMap("x-stream-offset", 0), // "first" offset specification
                 (consumerTag, message) -> {
                     try {
-                        Vector<Message> messages = (Vector<Message>) deserialize(message.getBody());
+                        ArrayList<Message> messages = (ArrayList<Message>) Consumer.deserialize(message.getBody());
+                        for(int i = 0;i<messages.size();i++){
+                            System.out.println(messages.get(i).getSequence_number());
+                        }
+
+
                     } catch (ClassNotFoundException e) {
                         throw new RuntimeException(e);
                     }
