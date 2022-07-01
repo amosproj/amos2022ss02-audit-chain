@@ -1,6 +1,11 @@
 package ConsumerDummy.Client;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,7 +40,7 @@ public class Client extends Consumer {
      * @throws TimeoutException if the timeout expires
      */
     public void start() throws IOException, TimeoutException {
-
+        // create Callback to receive Messages
         Channel channel = this.getChannel();
         channel.basicQos(100); // QoS must be specified
         channel.confirmSelect();
@@ -58,7 +63,29 @@ public class Client extends Consumer {
                     channel.basicAck(message.getEnvelope().getDeliveryTag(), false); // ack is required
                 },
                 consumerTag -> {});
+
+        listen();
+
     }
+
+    public void listen() throws IOException {
+
+        ServerSocket serverSocket = new ServerSocket(6868);
+
+        while(true){
+            Socket socket = serverSocket.accept();
+            System.out.println("A client connected.");
+            InputStream input = socket.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+            String line = reader.readLine();
+            // here is your part, create the methods to communicate with the Blockchain. Communicate with Francesco about it
+
+        }
+
+
+    }
+
+
 
 }
 

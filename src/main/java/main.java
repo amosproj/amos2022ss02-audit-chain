@@ -6,11 +6,12 @@ import ProducerDummy.DataGeneration.DynamicDataGenerator;
 import ProducerDummy.Persistence.NullObjectPersistenceStrategy;
 import ProducerDummy.Persistence.PersistenceStrategy;
 
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.net.Socket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class main {
@@ -82,8 +83,31 @@ public class main {
                 }
             }
         });
-        t1.start();
+        //t1.start();
         t2.start();
+
+
+        TimeUnit.SECONDS.sleep(10);
+
+
+        Thread t3 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Socket socket = new Socket("0.0.0.0",6868);
+                    OutputStream output = socket.getOutputStream();
+                    PrintWriter writer = new PrintWriter(output, true);
+                    writer.println("This is a message sent to the server");
+
+
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+        });
+
+        t3.start();
 
 
 
