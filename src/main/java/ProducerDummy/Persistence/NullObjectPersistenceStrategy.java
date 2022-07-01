@@ -2,6 +2,8 @@ package ProducerDummy.Persistence;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Vector;
 
 import ProducerDummy.Messages.Message;
 import ProducerDummy.Messages.SimpleMessage;
@@ -27,8 +29,8 @@ public class NullObjectPersistenceStrategy implements PersistenceStrategy {
     }
 
     @Override
-    public Message ReadLastMessage() {
-        return new SimpleMessage(0, "DEBUG");
+    public ArrayList<Message> ReadLastMessage() {
+        return new ArrayList<>(0);
     }
 
     @Override

@@ -81,9 +81,9 @@ String queue_name;
         PersistenceStrategy filePersistenceStrategy = new FilePersistenceStrategy(filepath ,filename);
         Message message = new SimpleMessage(0, "Hello World");
         filePersistenceStrategy.StoreMessage(message);
-        Message message1 = filePersistenceStrategy.ReadLastMessage();
-        assertEquals(message.getMessage(), message1.getMessage());
-        assertEquals(message.getSequence_number(), message1.getSequence_number());
+        ArrayList<Message> message1 = filePersistenceStrategy.ReadLastMessage();
+        assertEquals(message.getMessage(), message1.get(0).getMessage());
+        assertEquals(message.getSequence_number(), message1.get(0).getSequence_number());
     }
 
 
@@ -97,8 +97,7 @@ String queue_name;
         filePersistenceStrategy.StoreMessage(message1);
 
 
-        AggregateMessage message2 = (AggregateMessage) filePersistenceStrategy.ReadLastMessage();
-        Vector<Message> messages = message2.getMessages();
+        ArrayList<Message> messages = filePersistenceStrategy.ReadLastMessage();
         Message m = messages.get(0);
         Message m1 = messages.get(1);
 

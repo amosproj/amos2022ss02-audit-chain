@@ -29,7 +29,7 @@ public class ConsumerClientBlockchain extends Consumer {
      */
     public ConsumerClientBlockchain(String host, int port, String username, String password, String queue_name, String path, long maxSizeByte) throws IOException {
 
-        super(host, port, username, password, queue_name);
+        super(host, port, username, password);
         this.blockchain = new Blockchain<>(path, maxSizeByte);
 
     }
@@ -44,7 +44,7 @@ public class ConsumerClientBlockchain extends Consumer {
         System.out.println("Starting to receive Messages.");
         Connection connection = this.factory.newConnection();
         Channel channel = connection.createChannel();
-        channel.queueDeclare(QUEUE_NAME, true, false, false, Map.of("x-queue-type", "quorum"));
+        //channel.queueDeclare(QUEUE_NAME, true, false, false, Map.of("x-queue-type", "quorum"));
 
         System.out.println(" [-] Waiting for messages.");
 
@@ -83,8 +83,8 @@ public class ConsumerClientBlockchain extends Consumer {
             System.out.println(" [---] Added a new block to the blockchain with previous messages [---]");
             System.out.println(" [-] Waiting for messages.");
         };
-
-        channel.basicConsume(QUEUE_NAME, true, deliverCallback, consumerTag -> {
+        //TODO fixeme
+        channel.basicConsume("WORKAORUD", true, deliverCallback, consumerTag -> {
         });
     }
 

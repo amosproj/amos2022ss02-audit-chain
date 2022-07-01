@@ -5,13 +5,13 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import ProducerDummy.Messages.AggregateMessage;
 import ProducerDummy.Messages.Hmac_JsonMessage;
 import ProducerDummy.Messages.Hmac_SimpleMessage;
 import ProducerDummy.Messages.JsonMessage;
@@ -57,9 +57,9 @@ public class AggregateMessageFilePersistence extends FilePersistenceStrategy {
     }
 
     @Override
-    public Message ReadLastMessage() {
+    public ArrayList<Message> ReadLastMessage() {
 
-        AggregateMessage messages = new AggregateMessage();
+        ArrayList<Message> messages = new ArrayList<>(100);
 
         try {
             // modify the file so gson can parse it
@@ -78,9 +78,9 @@ public class AggregateMessageFilePersistence extends FilePersistenceStrategy {
                     // if there is a Hmac key we know it is a Hmac Message else it is just a normal Message
                     try {
                         String hmac = jsonObject.getAsJsonPrimitive(Hmac_JsonMessage.HMAC_KEY).getAsString();
-                        messages.addMessage(new Hmac_SimpleMessage(sequence_number, message_string, hmac));
+                        messages.add(new Hmac_SimpleMessage(sequence_number, message_string, hmac));
                     } catch (NullPointerException e) {
-                        messages.addMessage(new SimpleMessage(sequence_number, message_string));
+                        messages.add(new SimpleMessage(sequence_number, message_string));
                     }
 
                 }

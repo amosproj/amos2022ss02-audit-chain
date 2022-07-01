@@ -15,6 +15,7 @@ import com.rabbitmq.client.DeliverCallback;
 
 public class Consumer extends AbstractClient {
 
+    static String QUEUE_NAME = "WORKAROUND";
     /**
      * Constructor for Client.AbstractClient. Initializes the filepath, the file reader and set information for the
      * connection factory. Call {@link #initFactory()} to initialize the connection factory.
@@ -23,11 +24,10 @@ public class Consumer extends AbstractClient {
      * @param port
      * @param username
      * @param password
-     * @param queue_name
      * @throws IOException if the file cannot be read
      */
-    public Consumer(String host, int port, String username, String password, String queue_name) {
-        super(host, port, username, password, queue_name);
+    public Consumer(String host, int port, String username, String password) {
+        super(host, port, username, password);
     }
 
     public Object deserialize(byte[] bytes) throws IOException, ClassNotFoundException {

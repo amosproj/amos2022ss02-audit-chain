@@ -3,6 +3,8 @@ package ProducerDummy.Client;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
+import ProducerDummy.ChannelSelection.QuorumQueues;
+import ProducerDummy.ChannelSelection.RabbitMQChannel;
 import com.rabbitmq.client.ConnectionFactory;
 
 /**
@@ -14,8 +16,8 @@ abstract public class AbstractClient {
     protected int PORT;
     protected String USER;
     protected String PASSWORD;
-    protected String QUEUE_NAME;
     public ConnectionFactory factory = new ConnectionFactory();
+    public RabbitMQChannel channel = null;
 
     /**
      * Constructor for Client.AbstractClient. Initializes the filepath, the file reader and set information for the
@@ -23,15 +25,12 @@ abstract public class AbstractClient {
      *
      * @throws IOException if the file cannot be read
      */
-    public AbstractClient(String host, int port, String username, String password, String queue_name) {
-
+    public AbstractClient(String host, int port, String username, String password) {
         this.HOST = host;
         this.PORT = port;
         this.USER = username;
         this.PASSWORD = password;
-        this.QUEUE_NAME = queue_name;
         this.initFactory();
-
     }
 
     /**
@@ -46,11 +45,11 @@ abstract public class AbstractClient {
         
     }
 
-    public void start() throws IOException, TimeoutException {
+    public void start() throws IOException, TimeoutException, InterruptedException {
     }
 
-    public void recoverLastState() {
-        return;
+    public void setChannel(RabbitMQChannel channel){
+        this.channel = channel;
     }
 
 }

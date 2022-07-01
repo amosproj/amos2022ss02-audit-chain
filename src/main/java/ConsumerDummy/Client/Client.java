@@ -20,8 +20,8 @@ public class Client extends Consumer {
      *
      * @throws IOException if the file cannot be read
      */
-    public Client(String host, int port, String username, String password, String queue_name) throws IOException {
-        super(host, port, username, password, queue_name);
+    public Client(String host, int port, String username, String password) throws IOException {
+        super(host, port, username, password);
     }
 
 

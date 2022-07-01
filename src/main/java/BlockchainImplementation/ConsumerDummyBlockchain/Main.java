@@ -28,7 +28,7 @@ public class Main {
 
         AbstractClient client = new ConsumerClientBlockchain(HOST,PORT,USER,PASSWORD,queue_name, "src/test/resources/testOutput/", Long.MAX_VALUE);
 
-        client.start();
+        //client.start();
         return;
 
     }
