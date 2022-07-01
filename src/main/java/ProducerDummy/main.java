@@ -12,6 +12,7 @@ import java.util.Properties;
 import java.util.concurrent.TimeoutException;
 
 import ProducerDummy.Client.AggregateClient;
+import ProducerDummy.Client.Client;
 import ProducerDummy.Client.Producer;
 import ProducerDummy.DataGeneration.DataGenerator;
 import ProducerDummy.DataGeneration.DynamicDataGenerator;
@@ -35,15 +36,15 @@ public class main {
         int PORT = Integer.parseInt(p.getProperty("PORT"));
         String USER = p.getProperty("USERNAME");
         String PASSWORD = p.getProperty("PASSWORD");
-        String queue_name = "FAKE";
+        String queue_name = "BIGGEST_TEST";
 
         String base_path = Paths.get(System.getProperty("user.dir"), filepath).toString();
-        //DataGenerator dataGenerator = new FileDataReader(base_path, "household_power_consumption.txt");
-        DataGenerator dataGenerator = new DynamicDataGenerator();
+        DataGenerator dataGenerator = new FileDataReader(base_path, "household_power_consumption.txt");
+        dataGenerator = new DynamicDataGenerator();
 
         PersistenceStrategy filePersistenceStrategy = new AggregateMessageFilePersistence(base_path, "last_messages.txt");
 
-        Producer client = new AggregateClient(HOST, PORT, USER, PASSWORD, queue_name);
+        Producer client = new Client(HOST, PORT, USER, PASSWORD, queue_name);
         client.setDataGenerator(dataGenerator);
         client.setPersistenceStrategy(filePersistenceStrategy);
         client.start();

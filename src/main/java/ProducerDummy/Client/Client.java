@@ -2,9 +2,11 @@ package ProducerDummy.Client;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import ProducerDummy.Messages.SimpleMessage;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 
@@ -19,6 +21,7 @@ import ProducerDummy.Persistence.NullObjectPersistenceStrategy;
 public class Client extends Producer {
 
     private final static int SECOND_DELAY_BETWEEN_MESSAGES = 5;
+
 
     public Client(String host, int port, String username, String password, String queue_name) throws IOException {
 
@@ -52,37 +55,37 @@ public class Client extends Producer {
      * @throws InterruptedException if the thread is interrupted
      */
     public void start() throws IOException, TimeoutException {
+        //TODO simply let the filepersistence return a vector with the messages, if a file exists
+        Vector<Message> messageVector = new Vector<>();
 
         System.out.println("Starting to send Messages.Message to AMQP Host");
+        Channel channel = this.getChannel();
+        for (String line = this.dataGenerator.getData(); line != null; line = this.dataGenerator.getData()) {
+            /***
+             * Create the Message, store it into the PersistenceMechanism and add it to the vector.
+             * Now decide weather to send the vector or not.
+             * Strategy are either to send every Message as one or collect a certain amount of messages and send them later
+             */
 
-        try (Connection connection = this.factory.newConnection();
-            Channel channel = connection.createChannel()) {
-            channel.queueDeclare(QUEUE_NAME, true, false, false, Map.of("x-queue-type", "quorum"));
+            Message message = new SimpleMessage(sequence_number,line);
+            this.persistenceStrategy.StoreMessage(message);
+            messageVector.add(message);
+            if(isReadyToSend()){
+                //TODO change to messagevector
+                this.getAcknowledgment(channel,message);
+                this.persistenceStrategy.cleanFile();
 
-            // If sequence_number is bigger we have a Message in our persistence_mechanism
-            if(this.sequence_number > START_NUMBER){
-                Message message = this.recoverLastMessage();
-                channel.basicPublish("", QUEUE_NAME, null, serialize(message));
-                this.sequence_number +=1;
+            }else{
+                System.out.println(String.format("Append Message with event Nr %d: ",this.sequence_number ) + line);
             }
+            this.sequence_number++;
 
-            for (String line = this.dataGenerator.getData(); line != null; line = this.dataGenerator.getData()) {
-
-                System.out.println("The following Messages.Message will be send:\n" + line);
-
-                Message message = new JsonMessage(this.sequence_number,line);
-                this.persistenceStrategy.StoreMessage(message);
-                channel.basicPublish("", QUEUE_NAME, null, serialize(message.toSimpleFormat()));
-                this.sequence_number +=1;
-                
-                try {
-                    TimeUnit.SECONDS.sleep(SECOND_DELAY_BETWEEN_MESSAGES);
-                } catch (InterruptedException e) {
-                    System.out.println("Thread was interrupted");
-                }
-            }
         }
-    }
+
+        channel.close();
+
+        }
+
 
 }
 

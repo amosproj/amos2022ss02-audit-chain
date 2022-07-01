@@ -17,6 +17,15 @@ import ProducerDummy.Messages.Hmac_JsonMessage;
 import ProducerDummy.Messages.Hmac_Message;
 import ProducerDummy.Persistence.NullObjectPersistenceStrategy;
 
+
+/***
+ *
+ * This Branch:
+ * combines AggregateClient and Client
+ * changes isReadyToSend to Client since it should be his job
+ *
+ */
+
 public class AggregateClient extends Producer {
 
     private int SIZE = 2014;

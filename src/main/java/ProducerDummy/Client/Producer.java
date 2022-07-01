@@ -59,9 +59,29 @@ public class Producer extends AbstractClient {
         }
         this.dataGenerator.getData(this.sequence_number);
         // Message(s) in a file will be sent instantly
-        this.sendRecoveredMessage(message);
     }
 
+
+    public Channel getChannel() throws IOException, TimeoutException {
+        Connection connection = this.factory.newConnection();
+        Channel channel = connection.createChannel();
+
+        channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+        //channel.queueDeclare(QUEUE_NAME, true, false, false, Map.of("x-queue-type", "quorum"));
+        /*
+        channel.queueDeclare(
+                QUEUE_NAME,
+                true,         // durable
+                false, false, // not exclusive, not auto-delete
+                Map.of(
+                        "x-queue-type", "stream",
+                        "x-max-length-bytes", 1_000_000_000, // maximum stream size: 20 GB
+                        "x-stream-max-segment-size-bytes", 1_000_000 // size of segment files: 100 MB
+                )
+        );
+        */
+        return channel;
+    }
 
     private void sendRecoveredMessage(Message message) {
         System.out.println("Message(s) in File found, will send them immediately!");
@@ -79,6 +99,10 @@ public class Producer extends AbstractClient {
         this.persistenceStrategy.cleanFile();
     }
 
+
+
+
+
     public void getAcknowledgment(Channel channel, Message message) {
         //we try for 5 times for acknowledgment and if we get it, we publish the message
         for (int i = 0; i <= 5; i++) {
@@ -92,6 +116,11 @@ public class Producer extends AbstractClient {
                 }
             }
         }
+    }
+
+    public boolean isReadyToSend() throws IOException {
+        return true;
+
     }
 
         public static byte[] serialize(Object object) {
