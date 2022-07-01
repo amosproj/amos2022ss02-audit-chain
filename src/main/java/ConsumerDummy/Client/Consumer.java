@@ -37,25 +37,13 @@ public class Consumer extends AbstractClient {
         return objStream.readObject();
     }
 
-    @Override
-    public void initFactory() {
-        this.factory.setHost(this.HOST);
-        if(!HOST.equals("localhost")) {
-            this.factory.setUsername(this.USER);
-            this.factory.setPassword(this.PASSWORD);
-        }
-        this.factory.setPort(this.PORT);
-    }
 
     public ConnectionFactory getFactory(){
         return this.factory;
     }
 
-    public Channel generateChannel() throws IOException, TimeoutException {
-        Connection connection = this.factory.newConnection();
-        Channel channel = connection.createChannel();
-        channel.queueDeclare(QUEUE_NAME, true, false, false, Map.of("x-queue-type", "quorum"));
-        return channel;
+    public Channel getChannel() throws IOException, TimeoutException {
+        return this.channel.createChannel(this.factory);
     }
 
     public DeliverCallback DeliveryCallback(Channel channel){

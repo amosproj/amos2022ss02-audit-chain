@@ -15,7 +15,7 @@ class ConsumerTest {
 
     @Test
     void initFactory() {
-        Consumer c = new Consumer("localhost", 5672, "shouldn't be", "set in factory", "Fake");
+        Consumer c = new Consumer("localhost", 5672, "shouldn't be", "set in factory");
         ConnectionFactory factory = c.getFactory();
         assertAll(
                 () -> assertEquals("localhost", c.factory.getHost()),
@@ -26,8 +26,9 @@ class ConsumerTest {
 
     @Test
     void generateChannel() throws IOException, TimeoutException {
-        Consumer c = new Consumer("localhost", 5672, "shouldn't be", "set in factory", "Fake");
-        Channel channel = c.generateChannel();
+        Consumer c = new Consumer("localhost", 5672, "shouldn't be", "set in factory");
+        //TODO fixe me
+        Channel channel = null;
 
         assertAll(
                 () -> assertEquals(1, channel.getChannelNumber()),
@@ -37,7 +38,7 @@ class ConsumerTest {
 
     @Test
     void deliveryCallback() {
-        Consumer c = new Consumer("localhost", 5672, "shouldn't be", "set in factory", "Fake");
+        Consumer c = new Consumer("localhost", 5672, "shouldn't be", "set in factory" );
         DeliverCallback deliverCallback = null;
         deliverCallback = c.DeliveryCallback(null);
         assertNotNull(deliverCallback);
