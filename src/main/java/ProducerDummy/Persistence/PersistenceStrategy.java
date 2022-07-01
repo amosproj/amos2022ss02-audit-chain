@@ -1,10 +1,13 @@
 package ProducerDummy.Persistence;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Vector;
 
 import ProducerDummy.Messages.Message;
 
 /** Interface for the persistence strategy mechanisms */
+//TODO generic for readlastmessage
 public interface PersistenceStrategy {
 
     /***
@@ -22,7 +25,7 @@ public interface PersistenceStrategy {
     /**
      * @return last AbstractMessage written in the persistence mechanism
      */
-    public Message ReadLastMessage();
+    public ArrayList<Message> ReadLastMessage();
 
     public Path getFilePath();
 

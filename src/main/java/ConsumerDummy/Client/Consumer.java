@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 import ProducerDummy.Client.AbstractClient;
+import ProducerDummy.Persistence.NullObjectPersistenceStrategy;
+import ProducerDummy.Persistence.PersistenceStrategy;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -23,39 +25,33 @@ public class Consumer extends AbstractClient {
      * @param port
      * @param username
      * @param password
-     * @param queue_name
      * @throws IOException if the file cannot be read
      */
-    public Consumer(String host, int port, String username, String password, String queue_name) {
-        super(host, port, username, password, queue_name);
+    protected PersistenceStrategy persistenceStrategy = new NullObjectPersistenceStrategy("","");
+
+    public Consumer(String host, int port, String username, String password) {
+        super(host, port, username, password);
     }
 
-    public Object deserialize(byte[] bytes) throws IOException, ClassNotFoundException {
+    public static Object deserialize(byte[] bytes) throws IOException, ClassNotFoundException {
         ByteArrayInputStream byteStream = new ByteArrayInputStream(bytes);
         ObjectInputStream objStream = new ObjectInputStream(byteStream);
 
         return objStream.readObject();
+
     }
 
-    @Override
-    public void initFactory() {
-        this.factory.setHost(this.HOST);
-        if(!HOST.equals("localhost")) {
-            this.factory.setUsername(this.USER);
-            this.factory.setPassword(this.PASSWORD);
-        }
-        this.factory.setPort(this.PORT);
+    public void setPersistenceStrategy(PersistenceStrategy persistenceStrategy){
+        this.persistenceStrategy = persistenceStrategy;
     }
+
 
     public ConnectionFactory getFactory(){
         return this.factory;
     }
 
-    public Channel generateChannel() throws IOException, TimeoutException {
-        Connection connection = this.factory.newConnection();
-        Channel channel = connection.createChannel();
-        channel.queueDeclare(QUEUE_NAME, true, false, false, Map.of("x-queue-type", "quorum"));
-        return channel;
+    public Channel getChannel() throws IOException, TimeoutException {
+        return this.channel.createChannel(this.factory);
     }
 
     public DeliverCallback DeliveryCallback(Channel channel){
