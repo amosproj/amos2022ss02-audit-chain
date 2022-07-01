@@ -1,8 +1,11 @@
-import ConsumerDummy.Client.Client;
+import ConsumerDummy.Client.StreamClient;
 import ProducerDummy.ChannelSelection.RabbitMQChannel;
+import ProducerDummy.ChannelSelection.StandardQueue;
 import ProducerDummy.ChannelSelection.Stream;
+import ProducerDummy.Client.Client;
 import ProducerDummy.DataGeneration.DataGenerator;
 import ProducerDummy.DataGeneration.DynamicDataGenerator;
+import ProducerDummy.DataGeneration.FileDataReader;
 import ProducerDummy.Persistence.NullObjectPersistenceStrategy;
 import ProducerDummy.Persistence.PersistenceStrategy;
 
@@ -39,20 +42,22 @@ public class main {
         String PASSWORD = p.getProperty("PASSWORD");
         String queue_name = "TEST";
 
-        RabbitMQChannel channel = new Stream(queue_name);
-        DataGenerator dataGenerator = new DynamicDataGenerator();
+        RabbitMQChannel producer_channel = new Stream(queue_name);
+        RabbitMQChannel consumer_channel = new Stream(queue_name);
+
+        DataGenerator dataGenerator = new FileDataReader(System.getProperty("user.dir")+ "\\src\\main\\java\\ProducerDummy","household_power_consumption.txt");
         PersistenceStrategy persistenceStrategy = new NullObjectPersistenceStrategy("","",2000);
 
 
 
-        ConsumerDummy.Client.Client consumer = new Client(HOST,PORT,USER,PASSWORD);
-        ProducerDummy.Client.Client producer = new ProducerDummy.Client.Client(HOST,PORT,USER,PASSWORD);
+        ConsumerDummy.Client.Consumer consumer = new StreamClient(HOST,PORT,USER,PASSWORD);
+        ProducerDummy.Client.Producer producer = new Client(HOST,PORT,USER,PASSWORD);
 
         producer.setDataGenerator(dataGenerator);
         producer.setPersistenceStrategy(persistenceStrategy);
         consumer.setPersistenceStrategy(new NullObjectPersistenceStrategy("",""));
-        producer.setChannel(channel);
-        consumer.setChannel(channel);
+        producer.setChannel(producer_channel);
+        consumer.setChannel(consumer_channel);
 
 
         Thread t1 = new Thread(new Runnable() {
@@ -80,34 +85,14 @@ public class main {
                     throw new RuntimeException(e);
                 } catch (TimeoutException e) {
                     throw new RuntimeException(e);
-                }
-            }
-        });
-        //t1.start();
-        t2.start();
-
-
-        TimeUnit.SECONDS.sleep(10);
-
-
-        Thread t3 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Socket socket = new Socket("0.0.0.0",6868);
-                    OutputStream output = socket.getOutputStream();
-                    PrintWriter writer = new PrintWriter(output, true);
-                    writer.println("This is a message sent to the server");
-
-
-                } catch (IOException e) {
+                } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-
             }
         });
+        t1.start();
+        t2.start();
 
-        t3.start();
 
 
 

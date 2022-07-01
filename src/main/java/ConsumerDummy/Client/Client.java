@@ -42,48 +42,12 @@ public class Client extends Consumer {
     public void start() throws IOException, TimeoutException {
         // create Callback to receive Messages
         Channel channel = this.getChannel();
-        channel.basicQos(100); // QoS must be specified
+        channel.basicQos(1);
         channel.confirmSelect();
-        channel.basicConsume(
-                this.channel.getQueueName(),
-                false,
-                Collections.singletonMap("x-stream-offset", 0), // "first" offset specification
-                (consumerTag, message) -> {
-                    try {
-                        ArrayList<Message> messages = (ArrayList<Message>) Consumer.deserialize(message.getBody());
-                        for (int i = 0; i < messages.size(); i++) {
-                            Message m = messages.get(i);
-                            this.persistenceStrategy.StoreMessage(m);
-                            System.out.println(String.format("Message received with event Number: %d",m.getSequence_number() ));
-                        }
-
-                    } catch (ClassNotFoundException e) {
-                        throw new RuntimeException(e);
-                    }
-                    channel.basicAck(message.getEnvelope().getDeliveryTag(), false); // ack is required
-                },
-                consumerTag -> {});
-
-        listen();
-
+        channel.basicConsume(this.channel.getQueueName(), true, this.DeliveryCallback(), consumerTag -> { });
+        this.listen();
     }
 
-    public void listen() throws IOException {
-
-        ServerSocket serverSocket = new ServerSocket(6868);
-
-        while(true){
-            Socket socket = serverSocket.accept();
-            System.out.println("A client connected.");
-            InputStream input = socket.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-            String line = reader.readLine();
-            // here is your part, create the methods to communicate with the Blockchain. Communicate with Francesco about it
-
-        }
-
-
-    }
 
 
 

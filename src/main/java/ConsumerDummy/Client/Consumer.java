@@ -1,13 +1,15 @@
 package ConsumerDummy.Client;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 import ProducerDummy.Client.AbstractClient;
+import ProducerDummy.Messages.Message;
 import ProducerDummy.Persistence.NullObjectPersistenceStrategy;
 import ProducerDummy.Persistence.PersistenceStrategy;
 import com.rabbitmq.client.Channel;
@@ -54,12 +56,29 @@ public class Consumer extends AbstractClient {
         return this.channel.createChannel(this.factory);
     }
 
-    public DeliverCallback DeliveryCallback(Channel channel){
+    public DeliverCallback DeliveryCallback(){
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-            String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
-            System.out.println(" [x] Received '" + message + "'");
+            try {
+                ArrayList<Message> messages = (ArrayList<Message>) Consumer.deserialize(delivery.getBody());
+                messages.forEach(message ->
+                        System.out.println(String.format(" [%d] Received %s'", message.getSequence_number(),message.getMessage())));
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
         };
         return deliverCallback;
+    }
+
+    public void listen() throws IOException {
+        ServerSocket serverSocket = new ServerSocket(6868);
+        while(true){
+            Socket socket = serverSocket.accept();
+            System.out.println("A client connected.");
+            InputStream input = socket.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+            String line = reader.readLine();
+            // here is your part, create the methods to communicate with the Blockchain. Communicate with Francesco about it
+        }
     }
 
 }
