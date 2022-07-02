@@ -30,7 +30,6 @@ public class Consumer extends AbstractClient {
      * @param password
      * @throws IOException if the file cannot be read
      */
-    protected PersistenceStrategy persistenceStrategy = new NullObjectPersistenceStrategy("","");
 
     public Consumer(String host, int port, String username, String password) {
         super(host, port, username, password);
@@ -43,11 +42,6 @@ public class Consumer extends AbstractClient {
         return objStream.readObject();
 
     }
-
-    public void setPersistenceStrategy(PersistenceStrategy persistenceStrategy){
-        this.persistenceStrategy = persistenceStrategy;
-    }
-
 
     public ConnectionFactory getFactory(){
         return this.factory;

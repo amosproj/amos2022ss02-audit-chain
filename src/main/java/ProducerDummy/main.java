@@ -46,7 +46,7 @@ public class main {
         String queue_name = "HELLO_WORLD";
         // create components for Client
         DataGenerator dataGenerator = new DynamicDataGenerator();
-        PersistenceStrategy filePersistenceStrategy = new NullObjectPersistenceStrategy(base_path, "last_messages.txt",2005);
+        PersistenceStrategy filePersistenceStrategy = new NullObjectPersistenceStrategy(base_path, "last_messages.txt");
         RabbitMQChannel channel = new QuorumQueues(queue_name);
 
         //Producer client = new Client(HOST, PORT, USER, PASSWORD,KEY,ALGORITHM);

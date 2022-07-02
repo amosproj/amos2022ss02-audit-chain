@@ -39,7 +39,9 @@ public class Client extends Producer {
 
 
     /***
-     * Start Sending Messages to the RabbitMQ Server.
+     * 1. Get Channel, 2. Get stored messages from PersistenceStrategy, 3. send these if ready to send.
+     * 4. get new Data, store these in persistence, update Payload and send to server if ready to send
+     *
      * @throws IOException if an I/O error occurs
      * @throws TimeoutException if the timeout expires
      * @throws InterruptedException if the thread is interrupted
@@ -47,9 +49,12 @@ public class Client extends Producer {
     public void start() throws IOException, TimeoutException, InterruptedException {
         Channel channel = this.getChannel();
         ArrayList<Message> messageVector = this.persistenceStrategy.ReadLastMessage();
+        this.RecoverCurrentPayloadSize(messageVector);
+        if(messageVector.size()>=1 && this.isReadyToSend())
+
         // check if the Message(s) in the file shall be sent to rabbitmq
         if (messageVector.size() > 0) {
-            if (isReadyToSend(messageVector)) {
+            if (isReadyToSend()) {
                 System.out.println("Found Message(s) in the Persistence Storage which are ready to send, they will now be send");
                 this.getAcknowledgment(channel, messageVector);
                 this.persistenceStrategy.cleanFile();
@@ -70,7 +75,8 @@ public class Client extends Producer {
             Message message = this.createMessage(sequence_number,line);
             this.persistenceStrategy.StoreMessage(message);
             messageVector.add(message);
-            if (isReadyToSend(messageVector)) {
+            this.updatePayloadSize(message);
+            if (isReadyToSend()) {
                 System.out.println(String.format("Event Message(s) from %d to %d are ready to send, trying to send them to RabbitMq ...",
                         messageVector.get(0).getSequence_number(),
                         messageVector.get(messageVector.size() - 1).getSequence_number()
@@ -90,6 +96,7 @@ public class Client extends Producer {
         }
         channel.close();
     }
+
 
     protected Message createMessage(int sequence_number,String message_string) {
         return new SimpleMessage(sequence_number,message_string);

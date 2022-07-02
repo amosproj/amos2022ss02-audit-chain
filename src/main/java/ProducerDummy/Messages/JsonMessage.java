@@ -2,6 +2,9 @@ package ProducerDummy.Messages;
 
 import com.google.gson.JsonObject;
 
+/**
+ * Implementation of the Message interface in JSON Form. Not yet supported
+ */
 public class JsonMessage implements Message {
 
     JsonObject json_message = new JsonObject();
@@ -12,8 +15,8 @@ public class JsonMessage implements Message {
         this.formatMessage(sequence_number, json_message);
     }
 
-    @Override
-    public void formatMessage(int sequence_number, String message) {
+
+    protected void formatMessage(int sequence_number, String message) {
         this.setMessage(message);
         this.setSequence_number(sequence_number);
     }

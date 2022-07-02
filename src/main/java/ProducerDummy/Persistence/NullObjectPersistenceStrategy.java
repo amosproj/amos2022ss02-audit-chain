@@ -3,30 +3,20 @@ package ProducerDummy.Persistence;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Vector;
-
 import ProducerDummy.Messages.Message;
-import ProducerDummy.Messages.SimpleMessage;
 
 /***
- * This Implementation should be used for Debug purpose because you don´t want to write every message into your Hdd.
+ * Just like the name suggest this Implementation does not really do anything.
+ * It´s best use if you don´t want to store anything Messages.
  */
 
 public class NullObjectPersistenceStrategy implements PersistenceStrategy {
-
-    int size = 0;
-    int current_size = 0;
     public NullObjectPersistenceStrategy(String filepath,String fileName){
         return;
     }
-    public NullObjectPersistenceStrategy(String filepath,String fileName,int size){
-        this.size = size;
-        return;
-    }
+
     @Override
     public void StoreMessage(Message message) {
-        // only length of String is interesting
-        this.current_size += message.getMessage().getBytes().length;
         return;
     }
 

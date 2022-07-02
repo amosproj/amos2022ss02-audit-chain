@@ -4,20 +4,17 @@ import ProducerDummy.ChannelSelection.QuorumQueues;
 import ProducerDummy.ChannelSelection.RabbitMQChannel;
 import ProducerDummy.ChannelSelection.StandardQueue;
 import ProducerDummy.ChannelSelection.Stream;
+import ProducerDummy.Client.AbstractClient;
 import ProducerDummy.Client.Client;
-import ProducerDummy.Client.Producer;
 import ProducerDummy.DataGeneration.DataGenerator;
-import ProducerDummy.DataGeneration.DynamicDataGenerator;
 import ProducerDummy.DataGeneration.FileDataReader;
 import ProducerDummy.Persistence.NullObjectPersistenceStrategy;
 import ProducerDummy.Persistence.PersistenceStrategy;
 
 import java.io.*;
-import java.net.Socket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class main {
@@ -49,12 +46,12 @@ public class main {
         RabbitMQChannel consumer_channel = new QuorumQueues(queue_name);
 
         DataGenerator dataGenerator = new FileDataReader(System.getProperty("user.dir")+ "\\src\\main\\java\\ProducerDummy","household_power_consumption.txt");
-        PersistenceStrategy persistenceStrategy = new NullObjectPersistenceStrategy("","",2000);
+        PersistenceStrategy persistenceStrategy = new NullObjectPersistenceStrategy("","");
 
 
 
-        ConsumerDummy.Client.Consumer consumer = new ConsumerDummy.Client.Client(HOST,PORT,USER,PASSWORD);
-        ProducerDummy.Client.Producer producer = new Client(HOST,PORT,USER,PASSWORD);
+        AbstractClient consumer = new ConsumerDummy.Client.Client(HOST,PORT,USER,PASSWORD);
+        Client producer = new Client(HOST,PORT,USER,PASSWORD);
 
         producer.setDataGenerator(dataGenerator);
         producer.setPersistenceStrategy(persistenceStrategy);
@@ -86,7 +83,7 @@ public class main {
                     consumer.start();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
-                } catch (TimeoutException e) {
+                } catch (TimeoutException | InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }

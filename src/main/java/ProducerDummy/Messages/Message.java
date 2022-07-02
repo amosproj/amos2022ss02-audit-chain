@@ -2,9 +2,11 @@ package ProducerDummy.Messages;
 
 import java.io.Serializable;
 
-public interface Message extends Serializable {
 
-    public void formatMessage(int sequence_number, String message);
+/**
+ * Implementation of a normal Message which only has a Sequence Nr (event number) and a String
+ */
+public interface Message extends Serializable {
 
     public int getSequence_number();
 

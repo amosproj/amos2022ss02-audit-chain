@@ -9,7 +9,6 @@ import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Vector;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -23,7 +22,7 @@ import ProducerDummy.Messages.Message;
 import ProducerDummy.Messages.SimpleMessage;
 
 /***
- * This is one Implementation which is supposed to guarantee us that we never lose our current state of the Sequence Number.
+ * This is Implementation Stores only one Message in a File.
  */
 
 public class FilePersistenceStrategy implements PersistenceStrategy {

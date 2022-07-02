@@ -20,7 +20,7 @@ import ProducerDummy.Messages.SimpleMessage;
 
 
 /***
- * This is one Implementation which is supposed to guarantee us that we never lose our current state of the Sequence Number.
+ * This Implementation is Append only. It stores every Message it receives in a File.
  */
 
 public class AggregateMessageFilePersistence extends FilePersistenceStrategy {

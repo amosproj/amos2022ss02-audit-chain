@@ -12,13 +12,14 @@ public class QuorumQueues extends RabbitMQChannel {
 
     public QuorumQueues(String name) {
         super(name);
+        this.durable = true;
     }
 
     @Override
     public Channel createChannel(ConnectionFactory factory) throws IOException, TimeoutException {
         Connection connection = factory.newConnection();
         com.rabbitmq.client.Channel channel = connection.createChannel();
-        channel.queueDeclare(this.channel_name, true, false, false, Map.of("x-queue-type", "quorum"));
+        channel.queueDeclare(this.channel_name, this.durable, this.exclusive, this.autoDelete, Map.of("x-queue-type", "quorum"));
         channel.confirmSelect();
         return channel;
     }

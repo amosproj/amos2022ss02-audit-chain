@@ -9,15 +9,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Vector;
 import java.util.concurrent.TimeoutException;
 
 public class Producer extends AbstractClient {
 
-    /**
-     * Every Producer must be able to store their Messages into a File and also must have a Datasource
-     */
+
+    // Data Generator is the Component which generates the Data for the RabbitMQ. See DataGeneration Folder
     protected DataGenerator dataGenerator;
-    protected PersistenceStrategy persistenceStrategy;
     static int START_NUMBER = 0;
     protected int sequence_number;
     protected int DESIRED_PAYLOAD_IN_BYTE = 1024;
@@ -32,26 +31,20 @@ public class Producer extends AbstractClient {
      * @param username
      * @param password
      */
+    // if you want to aggregate Messages and not sending every Message to RabbitMQ use this one. Be careful tho, the desired_payload_in_byte is just an estimation
     public Producer(String host, int port, String username, String password, int desired_payload_in_byte) {
         super(host, port, username, password);
         this.DESIRED_PAYLOAD_IN_BYTE = desired_payload_in_byte;
     }
-
+    // A normal Producer which sends every Message to RabbitMQ
     public Producer(String host, int port, String username, String password) {
         super(host, port, username, password);
         this.DESIRED_PAYLOAD_IN_BYTE = 0; // we don´t care, we send every Message instantly
     }
-
+    // Data Generator is the Component which generates the Data for the RabbitMQ. See DataGeneration Folder
     public void setDataGenerator(DataGenerator dataGenerator) {
         this.dataGenerator = dataGenerator;
     }
-
-    ;
-
-    public void setPersistenceStrategy(PersistenceStrategy persistenceStrategy) {
-        this.persistenceStrategy = persistenceStrategy;
-    }
-
 
     public Channel getChannel() throws IOException, TimeoutException {
         return this.channel.createChannel(this.factory);
@@ -72,21 +65,33 @@ public class Producer extends AbstractClient {
         }
     }
 
-    public boolean isReadyToSend(ArrayList<Message> arrayList) throws IOException {
+    public boolean isReadyToSend() throws IOException {
         if (DESIRED_PAYLOAD_IN_BYTE == 0) {
             return true;
         }
-        // if payload actually matters, but just an estimation, also overhead of object/arraylist does not matter
-        for (Message m : arrayList) {
-            this.current_payload += m.getMessage().getBytes().length + m.getSequence_number() + 8 * 32;
-        }
-
         if (this.current_payload >= DESIRED_PAYLOAD_IN_BYTE) {
             this.current_payload = 0; //reset
             return true;
         }
         return false;
     }
+
+    protected void RecoverCurrentPayloadSize(ArrayList<Message> messages){
+        // if desired is 0 we can save the time
+        if (DESIRED_PAYLOAD_IN_BYTE == 0) {
+            return;
+        }
+        // if payload actually matters.
+        for (Message m : messages) {
+            this.updatePayloadSize(m);
+        }
+    }
+
+    protected void updatePayloadSize(Message message){
+        //just an estimation, also overhead of object/arraylist does not matter
+        this.current_payload += message.getMessage().getBytes().length + message.getSequence_number() + 8 * 32;
+    }
+
 
     public static byte[] serialize(Object object) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();

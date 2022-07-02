@@ -5,6 +5,7 @@ import java.util.concurrent.TimeoutException;
 
 import ProducerDummy.ChannelSelection.QuorumQueues;
 import ProducerDummy.ChannelSelection.RabbitMQChannel;
+import ProducerDummy.Persistence.PersistenceStrategy;
 import com.rabbitmq.client.ConnectionFactory;
 
 /**
@@ -17,7 +18,11 @@ abstract public class AbstractClient {
     protected String USER;
     protected String PASSWORD;
     public ConnectionFactory factory = new ConnectionFactory();
+    // A wrapped RabbitMQ Channel. See RabbitMQChannel Folder.
     public RabbitMQChannel channel = null;
+    // A Component which stores a Message persistently. See Persistence Folder
+    protected PersistenceStrategy persistenceStrategy;
+
 
     /**
      * Constructor for Client.AbstractClient. Initializes the filepath, the file reader and set information for the
@@ -50,6 +55,10 @@ abstract public class AbstractClient {
 
     public void setChannel(RabbitMQChannel channel){
         this.channel = channel;
+    }
+
+    public void setPersistenceStrategy(PersistenceStrategy persistenceStrategy){
+        this.persistenceStrategy = persistenceStrategy;
     }
 
 }

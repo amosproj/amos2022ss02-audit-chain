@@ -21,6 +21,9 @@ public class Stream extends RabbitMQChannel{
         super(name);
         this.MAXIMUM_STREAM_SIZE = stream_size;
         this.STREAM_SEGMENT_SIZE = segment_size;
+        this.durable = true;
+        this.autoDelete = false;
+        this.exclusive = false;
     }
 
 
@@ -30,9 +33,9 @@ public class Stream extends RabbitMQChannel{
         Channel channel = connection.createChannel();
         channel.queueDeclare(
                 this.channel_name,
-                true,         // durable
-                false,
-                false, // not exclusive, not auto-delete
+                this.durable, // MUST BE true
+                this.exclusive, // MUST BE not exclusive
+                this.autoDelete,
                 Map.of(
                         "x-queue-type", "stream",
                         "x-max-length-bytes", this.MAXIMUM_STREAM_SIZE, // maximum stream size: 20 GB

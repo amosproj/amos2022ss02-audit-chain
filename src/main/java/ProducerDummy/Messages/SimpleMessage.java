@@ -1,5 +1,8 @@
 package ProducerDummy.Messages;
 
+/**
+ * Implementation of the Message interface in it´s most simple Form
+ */
 public class SimpleMessage implements Message {
 
     public int getSequence_number() {
@@ -27,21 +30,8 @@ public class SimpleMessage implements Message {
     private String message;
 
     public SimpleMessage(int sequence_number, String message) {
-        this.formatMessage(sequence_number,message);
-    }
-
-    @Override
-    public void formatMessage(int sequence_number, String message) {
-
         this.sequence_number = sequence_number;
         this.message = message;
-
-        return;
-
-    }
-
-    public JsonMessage toJSONMessage(){
-        return new JsonMessage(this.getSequence_number(),this.getMessage());
     }
 
     public String toString(){

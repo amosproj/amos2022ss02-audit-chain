@@ -21,6 +21,7 @@ public class SecurityClient extends Client{
     }
 
 
+    @Override
     protected Message createMessage(int sequence_number,String message_string) {
         try {
             return new Hmac_SimpleMessage(sequence_number,message_string,this.algorithm,this.key);
