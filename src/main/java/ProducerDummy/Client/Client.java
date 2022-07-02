@@ -1,13 +1,10 @@
 package ProducerDummy.Client;
 
 import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import ProducerDummy.Messages.Hmac_JsonMessage;
 import ProducerDummy.Messages.SimpleMessage;
 import com.rabbitmq.client.Channel;
 
@@ -30,6 +27,11 @@ public class Client extends Producer {
 
     }
 
+    public Client(String host, int port, String username, String password, int desired_payload_in_byte) {
+        super(host, port, username, password);
+        this.DESIRED_PAYLOAD_IN_BYTE = desired_payload_in_byte;
+    }
+
     /**
      * Recover the last message stored in the persistence mechanism and use its sequence number to set the
      * DataGenerator again to the point it was before "the interruption"
@@ -47,7 +49,7 @@ public class Client extends Producer {
         ArrayList<Message> messageVector = this.persistenceStrategy.ReadLastMessage();
         // check if the Message(s) in the file shall be sent to rabbitmq
         if (messageVector.size() > 0) {
-            if (isReadyToSend()) {
+            if (isReadyToSend(messageVector)) {
                 System.out.println("Found Message(s) in the Persistence Storage which are ready to send, they will now be send");
                 this.getAcknowledgment(channel, messageVector);
                 this.persistenceStrategy.cleanFile();
@@ -68,7 +70,7 @@ public class Client extends Producer {
             Message message = this.createMessage(sequence_number,line);
             this.persistenceStrategy.StoreMessage(message);
             messageVector.add(message);
-            if (isReadyToSend()) {
+            if (isReadyToSend(messageVector)) {
                 System.out.println(String.format("Event Message(s) from %d to %d are ready to send, trying to send them to RabbitMq ...",
                         messageVector.get(0).getSequence_number(),
                         messageVector.get(messageVector.size() - 1).getSequence_number()

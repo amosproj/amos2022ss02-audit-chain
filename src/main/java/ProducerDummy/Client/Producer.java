@@ -4,7 +4,6 @@ import ProducerDummy.DataGeneration.DataGenerator;
 import ProducerDummy.Messages.Message;
 import ProducerDummy.Persistence.PersistenceStrategy;
 import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -16,14 +15,13 @@ public class Producer extends AbstractClient {
 
     /**
      * Every Producer must be able to store their Messages into a File and also must have a Datasource
-     * */
+     */
     protected DataGenerator dataGenerator;
     protected PersistenceStrategy persistenceStrategy;
-
-
     static int START_NUMBER = 0;
-
     protected int sequence_number;
+    protected int DESIRED_PAYLOAD_IN_BYTE = 1024;
+    protected int current_payload = 0;
 
     /**
      * Constructor for Client.AbstractClient. Initializes the filepath, the file reader and set information for the
@@ -34,21 +32,28 @@ public class Producer extends AbstractClient {
      * @param username
      * @param password
      */
-    public Producer(String host, int port, String username, String password) {
+    public Producer(String host, int port, String username, String password, int desired_payload_in_byte) {
         super(host, port, username, password);
+        this.DESIRED_PAYLOAD_IN_BYTE = desired_payload_in_byte;
     }
 
-    public void setDataGenerator(DataGenerator dataGenerator){
-        this.dataGenerator = dataGenerator;
-    };
+    public Producer(String host, int port, String username, String password) {
+        super(host, port, username, password);
+        this.DESIRED_PAYLOAD_IN_BYTE = 0; // we don´t care, we send every Message instantly
+    }
 
-    public void setPersistenceStrategy(PersistenceStrategy persistenceStrategy){
-     this.persistenceStrategy = persistenceStrategy;
+    public void setDataGenerator(DataGenerator dataGenerator) {
+        this.dataGenerator = dataGenerator;
+    }
+
+    ;
+
+    public void setPersistenceStrategy(PersistenceStrategy persistenceStrategy) {
+        this.persistenceStrategy = persistenceStrategy;
     }
 
 
     public Channel getChannel() throws IOException, TimeoutException {
-
         return this.channel.createChannel(this.factory);
     }
 
@@ -67,12 +72,23 @@ public class Producer extends AbstractClient {
         }
     }
 
-    public boolean isReadyToSend() throws IOException {
-        return true;
+    public boolean isReadyToSend(ArrayList<Message> arrayList) throws IOException {
+        if (DESIRED_PAYLOAD_IN_BYTE == 0) {
+            return true;
+        }
+        // if payload actually matters, but just an estimation, also overhead of object/arraylist does not matter
+        for (Message m : arrayList) {
+            this.current_payload += m.getMessage().getBytes().length + m.getSequence_number() + 8 * 32;
+        }
 
+        if (this.current_payload >= DESIRED_PAYLOAD_IN_BYTE) {
+            this.current_payload = 0; //reset
+            return true;
+        }
+        return false;
     }
 
-        public static byte[] serialize(Object object) {
+    public static byte[] serialize(Object object) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
             ObjectOutputStream os = new ObjectOutputStream(out);
@@ -83,7 +99,6 @@ public class Producer extends AbstractClient {
         }
 
     }
-
 
 
 }

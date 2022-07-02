@@ -60,6 +60,7 @@ public class Consumer extends AbstractClient {
 
 
     /***
+     * Simple Consumer, receives Messages, prints them out and delivers an ACK
      * Start receiving Messages from the RabbitMQ Server.
      * @throws IOException if an I/O error occurs
      * @throws TimeoutException if the timeout expires

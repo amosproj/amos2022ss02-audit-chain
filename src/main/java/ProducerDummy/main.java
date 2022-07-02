@@ -50,7 +50,7 @@ public class main {
         RabbitMQChannel channel = new QuorumQueues(queue_name);
 
         //Producer client = new Client(HOST, PORT, USER, PASSWORD,KEY,ALGORITHM);
-        Producer client = new Client(HOST, PORT, USER, PASSWORD);
+        Producer client = new Client(HOST, PORT, USER, PASSWORD, 30000);
         client.setDataGenerator(dataGenerator);
         client.setPersistenceStrategy(filePersistenceStrategy);
         client.setChannel(channel);
