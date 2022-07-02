@@ -20,7 +20,7 @@ import ProducerDummy.Persistence.NullObjectPersistenceStrategy;
  */
 public class Client extends Producer {
 
-    private final static int SECOND_DELAY_BETWEEN_MESSAGES = 5;
+    private final static int SECOND_DELAY_BETWEEN_MESSAGES = 1;
 
 
     public Client(String host, int port, String username, String password) throws IOException {

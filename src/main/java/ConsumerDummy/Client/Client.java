@@ -34,22 +34,5 @@ public class Client extends Consumer {
     }
 
 
-    /***
-     * Start receiving Messages from the RabbitMQ Server.
-     * @throws IOException if an I/O error occurs
-     * @throws TimeoutException if the timeout expires
-     */
-    public void start() throws IOException, TimeoutException {
-        // create Callback to receive Messages
-        Channel channel = this.getChannel();
-        channel.basicQos(1);
-        channel.confirmSelect();
-        channel.basicConsume(this.channel.getQueueName(), true, this.DeliveryCallback(), consumerTag -> { });
-        this.listen();
-    }
-
-
-
-
 }
 

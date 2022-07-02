@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
@@ -56,17 +57,33 @@ public class Consumer extends AbstractClient {
         return this.channel.createChannel(this.factory);
     }
 
-    public DeliverCallback DeliveryCallback(){
-        DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-            try {
-                ArrayList<Message> messages = (ArrayList<Message>) Consumer.deserialize(delivery.getBody());
-                messages.forEach(message ->
-                        System.out.println(String.format(" [%d] Received %s'", message.getSequence_number(),message.getMessage())));
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        };
-        return deliverCallback;
+
+
+    /***
+     * Start receiving Messages from the RabbitMQ Server.
+     * @throws IOException if an I/O error occurs
+     * @throws TimeoutException if the timeout expires
+     */
+    public void start() throws IOException, TimeoutException {
+        // create Callback to receive Messages
+        Channel channel = this.channel.createChannel(this.factory);
+        channel.basicConsume(
+                this.channel.getQueueName(), // set Queue Name
+                false, // Autoack no
+                (consumerTag, delivery) -> {
+                    try {
+                        ArrayList<Message> messages = (ArrayList<Message>) Consumer.deserialize(delivery.getBody());
+                        messages.forEach(message ->
+                                System.out.println(String.format(" [%d] Received %s'", message.getSequence_number(), message.getMessage())));
+                    } catch (ClassNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
+                    channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
+                },
+                consumerTag -> { });
+
+
+        this.listen();
     }
 
     public void listen() throws IOException {

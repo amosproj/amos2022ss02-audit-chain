@@ -1,8 +1,11 @@
+import ConsumerDummy.Client.Consumer;
 import ConsumerDummy.Client.StreamClient;
+import ProducerDummy.ChannelSelection.QuorumQueues;
 import ProducerDummy.ChannelSelection.RabbitMQChannel;
 import ProducerDummy.ChannelSelection.StandardQueue;
 import ProducerDummy.ChannelSelection.Stream;
 import ProducerDummy.Client.Client;
+import ProducerDummy.Client.Producer;
 import ProducerDummy.DataGeneration.DataGenerator;
 import ProducerDummy.DataGeneration.DynamicDataGenerator;
 import ProducerDummy.DataGeneration.FileDataReader;
@@ -40,17 +43,17 @@ public class main {
         int PORT = Integer.parseInt(p.getProperty("PORT"));
         String USER = p.getProperty("USERNAME");
         String PASSWORD = p.getProperty("PASSWORD");
-        String queue_name = "TEST";
+        String queue_name = "HERE2";
 
-        RabbitMQChannel producer_channel = new Stream(queue_name);
-        RabbitMQChannel consumer_channel = new Stream(queue_name);
+        RabbitMQChannel producer_channel = new QuorumQueues(queue_name);
+        RabbitMQChannel consumer_channel = new QuorumQueues(queue_name);
 
         DataGenerator dataGenerator = new FileDataReader(System.getProperty("user.dir")+ "\\src\\main\\java\\ProducerDummy","household_power_consumption.txt");
         PersistenceStrategy persistenceStrategy = new NullObjectPersistenceStrategy("","",2000);
 
 
 
-        ConsumerDummy.Client.Consumer consumer = new StreamClient(HOST,PORT,USER,PASSWORD);
+        ConsumerDummy.Client.Consumer consumer = new ConsumerDummy.Client.Client(HOST,PORT,USER,PASSWORD);
         ProducerDummy.Client.Producer producer = new Client(HOST,PORT,USER,PASSWORD);
 
         producer.setDataGenerator(dataGenerator);
@@ -84,8 +87,6 @@ public class main {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 } catch (TimeoutException e) {
-                    throw new RuntimeException(e);
-                } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }

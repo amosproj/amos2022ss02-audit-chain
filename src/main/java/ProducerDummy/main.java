@@ -43,11 +43,11 @@ public class main {
 
         String base_path = Paths.get(System.getProperty("user.dir"), filepath).toString();
 
-        String queue_name = "TEST_STANDARD";
+        String queue_name = "HELLO_WORLD";
         // create components for Client
         DataGenerator dataGenerator = new DynamicDataGenerator();
-        PersistenceStrategy filePersistenceStrategy = new NullObjectPersistenceStrategy(base_path, "last_messages.txt");
-        RabbitMQChannel channel = new Stream(queue_name);
+        PersistenceStrategy filePersistenceStrategy = new NullObjectPersistenceStrategy(base_path, "last_messages.txt",2005);
+        RabbitMQChannel channel = new QuorumQueues(queue_name);
 
         //Producer client = new Client(HOST, PORT, USER, PASSWORD,KEY,ALGORITHM);
         Producer client = new Client(HOST, PORT, USER, PASSWORD);

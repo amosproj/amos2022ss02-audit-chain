@@ -26,14 +26,13 @@ public class StreamClient extends Consumer{
     }
 
     public void start() throws IOException, TimeoutException {
-        // create Callback to receive Messages
         Channel channel = this.getChannel();
         channel.basicQos(1);
 
         channel.basicConsume(
                 this.channel.getQueueName(),
                 false,
-                Collections.singletonMap("x-stream-offset", "first"), // "first" offset specification
+                Collections.singletonMap("x-stream-offset", "first"), // From which offset to read (= which Message)
                 (consumerTag, delivery) -> {
                     try {
                         ArrayList<Message> messages = (ArrayList<Message>) Consumer.deserialize(delivery.getBody());
