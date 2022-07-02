@@ -7,12 +7,10 @@ import java.util.Vector;
 import java.util.concurrent.TimeoutException;
 
 import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.DeliverCallback;
 
 import BlockchainImplementation.Blockchain.Blockchain;
 import ConsumerDummy.Client.Consumer;
-import ProducerDummy.Messages.AggregateMessage;
 import ProducerDummy.Messages.Hmac_Message;
 import ProducerDummy.Messages.Message;
 
