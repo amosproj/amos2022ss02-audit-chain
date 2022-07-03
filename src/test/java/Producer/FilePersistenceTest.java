@@ -4,6 +4,7 @@ package Producer;
 import ProducerDummy.Messages.*;
 import ProducerDummy.Persistence.AggregateMessageFilePersistence;
 import ProducerDummy.Persistence.FilePersistenceStrategy;
+import ProducerDummy.Persistence.NullObjectPersistenceStrategy;
 import ProducerDummy.Persistence.PersistenceStrategy;
 
 
@@ -16,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -116,6 +118,22 @@ String queue_name;
 
     }
 
+    @Test()
+    public void StoreNullObjectPersistenceTest() throws IOException {
+        PersistenceStrategy filePersistenceStrategy = new NullObjectPersistenceStrategy(filepath, filename);
+        Message message = new SimpleMessage(1,"Srly, what do you expect here?");
+        filePersistenceStrategy.StoreMessage(message);
+    }
+
+    @Test()
+    public void StoreNullObjectPersistenceReadLastmessageTest() throws IOException {
+        PersistenceStrategy filePersistenceStrategy = new NullObjectPersistenceStrategy(filepath, filename);
+        Message message = new SimpleMessage(1,"");
+        filePersistenceStrategy.StoreMessage(message);
+        ArrayList<Message> messages = filePersistenceStrategy.ReadLastMessage();
+        assertEquals(new ArrayList<Message>(),messages);
+
+    }
 
 
 
