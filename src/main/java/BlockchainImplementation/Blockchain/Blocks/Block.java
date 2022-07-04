@@ -12,6 +12,7 @@ import java.util.*;
  */
 public class Block<T,R> extends AbstractBlock<Map<String, SubBlock<T,R>>>{
 
+    private String firstSubBlockHash; /** The hash of the first SubBlock added*/
     private String lastSubBlockHash; /** The hash of the last SubBlock added*/
 
     public Block(String previousHashBlock, T[] meta_data, R[] content) {
@@ -37,6 +38,8 @@ public class Block<T,R> extends AbstractBlock<Map<String, SubBlock<T,R>>>{
             previousHash = newSubBlock.getHashBlock();
 
             transaction.put(previousHash, newSubBlock);
+
+            if(i == 0) firstSubBlockHash = previousHash;
         }
 
         lastSubBlockHash = previousHash;
@@ -44,6 +47,10 @@ public class Block<T,R> extends AbstractBlock<Map<String, SubBlock<T,R>>>{
 
     public String getLastSubBlockHash() {
         return lastSubBlockHash;
+    }
+
+    public String getFirstSubBlockHash() {
+        return firstSubBlockHash;
     }
 
     /**
