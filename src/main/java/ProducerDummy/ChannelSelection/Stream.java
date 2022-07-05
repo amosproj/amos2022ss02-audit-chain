@@ -16,15 +16,21 @@ public class Stream extends RabbitMQChannel{
 
     public Stream(String name) {
         super(name);
+        this.setStreamProperties();
     }
     public Stream(String name, int stream_size, int segment_size) {
         super(name);
         this.MAXIMUM_STREAM_SIZE = stream_size;
         this.STREAM_SEGMENT_SIZE = segment_size;
+        this.setStreamProperties();
+    }
+
+    private void setStreamProperties(){
         this.durable = true;
         this.autoDelete = false;
         this.exclusive = false;
     }
+
 
 
     public Channel createChannel(ConnectionFactory factory) throws IOException, TimeoutException {
