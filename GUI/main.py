@@ -23,12 +23,12 @@ class ConnectionDialog(QDialog):
         port = self.ui.lineEdit_2.text()
         # TODO change to ip
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client_socket.connect(("127.0.0.1", 6868))
+        self.client_socket.connect(("127.0.0.1", 44556))
 
 
     def send_command(self,command):
         print(command)
-        #self.client_socket.send(bytes(command.encode(),"utf-8"))
+        self.client_socket.send(str(command).encode('utf-8'))
 
 
 
@@ -49,7 +49,7 @@ class MainWindow(QMainWindow):
             "command": "check_single_message",
             "number":eventNum
         }
-        self.connection_dialog.send_command(json.dumps(command))
+        self.connection_dialog.send_command(command)
     def pushButton_2_clicked(self):
         startEvent = self.ui.lineEdit_3.text()
         endEvent = self.ui.lineEdit_2.text()
@@ -58,14 +58,14 @@ class MainWindow(QMainWindow):
             "start" : startEvent,
             "end": endEvent
         }
-        self.connection_dialog.send_command(json.dumps(command))
+        self.connection_dialog.send_command(command)
 
 
     def pushButton_3_clicked(self):
         command = {
             "command": "get_statistics"
         }
-        self.connection_dialog.send_command(json.dumps(command))
+        self.connection_dialog.send_command(command)
 
 
 if __name__ == "__main__":
