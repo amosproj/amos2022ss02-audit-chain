@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
@@ -33,6 +35,18 @@ public class Client extends Consumer {
         super(host, port, username, password);
     }
 
-
+    public static void main(String [] args) throws IOException{
+    
+            // TODO bind ip else it just works on the pc 0.0.0.0:6868
+            ServerSocket serverSocket = new ServerSocket(6868);
+            while(true){
+                Socket socket = serverSocket.accept();
+                System.out.println("Client connected");
+                InputStream input = socket.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+                String line = reader.readLine();
+                System.out.println(line); 
+            }
+        
+    }
 }
-

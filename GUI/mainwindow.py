@@ -10,6 +10,7 @@
 
 from PySide2 import QtCore, QtGui, QtWidgets
 
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -182,18 +183,42 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtWidgets.QApplication.translate("MainWindow", "Audit Chain Blockchain App", None, -1))
+       
+        def __init__(self):
+            super(MainWindow, self).__init__()
+            self.ui = Ui_MainWindow()
+            self.ui.setupUi(self)
+
+
+        
+        #Message Check: from event number return the correspondant message    
         self.label_3.setText(QtWidgets.QApplication.translate("MainWindow", "Insert Event Number", None, -1))
         self.pushButton.setText(QtWidgets.QApplication.translate("MainWindow", "CheckMessage", None, -1))
         self.label_2.setText(QtWidgets.QApplication.translate("MainWindow", "Result", None, -1))
+        
+        self.textBrowser.setText(QtWidgets.QApplication.translate("MainWindow", "Please, insert Event Number", None, -1))
+        self.pushButton.clicked.connect(MainWindow.pushButton_clicked)
+        
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtWidgets.QApplication.translate("MainWindow", "MessageCheck", None, -1))
+    
+         
+        #message check interval: return the messages in between the start and end events inserted
         self.label_6.setText(QtWidgets.QApplication.translate("MainWindow", "Insert Event Number Start", None, -1))
         self.label_4.setText(QtWidgets.QApplication.translate("MainWindow", "Insert Event Number End", None, -1))
         self.pushButton_2.setText(QtWidgets.QApplication.translate("MainWindow", "CheckMessage", None, -1))
         self.label_5.setText(QtWidgets.QApplication.translate("MainWindow", "Result", None, -1))
+        self.textBrowser_2.setText(QtWidgets.QApplication.translate("MainWindow", "Please, insert event numbers", None, -1))
+        self.pushButton_2.clicked.connect(MainWindow.pushButton_2_clicked)     
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab3), QtWidgets.QApplication.translate("MainWindow", "MessageCheckIntervall", None, -1))
+        
+        #stats 1: return directly data records
         self.label.setText(QtWidgets.QApplication.translate("MainWindow", "Amout of Data Records", None, -1))
+        #stats 2: return directly files created
         self.label_7.setText(QtWidgets.QApplication.translate("MainWindow", "Amount of Files already created", None, -1))
+        #stats 3: return directly current size of the blockchain
         self.label_8.setText(QtWidgets.QApplication.translate("MainWindow", "Blockchain Current Size", None, -1))
+        self.pushButton_3.clicked.connect(MainWindow.pushButton_3_clicked)
+
         self.pushButton_3.setText(QtWidgets.QApplication.translate("MainWindow", "Get Statistics!", None, -1))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QtWidgets.QApplication.translate("MainWindow", "Statistics", None, -1))
         self.menuSettings.setTitle(QtWidgets.QApplication.translate("MainWindow", "Settings", None, -1))

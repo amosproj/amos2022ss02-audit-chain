@@ -89,7 +89,7 @@ public class main {
                 }
             }
         });
-        t1.start();
+        //t1.start();
         t2.start();
 
 

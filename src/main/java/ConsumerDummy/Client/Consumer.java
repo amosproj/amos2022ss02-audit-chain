@@ -86,11 +86,10 @@ public class Consumer extends AbstractClient {
         ServerSocket serverSocket = new ServerSocket(6868);
         while(true){
             Socket socket = serverSocket.accept();
-            System.out.println("Clien conncected");
+            System.out.println("Client connected");
             InputStream input = socket.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(input));
             String line = reader.readLine();
-            // here is your part, create the methods to communicate with the Blockchain. Communicate with Francesco about it
         }
     }
 

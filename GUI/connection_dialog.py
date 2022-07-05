@@ -10,6 +10,7 @@
 
 from PySide2 import QtCore, QtGui, QtWidgets
 
+
 class Ui_connection_dialog(object):
     def setupUi(self, connection_dialog):
         connection_dialog.setObjectName("connection_dialog")
@@ -53,4 +54,8 @@ class Ui_connection_dialog(object):
         self.label_2.setText(QtWidgets.QApplication.translate("connection_dialog", "Consumer Port", None, -1))
         self.pushButton.setText(QtWidgets.QApplication.translate("connection_dialog", "confirm", None, -1))
         self.pushButton_2.setText(QtWidgets.QApplication.translate("connection_dialog", "connect", None, -1))
-
+        self.pushButton_2.clicked.connect(connection_dialog.pushButton_2_conn_clicked)
+        
+        
+        
+        
