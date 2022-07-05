@@ -23,7 +23,7 @@ class ConnectionDialog(QDialog):
         port = self.ui.lineEdit_2.text()
         # TODO change to ip
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client_socket.connect(("127.0.0.1", 44556))
+        self.client_socket.connect(("127.0.0.1", 6868))
 
 
     def send_command(self,command):
