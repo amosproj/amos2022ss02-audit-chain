@@ -83,13 +83,16 @@ public class Consumer extends AbstractClient {
 
     public void listen() throws IOException {
         // TODO bind ip else it just works on the pc 0.0.0.0:6868
-        ServerSocket serverSocket = new ServerSocket(6868);
+        ServerSocket serverSocket = new ServerSocket(9999);
         while(true){
+            System.out.println("Accepting Connections now");
             Socket socket = serverSocket.accept();
-            System.out.println("Client connected");
+            System.out.println("Clien conncected");
             InputStream input = socket.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(input));
             String line = reader.readLine();
+            System.out.println(line);
+            // here is your part, create the methods to communicate with the Blockchain. Communicate with Francesco about it
         }
     }
 
