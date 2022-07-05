@@ -19,11 +19,11 @@ class ConnectionDialog(QDialog):
         self.ui.lineEdit_2.setText("created")
 
     def create_connection(self):
-        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         ip = self.ui.lineEdit.text()
         port = self.ui.lineEdit_2.text()
         # TODO change to ip
-        self.client_socket.connect("127.0.0.1", 6868)
+        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client_socket.connect(("127.0.0.1", 6868))
 
 
     def send_command(self,command):
