@@ -1,6 +1,7 @@
 package Producer;
 
 import ProducerDummy.DataGeneration.DataGenerator;
+import ProducerDummy.DataGeneration.DynamicDataGenerator;
 import ProducerDummy.DataGeneration.FileDataReader;
 import com.github.javafaker.service.FakeValuesService;
 import com.github.javafaker.service.RandomService;
@@ -15,8 +16,7 @@ import java.util.regex.Pattern;
 import java.io.FileNotFoundException;
 import java.nio.file.Paths;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class DataGeneratorTest {
 
@@ -53,5 +53,21 @@ public class DataGeneratorTest {
 
         assertTrue(alphaNumericMatcher.find());
     }
+
+    @Test
+    @DisplayName("Read once with Dynamic Data Generation")
+    public void ReadDynamicDataTest() {
+        DataGenerator dataGenerator = new DynamicDataGenerator();
+        assertFalse((dataGenerator.getData().isEmpty()));
+    }
+
+    @Test
+    @DisplayName("Read random X Line")
+    public void ReadLineXDynamicDataTest(){
+        DataGenerator dataGenerator = new DynamicDataGenerator();
+        assertFalse(dataGenerator.getData(6).isEmpty());
+
+    }
+
 
 }

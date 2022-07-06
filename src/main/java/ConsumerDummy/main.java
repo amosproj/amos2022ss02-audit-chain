@@ -1,5 +1,14 @@
 package ConsumerDummy;
 
+import ConsumerDummy.Client.Client;
+import ConsumerDummy.Client.Consumer;
+import ConsumerDummy.Client.StreamClient;
+import ProducerDummy.ChannelSelection.QuorumQueues;
+import ProducerDummy.ChannelSelection.RabbitMQChannel;
+import ProducerDummy.ChannelSelection.StandardQueue;
+import ProducerDummy.ChannelSelection.Stream;
+import ProducerDummy.Client.AbstractClient;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -7,7 +16,6 @@ import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.concurrent.TimeoutException;
 
-import ConsumerDummy.Client.AggregateClient;
 
 
 public class main {
@@ -25,9 +33,13 @@ public class main {
         int PORT = Integer.parseInt(p.getProperty("PORT"));
         String USER = p.getProperty("USERNAME");
         String PASSWORD = p.getProperty("PASSWORD");
-        String queue_name = "FAKE";
+        String queue_name = "ds";
 
-        AggregateClient client = new AggregateClient(HOST,PORT,USER,PASSWORD,queue_name);
+        RabbitMQChannel channel = new Stream(queue_name);
+
+        StreamClient client = new StreamClient(HOST,PORT,USER,PASSWORD);
+        client.setChannel(channel);
+
         client.start();
         return;
     }
