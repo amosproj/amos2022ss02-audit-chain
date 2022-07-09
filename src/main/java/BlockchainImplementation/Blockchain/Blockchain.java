@@ -104,10 +104,6 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
 
     }
 
-
-
-
-
     /**
      * Checks if the blockchain has tempered messages inside between the intervals defined with the Hash of the blocks
      * and returns a list of the involved subBlocks.
@@ -365,6 +361,10 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
      *                      but after it a new part for the blockchain to work on will be created.
      */
     public void blockchainToJson(long limitByteSize) {
+
+        if(locked) {
+            throw new IllegalStateException("This part of the blockchain is currently locked and cannot be overrided");
+        }
 
         if(lastBlockHash.equals("0")) {
             System.out.println("The Blockchain is still too empty to be saved");

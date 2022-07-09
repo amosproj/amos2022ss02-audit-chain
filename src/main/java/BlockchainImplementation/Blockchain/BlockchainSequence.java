@@ -64,17 +64,12 @@ public class BlockchainSequence<R> extends Blockchain<Integer, R>{
             SubBlock<Integer, R> lastSub = lastB.getTransaction().get(lastB.getLastSubBlockHash());
             output = this.numberBlockchain;
 
-            System.out.println(lastSub.getMeta_Data());
-
             int lastSeqNumber = lastSub.getMeta_Data();
 
 
             if(seqNumber > lastSeqNumber)
                 throw new IllegalArgumentException("Sequence Number has not been found in this and before this part of the blockchain");
         }
-
-        System.out.println("Num of this bc: " + this.numberBlockchain);
-        System.out.println(output);
 
         return this.numberBlockchain - output;
     }
@@ -97,6 +92,17 @@ public class BlockchainSequence<R> extends Blockchain<Integer, R>{
 
     }
 
+    /**
+     * Checks if the blockchain has tempered messages inside between the intervals defined with the sequence number
+     * (integer meta_data) of the blocks and returns a list of the involved subBlocks.
+     *
+     * @param seq_start the hash of the first block of the interval (included)
+     * @param seq_end the hash of the last block of the interval (included)
+     *
+     * @throws IllegalArgumentException if the seq_start appears before seq_end
+     *
+     * @return a list of subBlocks with the tempered messages; the list is empty if there is none.
+     */
     public List<SubBlock<Integer, R>> getTemperedMessageIfAny (int seq_start, int seq_end) {
 
         List<SubBlock<Integer, R>> temperedMessage = new ArrayList<>();
@@ -105,9 +111,6 @@ public class BlockchainSequence<R> extends Blockchain<Integer, R>{
             throw new IllegalArgumentException("The interval is not valid; " + seq_start + " appears before in the blockchain" +
                     "than " + seq_end);
 
-//        this.blockchainToJson(Long.MAX_VALUE); I think everything is saved after each adding a block
-
-        System.out.println(seq_start);
         int partBeforeStart = howManyBlockchainPartBeforeReaching(seq_start);
 
         loadPreviousOrNextPartsByANumber(partBeforeStart);
@@ -128,18 +131,22 @@ public class BlockchainSequence<R> extends Blockchain<Integer, R>{
                     SubBlock<Integer, R> subBlock = block.getTransaction().get(hashBlocks);
                     seqNumberBlocks = subBlock.getMeta_Data();
 
-                    if(seqNumberBlocks == seq_start)
+                    if(seqNumberBlocks == seq_start) {
                         searchingTempMsgMode = true;
+                    }
 
                     if(searchingTempMsgMode) {
-                        if(!subBlock.isAuthentic() || !subBlock.equals(block.getTransaction().get(subBlock.getHashBlock())))
+                        if(!subBlock.isAuthentic() || !subBlock.equals(block.getTransaction().get(subBlock.getHashBlock()))) {
                             temperedMessage.add(subBlock);
+                        }
                     }
 
                     hashBlocks = subBlock.getPreviousHashBlock();
-                    if(seqNumberBlocks == seq_end)
-                        stop = true;
+
                 }
+
+                if(seqNumberBlocks == seq_end)
+                    stop = true;
 
                 hash = block.getPreviousHashBlock();
             }
@@ -147,6 +154,7 @@ public class BlockchainSequence<R> extends Blockchain<Integer, R>{
             if(!stop)
                 try{
                     loadPreviousPartBlockchain();
+                    hash = getLastBlockHash();
                 } catch (Exception e) {
                     return null;
                 }
