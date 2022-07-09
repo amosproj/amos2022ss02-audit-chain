@@ -43,16 +43,17 @@ class MainWindow(QMainWindow):
             
 
 
-    def pushButton_clicked(self):
-        eventNum = self.ui.lineEdit.text()
+    def checkMessageButton_clicked(self):
+        eventNum = self.ui.messageCheckLineEdit.text()
         command = {
             "command": "check_single_message",
             "number":eventNum
         }
         self.connection_dialog.send_command(command)
-    def pushButton_2_clicked(self):
-        startEvent = self.ui.lineEdit_3.text()
-        endEvent = self.ui.lineEdit_2.text()
+        
+    def checkIntervallButton_clicked(self):
+        startEvent = self.ui.startEventLineEdit.text()
+        endEvent = self.ui.endEventLineEdit.text()
         command = {
             "command": "check_message_interval",
             "start" : startEvent,
@@ -61,7 +62,7 @@ class MainWindow(QMainWindow):
         self.connection_dialog.send_command(command)
 
 
-    def pushButton_3_clicked(self):
+    def getStatsButton_clicked(self):
         command = {
             "command": "get_statistics"
         }
