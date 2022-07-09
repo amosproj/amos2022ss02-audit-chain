@@ -12,6 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Data structure that represents the blockchain. It contains a hashmap of Blocks in which transactions and their
+ * meta_data of type Integer are stored. Meta_data as Integer allows to possibly use them as Sequence Numbers of the
+ * transactions
+ *
+ * @param <R> the type of the content of the transactions
+ */
 public class BlockchainSequence<R> extends Blockchain<Integer, R>{
 
 
@@ -19,14 +26,23 @@ public class BlockchainSequence<R> extends Blockchain<Integer, R>{
         super(pathDirectory, maxSizeByte);
     }
 
+    /**
+     * It finds the number of blockchain parts to load before reaching the sequence number wanted.
+     * It uses a file in which the sequence numbers are stored for each part of the blockchain so that this search
+     * is optimized.
+     *
+     * @param seqNumber the sequence number that it is wanted to be found
+     *
+     * @throws IllegalArgumentException if the sequence number is not found in any part of the blockchain
+     *
+     * @return the number of the part of the blockchain that contains the sequence number wanted
+     *
+     */
     private int howManyBlockchainPartBeforeReaching (int seqNumber) throws IllegalArgumentException {
 
         int output = 0;
         boolean found = false;
         String[] arrayCSV;
-
-        if(numberBlockchain == 1)
-            return output;
 
         try {
 
@@ -55,11 +71,11 @@ public class BlockchainSequence<R> extends Blockchain<Integer, R>{
             input.close();
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            return 0;
         }
 
         if(!found) {
-            jsonToBlockchain();
+            restoreBlockchainFromJson();
             Block<Integer, R> lastB = blockchain.get(getLastBlockHash());
             SubBlock<Integer, R> lastSub = lastB.getTransaction().get(lastB.getLastSubBlockHash());
             output = this.numberBlockchain;
@@ -73,9 +89,13 @@ public class BlockchainSequence<R> extends Blockchain<Integer, R>{
 
         return this.numberBlockchain - output;
     }
-//
-//    private List<SubBlock<Integer, R>> getTemperedMessageIfAny
 
+    /**
+     * Load previous or next parts of the blockchain starting from the current one
+     *
+     * @param partBeforeStart indicates the number of parts to skip before reaching the wanted one (included).
+     *                        If this number is negative then it loads next parts, if it is positive then it loads previous parts.
+     */
     private void loadPreviousOrNextPartsByANumber(int partBeforeStart) {
 
         if(partBeforeStart > 0)
@@ -161,7 +181,7 @@ public class BlockchainSequence<R> extends Blockchain<Integer, R>{
 
         }
 
-        jsonToBlockchain(); //reset to the last part
+        restoreBlockchainFromJson(); //reset to the last part
 
         return temperedMessage;
     }

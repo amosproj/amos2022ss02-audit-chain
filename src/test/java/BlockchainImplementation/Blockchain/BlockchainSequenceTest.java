@@ -186,5 +186,72 @@ public class BlockchainSequenceTest {
     }
 
 
+    @Test
+    @DisplayName("getTemperedMessageIfAny() using a valid interval on a tempered blockchain should return the tempered subblock even if in next parts")
+    public void getTemperedMessageIfAnyUsingAValidIntervalOnATemperedBlockchainShouldReturnTheTemperedSubBlockEvenIfNextParts() {
+        BlockchainSequence<String> blockchain = setupBlockchain();
+
+        blockchain.blockchainToJson( 1);
+
+        blockchain.addABlock(new Integer[]{10,11,12},
+                new String[]{"l", "m", "n"});
+
+        blockchain.blockchainToJson( 1);
+
+        blockchain.addABlock(new Integer[]{13,14,15},
+                new String[]{"o", "p", "q"});
+
+        Block<Integer, String> last = blockchain.getBlockFromHash(blockchain.getLastBlockHash());
+        Map<String, SubBlock<Integer,String>> transactions = last.getTransaction();
+
+        SubBlock<Integer, String> temperedSubBlock = new SubBlock<>(
+                transactions.get(last.getLastSubBlockHash()).getPreviousHashBlock(),
+                15,
+                "tempered"
+        );
+        last.getTransaction().put(last.getLastSubBlockHash(), temperedSubBlock);
+
+        blockchain.blockchainToJson( Long.MAX_VALUE);
+
+        blockchain.loadPreviousPartBlockchain();
+        blockchain.loadPreviousPartBlockchain();
+
+        List<SubBlock<Integer, String>> temperedTransaction = blockchain.getTemperedMessageIfAny(15,14);
+
+        assertThat(temperedTransaction.get(0)).isEqualTo(temperedSubBlock);
+    }
+
+    @Test
+    @DisplayName("getTemperedMessageIfAny() using a valid interval on a tempered blockchain should return the tempered subblock even if in next parts but not last")
+    public void getTemperedMessageIfAnyUsingAValidIntervalOnATemperedBlockchainShouldReturnTheTemperedSubBlockEvenIfNextPartsButNotLast() {
+        BlockchainSequence<String> blockchain = setupBlockchain();
+
+        blockchain.blockchainToJson( 1);
+
+        blockchain.addABlock(new Integer[]{10,11,12},
+                new String[]{"l", "m", "n"});
+
+        Block<Integer, String> last = blockchain.getBlockFromHash(blockchain.getLastBlockHash());
+        Map<String, SubBlock<Integer,String>> transactions = last.getTransaction();
+
+        SubBlock<Integer, String> temperedSubBlock = new SubBlock<>(
+                transactions.get(last.getLastSubBlockHash()).getPreviousHashBlock(),
+                12,
+                "tempered"
+        );
+        last.getTransaction().put(last.getLastSubBlockHash(), temperedSubBlock);
+
+        blockchain.blockchainToJson( 1);
+
+        blockchain.addABlock(new Integer[]{13,14,15},
+                new String[]{"o", "p", "q"});
+
+        blockchain.loadPreviousPartBlockchain();
+        blockchain.loadPreviousPartBlockchain();
+
+        List<SubBlock<Integer, String>> temperedTransaction = blockchain.getTemperedMessageIfAny(12,11);
+
+        assertThat(temperedTransaction.get(0)).isEqualTo(temperedSubBlock);
+    }
 
 }

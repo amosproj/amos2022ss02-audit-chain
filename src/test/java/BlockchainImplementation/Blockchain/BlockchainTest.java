@@ -490,7 +490,7 @@ public class BlockchainTest {
 
         Blockchain<String, String> blockchain2 = new Blockchain<>("src/test/resources/testOutput/", Long.MAX_VALUE);
 
-        blockchain2.jsonToBlockchain();
+        blockchain2.restoreBlockchainFromJson();
 
         assertThat(blockchain2).isEqualTo(blockchain);
     }
@@ -537,7 +537,7 @@ public class BlockchainTest {
 
         Blockchain<String, String> blockchain2 = new Blockchain<>("src/test/resources/testOutput/", Long.MAX_VALUE);
 
-        blockchain2.jsonToBlockchain();
+        blockchain2.restoreBlockchainFromJson();
 
         assertThat(blockchain2).isEqualTo(blockchain);
     }

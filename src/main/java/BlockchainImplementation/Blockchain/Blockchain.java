@@ -43,7 +43,7 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
 
         try {
 
-            jsonToBlockchain();
+            restoreBlockchainFromJson();
 
         } catch (Exception e) {
 
@@ -430,7 +430,7 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
      *
      * @throws RuntimeException if no blockchain has been found
      */
-    public void jsonToBlockchain() throws RuntimeException{
+    public void restoreBlockchainFromJson() throws RuntimeException{
 
         int nLastBlockchain = findLastBlockchainNumber();
         restoreBlockchainFromJson(nLastBlockchain);
