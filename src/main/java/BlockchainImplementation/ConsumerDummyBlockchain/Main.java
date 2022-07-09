@@ -26,7 +26,7 @@ public class Main {
         String PASSWORD = p.getProperty("PASSWORD");
         String queue_name = "FAKE";
 
-        AbstractClient client = new ConsumerClientBlockchain(HOST,PORT,USER,PASSWORD,queue_name, "src/test/resources/testOutput/", Long.MAX_VALUE);
+        AbstractClient client = new ConsumerClientBlockchain(HOST,PORT,USER,PASSWORD,queue_name, "src/test/resources/testOutput/", 1000);
 
         client.start();
         return;

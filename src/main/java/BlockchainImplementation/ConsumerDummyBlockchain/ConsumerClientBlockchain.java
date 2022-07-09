@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.TimeoutException;
 
+import BlockchainImplementation.Blockchain.BlockchainSequence;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.DeliverCallback;
@@ -17,7 +18,7 @@ import ProducerDummy.Messages.Message;
 
 public class ConsumerClientBlockchain extends Consumer {
 
-    private Blockchain<Integer, String> blockchain;
+    private BlockchainSequence<String> blockchain;
     private static String KEY = "0123456";
     private static String ALGORITHM = "HmacSHA256";
 
@@ -30,7 +31,7 @@ public class ConsumerClientBlockchain extends Consumer {
     public ConsumerClientBlockchain(String host, int port, String username, String password, String queue_name, String path, long maxSizeByte) throws IOException {
 
         super(host, port, username, password, queue_name);
-        this.blockchain = new Blockchain<>(path, maxSizeByte);
+        this.blockchain = new BlockchainSequence<>(path, maxSizeByte);
 
     }
 
