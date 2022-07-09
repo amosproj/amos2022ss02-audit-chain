@@ -4,26 +4,23 @@ import ProducerDummy.DataGeneration.DataGenerator;
 import ProducerDummy.Messages.Message;
 import ProducerDummy.Persistence.PersistenceStrategy;
 import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Vector;
 import java.util.concurrent.TimeoutException;
 
 public class Producer extends AbstractClient {
 
-    /**
-     * Every Producer must be able to store their Messages into a File and also must have a Datasource
-     * */
+
+    // Data Generator is the Component which generates the Data for the RabbitMQ. See DataGeneration Folder
     protected DataGenerator dataGenerator;
-    protected PersistenceStrategy persistenceStrategy;
-
-
     static int START_NUMBER = 0;
-
     protected int sequence_number;
+    protected int DESIRED_PAYLOAD_IN_BYTE = 1024;
+    protected int current_payload = 0;
 
     /**
      * Constructor for Client.AbstractClient. Initializes the filepath, the file reader and set information for the
@@ -33,57 +30,31 @@ public class Producer extends AbstractClient {
      * @param port
      * @param username
      * @param password
-     * @param queue_name
      */
-    public Producer(String host, int port, String username, String password, String queue_name) {
-        super(host, port, username, password, queue_name);
+    // if you want to aggregate Messages and not sending every Message to RabbitMQ use this one. Be careful tho, the desired_payload_in_byte is just an estimation
+    public Producer(String host, int port, String username, String password, int desired_payload_in_byte) {
+        super(host, port, username, password);
+        this.DESIRED_PAYLOAD_IN_BYTE = desired_payload_in_byte;
     }
-
-    public void setDataGenerator(DataGenerator dataGenerator){
+    // A normal Producer which sends every Message to RabbitMQ
+    public Producer(String host, int port, String username, String password) {
+        super(host, port, username, password);
+        this.DESIRED_PAYLOAD_IN_BYTE = 0; // we don´t care, we send every Message instantly
+    }
+    // Data Generator is the Component which generates the Data for the RabbitMQ. See DataGeneration Folder
+    public void setDataGenerator(DataGenerator dataGenerator) {
         this.dataGenerator = dataGenerator;
-    };
-
-    public void setPersistenceStrategy(PersistenceStrategy persistenceStrategy){
-     this.persistenceStrategy = persistenceStrategy;
-     recoverLastState();
     }
 
-    public void recoverLastState() {
-        Message message;
-        try {
-            message = this.persistenceStrategy.ReadLastMessage();
-            this.sequence_number = message.getSequence_number();
-        } catch (Exception e) {
-            this.sequence_number = START_NUMBER;
-            return;
-        }
-        this.dataGenerator.getData(this.sequence_number);
-        // Message(s) in a file will be sent instantly
-        this.sendRecoveredMessage(message);
+    public Channel getChannel() throws IOException, TimeoutException {
+        return this.channel.createChannel(this.factory);
     }
 
-
-    private void sendRecoveredMessage(Message message) {
-        System.out.println("Message(s) in File found, will send them immediately!");
-        try (Connection connection = this.factory.newConnection();
-             Channel channel = connection.createChannel()) {
-            channel.queueDeclare(QUEUE_NAME, true, false, false, Map.of("x-queue-type", "quorum"));
-            channel.confirmSelect();
-            this.getAcknowledgment(channel, message);
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (TimeoutException e) {
-            throw new RuntimeException(e);
-        }
-        this.persistenceStrategy.cleanFile();
-    }
-
-    public void getAcknowledgment(Channel channel, Message message) {
+    public void getAcknowledgment(Channel channel, ArrayList<Message> messageArrayList) {
         //we try for 5 times for acknowledgment and if we get it, we publish the message
         for (int i = 0; i <= 5; i++) {
             try {
-                channel.basicPublish("", this.QUEUE_NAME, null, serialize(message));
+                channel.basicPublish("", this.channel.getQueueName(), null, serialize(messageArrayList));
                 channel.waitForConfirmsOrDie(5_000);
                 break;
             } catch (InterruptedException | TimeoutException | IOException e) {
@@ -94,7 +65,35 @@ public class Producer extends AbstractClient {
         }
     }
 
-        public static byte[] serialize(Object object) {
+    public boolean isReadyToSend() throws IOException {
+        if (DESIRED_PAYLOAD_IN_BYTE == 0) {
+            return true;
+        }
+        if (this.current_payload >= DESIRED_PAYLOAD_IN_BYTE) {
+            this.current_payload = 0; //reset
+            return true;
+        }
+        return false;
+    }
+
+    protected void RecoverCurrentPayloadSize(ArrayList<Message> messages){
+        // if desired is 0 we can save the time
+        if (DESIRED_PAYLOAD_IN_BYTE == 0) {
+            return;
+        }
+        // if payload actually matters.
+        for (Message m : messages) {
+            this.updatePayloadSize(m);
+        }
+    }
+
+    protected void updatePayloadSize(Message message){
+        //just an estimation, also overhead of object/arraylist does not matter
+        this.current_payload += message.getMessage().getBytes().length + message.getSequence_number() + 8 * 32;
+    }
+
+
+    public static byte[] serialize(Object object) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
             ObjectOutputStream os = new ObjectOutputStream(out);
@@ -105,7 +104,6 @@ public class Producer extends AbstractClient {
         }
 
     }
-
 
 
 }

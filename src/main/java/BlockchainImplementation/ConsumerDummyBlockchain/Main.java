@@ -7,6 +7,9 @@ import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.concurrent.TimeoutException;
 
+import ProducerDummy.ChannelSelection.QuorumQueues;
+import ProducerDummy.ChannelSelection.RabbitMQChannel;
+import ProducerDummy.ChannelSelection.StandardQueue;
 import ProducerDummy.Client.AbstractClient;
 
 public class Main {
@@ -24,11 +27,17 @@ public class Main {
         int PORT = Integer.parseInt(p.getProperty("PORT"));
         String USER = p.getProperty("USERNAME");
         String PASSWORD = p.getProperty("PASSWORD");
-        String queue_name = "FAKE";
 
-        AbstractClient client = new ConsumerClientBlockchain(HOST,PORT,USER,PASSWORD,queue_name, "src/test/resources/testOutput/", 1000);
+        String queue_name = "HELLO_WORLD";
 
-        client.start();
+        AbstractClient client = new ConsumerClientBlockchain(HOST,PORT,USER,PASSWORD, "src/test/resources/testOutput/", 1000);
+        client.setChannel(new QuorumQueues(queue_name));
+        try {
+            client.start();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
         return;
 
     }

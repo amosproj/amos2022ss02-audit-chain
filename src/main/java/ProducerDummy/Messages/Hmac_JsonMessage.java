@@ -6,7 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import org.apache.commons.codec.digest.HmacUtils;
 
 public class Hmac_JsonMessage extends JsonMessage implements Hmac_Message {
-   
+
     public static String HMAC_KEY = "hmac";
 
     public Hmac_JsonMessage(int sequence_number, String message, String algorithm, String key) throws NoSuchAlgorithmException, InvalidKeyException {

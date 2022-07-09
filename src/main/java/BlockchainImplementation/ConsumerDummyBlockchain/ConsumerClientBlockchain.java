@@ -1,18 +1,17 @@
 package BlockchainImplementation.ConsumerDummyBlockchain;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.TimeoutException;
 
 import BlockchainImplementation.Blockchain.BlockchainSequence;
 import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.DeliverCallback;
 
 import BlockchainImplementation.Blockchain.Blockchain;
 import ConsumerDummy.Client.Consumer;
-import ProducerDummy.Messages.AggregateMessage;
 import ProducerDummy.Messages.Hmac_Message;
 import ProducerDummy.Messages.Message;
 
@@ -28,9 +27,9 @@ public class ConsumerClientBlockchain extends Consumer {
      *
      * @throws IOException if the file cannot be read
      */
-    public ConsumerClientBlockchain(String host, int port, String username, String password, String queue_name, String path, long maxSizeByte) throws IOException {
+    public ConsumerClientBlockchain(String host, int port, String username, String password,String path, long maxSizeByte) throws IOException {
 
-        super(host, port, username, password, queue_name);
+        super(host, port, username, password);
         this.blockchain = new BlockchainSequence<>(path, maxSizeByte);
 
     }
@@ -43,22 +42,20 @@ public class ConsumerClientBlockchain extends Consumer {
     @Override
     public void start() throws IOException, TimeoutException {
         System.out.println("Starting to receive Messages.");
-        Connection connection = this.factory.newConnection();
-        Channel channel = connection.createChannel();
-        channel.queueDeclare(QUEUE_NAME, true, false, false, Map.of("x-queue-type", "quorum"));
-
+        Channel channel = this.getChannel();
         System.out.println(" [-] Waiting for messages.");
 
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-            AggregateMessage message;
+
+            ArrayList<Message> messages = null;
 
             try {
-                message = (AggregateMessage) deserialize(delivery.getBody());
+                messages = (ArrayList<Message>) Consumer.deserialize(delivery.getBody());
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
 
-            Vector<Message> messages = message.getMessages();
+
 
             Integer[] seq_numbers = new Integer[messages.size()];
             String[] transactions = new String[messages.size()];
@@ -84,8 +81,7 @@ public class ConsumerClientBlockchain extends Consumer {
             System.out.println(" [---] Added a new block to the blockchain with previous messages [---]");
             System.out.println(" [-] Waiting for messages.");
         };
-
-        channel.basicConsume(QUEUE_NAME, true, deliverCallback, consumerTag -> {
+        channel.basicConsume(this.channel.getQueueName(), true, deliverCallback, consumerTag -> {
         });
     }
 

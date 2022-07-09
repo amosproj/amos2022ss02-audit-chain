@@ -3,17 +3,18 @@
 # Form implementation generated from reading ui file 'mainwindow.ui',
 # licensing of 'mainwindow.ui' applies.
 #
-# Created: Tue Jun 28 23:45:08 2022
+# Created: Sat Jul  2 03:04:47 2022
 #      by: pyside2-uic  running on PySide2 5.13.2
 #
 # WARNING! All changes made in this file will be lost!
 
 from PySide2 import QtCore, QtGui, QtWidgets
 
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(756, 609)
+        MainWindow.resize(773, 602)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.centralwidget)
@@ -107,25 +108,120 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.addLayout(self.verticalLayout_4)
         self.horizontalLayout_6.addLayout(self.verticalLayout_3)
         self.tabWidget.addTab(self.tab3, "")
+        self.tab_2 = QtWidgets.QWidget()
+        self.tab_2.setObjectName("tab_2")
+        self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.tab_2)
+        self.verticalLayout_6.setObjectName("verticalLayout_6")
+        self.horizontalLayout_7 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_7.setObjectName("horizontalLayout_7")
+        self.label = QtWidgets.QLabel(self.tab_2)
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.label.setFont(font)
+        self.label.setObjectName("label")
+        self.horizontalLayout_7.addWidget(self.label)
+        self.lineEdit_4 = QtWidgets.QLineEdit(self.tab_2)
+        self.lineEdit_4.setObjectName("lineEdit_4")
+        self.horizontalLayout_7.addWidget(self.lineEdit_4)
+        self.verticalLayout_6.addLayout(self.horizontalLayout_7)
+        self.horizontalLayout_8 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_8.setObjectName("horizontalLayout_8")
+        self.label_7 = QtWidgets.QLabel(self.tab_2)
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.label_7.setFont(font)
+        self.label_7.setObjectName("label_7")
+        self.horizontalLayout_8.addWidget(self.label_7)
+        self.lineEdit_5 = QtWidgets.QLineEdit(self.tab_2)
+        self.lineEdit_5.setObjectName("lineEdit_5")
+        self.horizontalLayout_8.addWidget(self.lineEdit_5)
+        self.verticalLayout_6.addLayout(self.horizontalLayout_8)
+        self.horizontalLayout_9 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_9.setObjectName("horizontalLayout_9")
+        self.label_8 = QtWidgets.QLabel(self.tab_2)
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.label_8.setFont(font)
+        self.label_8.setObjectName("label_8")
+        self.horizontalLayout_9.addWidget(self.label_8)
+        self.lineEdit_6 = QtWidgets.QLineEdit(self.tab_2)
+        self.lineEdit_6.setObjectName("lineEdit_6")
+        self.horizontalLayout_9.addWidget(self.lineEdit_6)
+        self.verticalLayout_6.addLayout(self.horizontalLayout_9)
+        self.verticalLayout_5 = QtWidgets.QVBoxLayout()
+        self.verticalLayout_5.setObjectName("verticalLayout_5")
+        self.pushButton_3 = QtWidgets.QPushButton(self.tab_2)
+        self.pushButton_3.setMinimumSize(QtCore.QSize(120, 40))
+        font = QtGui.QFont()
+        font.setPointSize(16)
+        self.pushButton_3.setFont(font)
+        self.pushButton_3.setObjectName("pushButton_3")
+        self.verticalLayout_5.addWidget(self.pushButton_3)
+        self.verticalLayout_6.addLayout(self.verticalLayout_5)
+        self.tabWidget.addTab(self.tab_2, "")
         self.horizontalLayout.addWidget(self.tabWidget)
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
+        self.menuBar = QtWidgets.QMenuBar(MainWindow)
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 773, 21))
+        self.menuBar.setObjectName("menuBar")
+        self.menuSettings = QtWidgets.QMenu(self.menuBar)
+        self.menuSettings.setObjectName("menuSettings")
+        MainWindow.setMenuBar(self.menuBar)
+        self.action_connect = QtWidgets.QAction(MainWindow)
+        self.action_connect.setObjectName("action_connect")
+        self.actiontest = QtWidgets.QAction(MainWindow)
+        self.actiontest.setObjectName("actiontest")
+        self.menuSettings.addAction(self.action_connect)
+        self.menuBar.addAction(self.menuSettings.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(2)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QtWidgets.QApplication.translate("MainWindow", "MainWindow", None, -1))
+        MainWindow.setWindowTitle(QtWidgets.QApplication.translate("MainWindow", "Audit Chain Blockchain App", None, -1))
+       
+        def __init__(self):
+            super(MainWindow, self).__init__()
+            self.ui = Ui_MainWindow()
+            self.ui.setupUi(self)
+
+
+        
+        #Message Check: from event number return the correspondant message    
         self.label_3.setText(QtWidgets.QApplication.translate("MainWindow", "Insert Event Number", None, -1))
         self.pushButton.setText(QtWidgets.QApplication.translate("MainWindow", "CheckMessage", None, -1))
         self.label_2.setText(QtWidgets.QApplication.translate("MainWindow", "Result", None, -1))
+        
+        self.textBrowser.setText(QtWidgets.QApplication.translate("MainWindow", "Please, insert Event Number", None, -1))
+        self.pushButton.clicked.connect(MainWindow.pushButton_clicked)
+        
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtWidgets.QApplication.translate("MainWindow", "MessageCheck", None, -1))
+    
+         
+        #message check interval: return the messages in between the start and end events inserted
         self.label_6.setText(QtWidgets.QApplication.translate("MainWindow", "Insert Event Number Start", None, -1))
         self.label_4.setText(QtWidgets.QApplication.translate("MainWindow", "Insert Event Number End", None, -1))
         self.pushButton_2.setText(QtWidgets.QApplication.translate("MainWindow", "CheckMessage", None, -1))
         self.label_5.setText(QtWidgets.QApplication.translate("MainWindow", "Result", None, -1))
+        self.textBrowser_2.setText(QtWidgets.QApplication.translate("MainWindow", "Please, insert event numbers", None, -1))
+        self.pushButton_2.clicked.connect(MainWindow.pushButton_2_clicked)     
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab3), QtWidgets.QApplication.translate("MainWindow", "MessageCheckIntervall", None, -1))
+        
+        #stats 1: return directly data records
+        self.label.setText(QtWidgets.QApplication.translate("MainWindow", "Amout of Data Records", None, -1))
+        #stats 2: return directly files created
+        self.label_7.setText(QtWidgets.QApplication.translate("MainWindow", "Amount of Files already created", None, -1))
+        #stats 3: return directly current size of the blockchain
+        self.label_8.setText(QtWidgets.QApplication.translate("MainWindow", "Blockchain Current Size", None, -1))
+        self.pushButton_3.clicked.connect(MainWindow.pushButton_3_clicked)
+
+        self.pushButton_3.setText(QtWidgets.QApplication.translate("MainWindow", "Get Statistics!", None, -1))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QtWidgets.QApplication.translate("MainWindow", "Statistics", None, -1))
+        self.menuSettings.setTitle(QtWidgets.QApplication.translate("MainWindow", "Settings", None, -1))
+        self.action_connect.setText(QtWidgets.QApplication.translate("MainWindow", "config Connection", None, -1))
+        self.actiontest.setText(QtWidgets.QApplication.translate("MainWindow", "test", None, -1))
 

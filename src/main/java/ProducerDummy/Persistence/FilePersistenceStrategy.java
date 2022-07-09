@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -21,7 +22,7 @@ import ProducerDummy.Messages.Message;
 import ProducerDummy.Messages.SimpleMessage;
 
 /***
- * This is one Implementation which is supposed to guarantee us that we never lose our current state of the Sequence Number.
+ * This is Implementation Stores only one Message in a File.
  */
 
 public class FilePersistenceStrategy implements PersistenceStrategy {
@@ -92,17 +93,15 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
      * @return a new Message object with the sequence number and message
      */
     @Override
-    public Message ReadLastMessage() {
+    public ArrayList<Message> ReadLastMessage() {
 
         File file = new File(this.filepath.toString());
-
         try {
 
             JsonElement jsonElement = JsonParser.parseReader(new FileReader(file));
 
             //this should be the only valid state, since in the single Filemode only the last Message will be stored
             if (jsonElement.isJsonObject()) {
-
                 // every Message consists of at least sequence_number and message_string
                 JsonObject jsonObject = jsonElement.getAsJsonObject();
                 String message_string = jsonObject.getAsJsonPrimitive(JsonMessage.MESSAGE_KEY).getAsString();
@@ -111,21 +110,23 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
                 // if there is a Hmac key we know it is a Hmac Message else it is just a normal Message
                 try {
                     String hmac = jsonObject.getAsJsonPrimitive(Hmac_JsonMessage.HMAC_KEY).getAsString();
-                    return new Hmac_SimpleMessage(sequence_number, message_string, hmac);
+                    return new ArrayList<Message>(){{
+                        add(new Hmac_SimpleMessage(sequence_number,message_string,hmac));
+                    }};
                 } catch (NullPointerException e) {
-                    return new SimpleMessage(sequence_number, message_string);
+                    return new ArrayList<Message>(){{
+                        add(new SimpleMessage(sequence_number, message_string));
+                    }};
                 }
-
             }
-
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IllegalStateException e) {
             //thats means there is no message inside
-            return null;
+            return new ArrayList<Message>(0);
         }
 
-        return null;
+        return new ArrayList<Message>(0);
     }
 
     @Override

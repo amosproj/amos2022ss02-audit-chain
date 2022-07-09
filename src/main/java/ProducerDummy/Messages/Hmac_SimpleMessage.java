@@ -11,13 +11,12 @@ public class Hmac_SimpleMessage extends SimpleMessage implements Hmac_Message {
     private String hmac;
 
     public Hmac_SimpleMessage(int sequence_number, String message, String algorithm, String key) throws NoSuchAlgorithmException, InvalidKeyException {
-        
         super(sequence_number, message);
         this.setHmac(this.calculateMac(algorithm,key));
     }
 
     public Hmac_SimpleMessage(int sequence_number, String message, String hmac)  {
-    
+
         super(sequence_number, message);
         this.setHmac(hmac);
 
@@ -43,7 +42,7 @@ public class Hmac_SimpleMessage extends SimpleMessage implements Hmac_Message {
         return false;
 
     }
-    
+
     @Override
     public String calculateMac(String algorithm ,String key) {
         String data = this.toString();
