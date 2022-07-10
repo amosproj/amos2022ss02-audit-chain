@@ -38,6 +38,8 @@ public class BlockchainTest {
     public void cleanUp() throws IOException {
         Files.deleteIfExists(Paths.get("src/test/resources/testOutput/blockchain1.json"));
         Files.deleteIfExists(Paths.get("src/test/resources/testOutput/blockchain2.json"));
+        Files.deleteIfExists(Paths.get("src/test/resources/testOutput/blockchain3.json"));
+        Files.deleteIfExists(Paths.get("src/test/resources/testOutput/blockchain4.json"));
         Files.deleteIfExists(Paths.get("src/test/resources/testOutput/lastBlockchain.txt"));
         Files.deleteIfExists(Paths.get("test.txt"));
         Files.deleteIfExists(Paths.get("src/test/resources/testOutput/sequenceRecords.csv"));
@@ -741,5 +743,112 @@ public class BlockchainTest {
         );
 
     }
+
+    @Test
+    @DisplayName("getSize() on a Blockchain with 9 transactions should return 9")
+    public void getSizeOnABWith9TransactionsShouldReturn9() {
+
+        Blockchain<String, String> blockchain = setupBlockchain();
+
+        assertThat(blockchain.getSize()).isEqualTo(9);
+
+    }
+
+
+    @Test
+    @DisplayName("getSize() on a Blockchain with 0 transactions should return 0")
+    public void getSizeOnABWith0TransactionsShouldReturn0() {
+
+        Blockchain<String, String> blockchain = new Blockchain<>("src/test/resources/testOutput/", Long.MAX_VALUE);
+
+        assertThat(blockchain.getSize()).isEqualTo(0);
+
+    }
+
+    @Test
+    @DisplayName("getSize() on a multi-file Blockchain with 12 transactions should return 12")
+    public void getSizeOnAMultiFileBlockchainWith12TransactionsShouldReturn12() {
+
+        Blockchain<String, String> blockchain = setupBlockchain();
+
+        blockchain.blockchainToJson( 1);
+
+        blockchain.addABlock(new String[]{"10", "11", "12"},
+                new String[]{"l", "m", "n"});
+
+        assertThat(blockchain.getSize()).isEqualTo(12);
+
+    }
+
+    @Test
+    @DisplayName("getNumberOfFiles() on a single-file Blockchain should return 1")
+    public void getNumberOfFilesOnASingleFileBlockchainShouldReturn1() {
+
+        Blockchain<String, String> blockchain = setupBlockchain();
+
+        assertThat(blockchain.getNumberOfFiles()).isEqualTo(1);
+
+    }
+
+    @Test
+    @DisplayName("getNumberOfFiles() on a multi-file Blockchain of 3 files should return 3")
+    public void getNumberOfFilesOnAMultiFileBlockchainOf3FilesShouldReturn3() {
+
+        Blockchain<String, String> blockchain = setupBlockchain();
+
+        blockchain.blockchainToJson( 1);
+
+        blockchain.addABlock(new String[]{"10", "11", "12"},
+                new String[]{"l", "m", "n"});
+
+        blockchain.blockchainToJson( 1);
+
+        blockchain.addABlock(new String[]{"13", "14", "15"},
+                new String[]{"o", "p", "q"});
+
+        assertThat(blockchain.getNumberOfFiles()).isEqualTo(3);
+
+    }
+
+    @Test
+    @DisplayName("getNumberOfFiles() on an empty Blockchain should return 0")
+    public void getNumberOfFilesOnAnEmptyBlockchainShouldReturn0() {
+
+        Blockchain<String, String> blockchain = new Blockchain<>("src/test/resources/testOutput/", Long.MAX_VALUE);
+
+        assertThat(blockchain.getNumberOfFiles()).isEqualTo(0);
+
+    }
+
+    @Test
+    @DisplayName("getByteSize() on an empty Blockchain should return 0")
+    public void getByteSizeOnAnEmptyBlockchainShouldReturn0() throws IOException {
+
+        Blockchain<String, String> blockchain = new Blockchain<>("src/test/resources/testOutput/", Long.MAX_VALUE);
+
+        assertThat(blockchain.getBytesSize()).isEqualTo(0);
+
+    }
+
+    @Test
+    @DisplayName("getByteSize() on a non-empty Blockchain should return a number different from 0")
+    public void getByteSizeOnANonEmptyBlockchainShouldReturnANumberDifferentFrom0() throws IOException {
+
+        Blockchain<String, String> blockchain = setupBlockchain();
+
+        blockchain.blockchainToJson( 1);
+
+        blockchain.addABlock(new String[]{"10", "11", "12"},
+                new String[]{"l", "m", "n"});
+
+        blockchain.blockchainToJson( 1);
+
+        blockchain.addABlock(new String[]{"13", "14", "15"},
+                new String[]{"o", "p", "q"});
+
+        assertThat(blockchain.getBytesSize()).isNotEqualTo(0);
+
+    }
+
 
 }

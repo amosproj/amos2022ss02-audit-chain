@@ -78,6 +78,10 @@ public class Block<T,R> extends AbstractBlock<Map<String, SubBlock<T,R>>>{
         return temperedMessages;
     }
 
+    public int getSize () {
+        return this.transaction.size();
+    }
+
     @Override
     public boolean equals (Object obj) {
 

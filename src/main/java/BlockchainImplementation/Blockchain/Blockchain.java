@@ -481,6 +481,97 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
         return blockchainFromJson;
     }
 
+    /**
+     * It computes how many transactions this blockchain is holding.
+     *
+     * @return the number of transactions stored in the blockchain.
+     */
+    public int getSize () {
+
+        try {
+            restoreBlockchainFromJson(); //load last part of the blockchain
+        } catch (RuntimeException e) {
+            return 0;
+        }
+
+        int counter = 0;
+
+        while(true) {
+
+            for (Map.Entry<String, Block<T,R>> entry : blockchain.entrySet()) {
+                counter += entry.getValue().getSize();
+            }
+
+            try {
+                loadPreviousPartBlockchain();
+            } catch (Exception e) {
+                break;
+            }
+
+        }
+
+        return counter;
+
+    }
+
+    /**
+     * It finds how many files is the blockchain currently.
+     *
+     * @return the number of transactions stored in the blockchain.
+     */
+    public int getNumberOfFiles () {
+
+        int output = 0;
+
+        try {
+            output = findLastBlockchainNumber();
+        } catch (RuntimeException e) {}
+
+        return output;
+    }
+
+    /**
+     * It computes the total size in byte of the files used by the blockchain.
+     *
+     * @return the total size in byte of the files used by the blockchain.
+     */
+    public long getBytesSize() throws IOException {
+
+        int lastBc = 0;
+
+        try {
+            lastBc = findLastBlockchainNumber();
+        } catch (Exception e) {
+            return 0;
+        }
+
+
+        try {
+            restoreBlockchainFromJson(); //load last part of the blockchain
+        } catch (RuntimeException e) {
+            return 0;
+        }
+
+        long counter = 0;
+        counter += Files.size(Paths.get(path + "/lastBlockchain.txt"));
+        counter += Files.size(Paths.get(path + "/sequenceRecords.csv"));
+
+
+        while(true) {
+
+            counter += Files.size(Paths.get(path + "/blockchain" + this.numberBlockchain + ".json"));
+
+            try {
+                loadPreviousPartBlockchain();
+            } catch (Exception e) {
+                break;
+            }
+
+        }
+
+        return counter;
+    }
+
     @Override
     public boolean equals (Object obj) {
 
