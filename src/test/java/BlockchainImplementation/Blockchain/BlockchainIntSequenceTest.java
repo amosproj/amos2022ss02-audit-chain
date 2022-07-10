@@ -16,11 +16,11 @@ import java.util.Map;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class BlockchainSequenceTest {
+public class BlockchainIntSequenceTest {
 
-    private static BlockchainSequence<String> setupBlockchain() {
+    private static BlockchainIntSequence<String> setupBlockchain() {
 
-        BlockchainSequence<String> blockchain = new BlockchainSequence<>("src/test/resources/testOutput/", Long.MAX_VALUE);
+        BlockchainIntSequence<String> blockchain = new BlockchainIntSequence<>("src/test/resources/testOutput/", Long.MAX_VALUE);
         blockchain.addABlock(new Integer[]{1,2,3},
                 new String[]{"a", "b", "c"});
 
@@ -46,7 +46,7 @@ public class BlockchainSequenceTest {
     @Test
     @DisplayName("getTemperedMessageIfAny() using a valid interval on a tempered blockchain should return the tempered subblock")
     public void getTemperedMessageIfAnyUsingAValidIntervalOnATemperedBlockchainShouldReturnTheTemperedSubBlock() {
-        BlockchainSequence<String> blockchain = setupBlockchain();
+        BlockchainIntSequence<String> blockchain = setupBlockchain();
 
         Block<Integer, String> last = blockchain.getBlockFromHash(blockchain.getLastBlockHash());
         Map<String, SubBlock<Integer,String>> transactions = last.getTransaction();
@@ -76,7 +76,7 @@ public class BlockchainSequenceTest {
     @Test
     @DisplayName("getTemperedMessageIfAny() using a valid interval on a tempered blockchain should return the tempered subblocks even if from different parts")
     public void getTemperedMessageIfAnyUsingAValidIntervalOnATemperedBlockchainShouldReturnTheTemperedSubBlocksEvenFromDifferentParts() {
-        BlockchainSequence<String> blockchain = setupBlockchain();
+        BlockchainIntSequence<String> blockchain = setupBlockchain();
 
         Block<Integer, String> last = blockchain.getBlockFromHash(blockchain.getLastBlockHash());
         Map<String, SubBlock<Integer,String>> transactions = last.getTransaction();
@@ -120,7 +120,7 @@ public class BlockchainSequenceTest {
     @Test
     @DisplayName("getTemperedMessageIfAny() using a single interval on a tempered blockchain should return the tempered subblock")
     public void getTemperedMessageIfAnyUsingASingleIntervalOnATemperedBlockchainShouldReturnTheTemperedSubBlock() {
-        BlockchainSequence<String> blockchain = setupBlockchain();
+        BlockchainIntSequence<String> blockchain = setupBlockchain();
 
         Block<Integer, String> last = blockchain.getBlockFromHash(blockchain.getLastBlockHash());
         Map<String, SubBlock<Integer,String>> transactions = last.getTransaction();
@@ -150,7 +150,7 @@ public class BlockchainSequenceTest {
     @Test
     @DisplayName("getTemperedMessageIfAny() using a valid interval on a untempered blockchain should return an empty list")
     public void getTemperedMessageIfAnyUsingAValidIntervalOnAUntemperedBlockchainShouldReturnAnEmptyList() {
-        BlockchainSequence<String> blockchain = setupBlockchain();
+        BlockchainIntSequence<String> blockchain = setupBlockchain();
 
         blockchain.blockchainToJson( 1);
 
@@ -170,7 +170,7 @@ public class BlockchainSequenceTest {
     @Test
     @DisplayName("getTemperedMessageIfAny() using an invalid interval on a tempered blockchain should throw IllegalArgumentException")
     public void getTemperedMessageIfAnyUsingAnInvalidIntervalOnAUntemperedBlockchainShouldReturnAnEmptyList() {
-        BlockchainSequence<String> blockchain = setupBlockchain();
+        BlockchainIntSequence<String> blockchain = setupBlockchain();
 
         blockchain.blockchainToJson( 1);
 
@@ -189,7 +189,7 @@ public class BlockchainSequenceTest {
     @Test
     @DisplayName("getTemperedMessageIfAny() using a valid interval on a tempered blockchain should return the tempered subblock even if in next parts")
     public void getTemperedMessageIfAnyUsingAValidIntervalOnATemperedBlockchainShouldReturnTheTemperedSubBlockEvenIfNextParts() {
-        BlockchainSequence<String> blockchain = setupBlockchain();
+        BlockchainIntSequence<String> blockchain = setupBlockchain();
 
         blockchain.blockchainToJson( 1);
 
@@ -224,7 +224,7 @@ public class BlockchainSequenceTest {
     @Test
     @DisplayName("getTemperedMessageIfAny() using a valid interval on a tempered blockchain should return the tempered subblock even if in next parts but not last")
     public void getTemperedMessageIfAnyUsingAValidIntervalOnATemperedBlockchainShouldReturnTheTemperedSubBlockEvenIfNextPartsButNotLast() {
-        BlockchainSequence<String> blockchain = setupBlockchain();
+        BlockchainIntSequence<String> blockchain = setupBlockchain();
 
         blockchain.blockchainToJson( 1);
 

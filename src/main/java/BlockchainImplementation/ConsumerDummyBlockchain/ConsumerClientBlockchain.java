@@ -2,22 +2,19 @@ package BlockchainImplementation.ConsumerDummyBlockchain;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Vector;
 import java.util.concurrent.TimeoutException;
 
-import BlockchainImplementation.Blockchain.BlockchainSequence;
+import BlockchainImplementation.Blockchain.BlockchainIntSequence;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.DeliverCallback;
 
-import BlockchainImplementation.Blockchain.Blockchain;
 import ConsumerDummy.Client.Consumer;
 import ProducerDummy.Messages.Hmac_Message;
 import ProducerDummy.Messages.Message;
 
 public class ConsumerClientBlockchain extends Consumer {
 
-    private BlockchainSequence<String> blockchain;
+    private BlockchainIntSequence<String> blockchain;
     private static String KEY = "0123456";
     private static String ALGORITHM = "HmacSHA256";
 
@@ -30,7 +27,7 @@ public class ConsumerClientBlockchain extends Consumer {
     public ConsumerClientBlockchain(String host, int port, String username, String password,String path, long maxSizeByte) throws IOException {
 
         super(host, port, username, password);
-        this.blockchain = new BlockchainSequence<>(path, maxSizeByte);
+        this.blockchain = new BlockchainIntSequence<>(path, maxSizeByte);
 
     }
 
@@ -54,8 +51,6 @@ public class ConsumerClientBlockchain extends Consumer {
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
-
-
 
             Integer[] seq_numbers = new Integer[messages.size()];
             String[] transactions = new String[messages.size()];

@@ -19,10 +19,10 @@ import java.util.Scanner;
  *
  * @param <R> the type of the content of the transactions
  */
-public class BlockchainSequence<R> extends Blockchain<Integer, R>{
+public class BlockchainIntSequence<R> extends Blockchain<Integer, R>{
 
 
-    public BlockchainSequence(String pathDirectory, long maxSizeByte) {
+    public BlockchainIntSequence(String pathDirectory, long maxSizeByte) {
         super(pathDirectory, maxSizeByte);
     }
 
@@ -186,12 +186,29 @@ public class BlockchainSequence<R> extends Blockchain<Integer, R>{
         return temperedMessage;
     }
 
+    /**
+     * Checks if the message corresponding to seqNumber in the blockchain has been tempered.
+     *
+     * @param seqNumber the sequence number of the message to be checked
+     *
+     * @return the message corresponding to that subblock if it has been tempered; null if not or if it is not found.
+     */
+    public SubBlock<Integer, R> getTemperedMessageIfAny (int seqNumber) {
+
+        List<SubBlock<Integer, R>> output = getTemperedMessageIfAny(seqNumber, seqNumber);
+
+        if(output == null || output.isEmpty())
+            return null;
+
+        return output.get(0);
+    }
+
     @Override
-    public BlockchainSequence<R> jsonToBlockchain(int nBlockchain) {
+    public BlockchainIntSequence<R> jsonToBlockchain(int nBlockchain) {
 
         Gson gson =  new Gson();
 
-        BlockchainSequence<R> blockchainFromJson = new BlockchainSequence<>("/", Long.MAX_VALUE);
+        BlockchainIntSequence<R> blockchainFromJson = new BlockchainIntSequence<>("/", Long.MAX_VALUE);
         FileReader fileReader = null;
 
         String pathDirectory = this.path;
@@ -201,7 +218,7 @@ public class BlockchainSequence<R> extends Blockchain<Integer, R>{
         try {
             fileReader = new FileReader(pathDirectory);
 
-            blockchainFromJson = (BlockchainSequence<R>) gson.fromJson(fileReader, BlockchainSequence.class);
+            blockchainFromJson = (BlockchainIntSequence<R>) gson.fromJson(fileReader, BlockchainIntSequence.class);
 
             fileReader.close();
 
