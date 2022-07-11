@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import ProducerDummy.Client.AbstractClient;
@@ -84,21 +85,39 @@ public class Consumer extends AbstractClient {
     }
 
     public void listen() throws IOException {
-        ServerSocket serverSocket = new ServerSocket(44556);
+        ServerSocket serverSocket = new ServerSocket(6868);
         while(true){
             try {
                 System.out.println("Accepting Connections now");
                 Socket socket = serverSocket.accept();
                 System.out.println("Client connected");
-                InputStream input = socket.getInputStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-                String line = reader.readLine();
-                System.out.println(line);
+                byte[] buffer = new byte[1024]; // a read buffer of 5KiB
+                byte[] redData;
+                StringBuilder clientData = new StringBuilder();
+                String redDataText;
+                int data;
+                StringBuilder message_from_client = new StringBuilder();
+                while ((data = socket.getInputStream().read(buffer)) > -1) {
+                    redData = new byte[data];
+                    System.arraycopy(buffer, 0, redData, 0, data);
+                    redDataText = new String(redData,"UTF-8"); // data ist UTF-8 encoded
+                    if(redDataText.contains("END")){
+                        String message_to_be_interpreted = message_from_client.toString();
+                        System.out.println("message recieved:" + message_to_be_interpreted);
+                        OutputStream output = socket.getOutputStream();
+                        PrintWriter writer = new PrintWriter(output);
+                        writer.println(message_to_be_interpreted);
+                        writer.flush();
+                        message_from_client = new StringBuilder();
+                        //TODO here is your part, create the methods to communicate with the Blockchain. Communicate with Francesco about it
+                    }else{
+                        message_from_client.append(redDataText);
+                    }
+                }
             }
             catch(SocketException e){
              System.out.println("Client disconnected");
             }
-            // here is your part, create the methods to communicate with the Blockchain. Communicate with Francesco about it
         }
     }
 
