@@ -1,8 +1,10 @@
 package ConsumerDummy.Client;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -82,16 +84,20 @@ public class Consumer extends AbstractClient {
     }
 
     public void listen() throws IOException {
-        // TODO bind ip else it just works on the pc 0.0.0.0:6868
         ServerSocket serverSocket = new ServerSocket(44556);
         while(true){
-            System.out.println("Accepting Connections now");
-            Socket socket = serverSocket.accept();
-            System.out.println("Client connected");
-            InputStream input = socket.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-            String line = reader.readLine();
-            System.out.println(line);
+            try {
+                System.out.println("Accepting Connections now");
+                Socket socket = serverSocket.accept();
+                System.out.println("Client connected");
+                InputStream input = socket.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+                String line = reader.readLine();
+                System.out.println(line);
+            }
+            catch(SocketException e){
+             System.out.println("Client disconnected");
+            }
             // here is your part, create the methods to communicate with the Blockchain. Communicate with Francesco about it
         }
     }
