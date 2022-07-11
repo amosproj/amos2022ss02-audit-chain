@@ -24,13 +24,13 @@ class ConnectionDialog(QDialog):
         # TODO change to ip
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_socket.connect(("127.0.0.1", 6868))
+        
 
 
     def send_command(self,command):
         print(command)
         self.client_socket.send(str(command).encode('utf-8'))
-
-
+    
 
 
 class MainWindow(QMainWindow):
@@ -65,10 +65,14 @@ class MainWindow(QMainWindow):
     def getStatsButton_clicked(self):
         command = {
             "command": "get_statistics"
+            
         }
         self.connection_dialog.send_command(command)
+        data = self.connection_dialog.client_socket.recv(1024)
+        print(data)
 
 
+      
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MainWindow()

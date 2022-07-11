@@ -20,6 +20,8 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
 
+import BlockchainImplementation.Blockchain.BlockchainIntSequenceAPI;
+
 public class Consumer extends AbstractClient {
 
     /**
@@ -94,11 +96,19 @@ public class Consumer extends AbstractClient {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(input));
                 String line = reader.readLine();
                 System.out.println(line);
+                // here is your part, create the methods to communicate with the Blockchain. Communicate with Francesco about it
+                BlockchainIntSequenceAPI blockchain = new BlockchainIntSequenceAPI<>("src/test/resources/testOutput/", 50); 
+                //stats
+                long byteSize = blockchain.getBytesSize(); 
+                DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
+                // Send first message
+                dOut.writeByte(1);
+                dOut.writeUTF("This is the first type of message.");
+                dOut.flush(); // Send off the data
             }
             catch(SocketException e){
              System.out.println("Client disconnected");
             }
-            // here is your part, create the methods to communicate with the Blockchain. Communicate with Francesco about it
         }
     }
 
