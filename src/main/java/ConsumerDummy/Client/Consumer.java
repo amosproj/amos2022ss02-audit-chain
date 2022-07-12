@@ -88,45 +88,48 @@ public class Consumer extends AbstractClient {
         this.listen();
     }
 
-    public void listen() throws IOException {
-        ServerSocket serverSocket = new ServerSocket( 6868);
-        System.out.println("Local IP: " + serverSocket.getInetAddress().toString());
-        System.out.println("Accepting Connections now");
-        Socket socket = serverSocket.accept();
-        System.out.println("Client connected");
-        InputStream input = socket.getInputStream();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+      public void listen() throws IOException {
+        while(true) {
+            ServerSocket serverSocket = new ServerSocket(6868);
+            System.out.println("Local IP: " + serverSocket.getInetAddress().toString());
+            System.out.println("Accepting Connections now");
+            Socket socket = serverSocket.accept();
+            System.out.println("Client connected");
+            InputStream input = socket.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 
-        // Placeholder for the Blockchain
-        BlockchainIntSequenceAPI blockchain = new BlockchainIntSequenceAPI<>("src/test/resources/testOutput/", 50);
-        while(true){
-            try {
-                //converting the String into an JSON object
-                JSONObject jsonObject = new JSONObject(reader.readLine());
-                //switch case over 'command' field
-                switch (jsonObject.get("command").toString()){
-                    case "check_single_message":
-                        final String check_single_message = blockchain.getTemperedMessageIfAnyAsString(Integer.parseInt(jsonObject.get("number").toString()));
-                        jsonObject.append("check_single_message", check_single_message);
-                        break;
-                    case "check_message_interval":
-                        final String check_message_interval = blockchain.getTemperedMessageIfAnyAsString(Integer.parseInt(jsonObject.get("start").toString()), Integer.parseInt(jsonObject.get("end").toString()));
-                        jsonObject.append("check_message_interval", check_message_interval);
-                        break;
-                    case "get_statistics":
-                        jsonObject.append("amountDataRecords", blockchain.getBytesSize());
-                        jsonObject.append("amountFilesCreated", blockchain.getNumberOfFiles());
-                        jsonObject.append("currentSize", blockchain.getSize());
-                        break;
+            // Placeholder for the Blockchain
+            BlockchainIntSequenceAPI blockchain = new BlockchainIntSequenceAPI<>("src/test/resources/testOutput/", 50);
+            while (true) {
+                try {
+                    //converting the String into an JSON object
+                    JSONObject jsonObject = new JSONObject(reader.readLine());
+                    //switch case over 'command' field
+                    switch (jsonObject.get("command").toString()) {
+                        case "check_single_message":
+                            final String check_single_message = blockchain.getTemperedMessageIfAnyAsString(Integer.parseInt(jsonObject.get("number").toString()));
+                            jsonObject.append("check_single_message", check_single_message);
+                            break;
+                        case "check_message_interval":
+                            final String check_message_interval = blockchain.getTemperedMessageIfAnyAsString(Integer.parseInt(jsonObject.get("start").toString()), Integer.parseInt(jsonObject.get("end").toString()));
+                            jsonObject.append("check_message_interval", check_message_interval);
+                            break;
+                        case "get_statistics":
+                            jsonObject.append("amountDataRecords", blockchain.getBytesSize());
+                            jsonObject.append("amountFilesCreated", blockchain.getNumberOfFiles());
+                            jsonObject.append("currentSize", blockchain.getSize());
+                            break;
+                    }
+
+                    //send back JSOnObject
+                    DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
+                    dOut.writeUTF(jsonObject.toString());
+                    dOut.flush();
+                } catch (SocketException e) {
+                    System.out.println("Client disconnected");
+                    serverSocket.close();
+                    break;
                 }
-
-                //send back JSOnObject
-                DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
-                dOut.writeUTF(jsonObject.toString());
-                dOut.flush();
-            }
-            catch(SocketException e){
-             System.out.println("Client disconnected");
             }
         }
     }
