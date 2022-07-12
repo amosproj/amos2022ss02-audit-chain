@@ -51,19 +51,21 @@ class MainWindow(QMainWindow):
         eventNum = self.ui.messageCheckLineEdit.text()
         command = {
             "command": "check_single_message",
-            "number":eventNum
+            "number": eventNum
         }
-        self.connection_dialog.send_command(command)
+        # added new line else java would recognize the send command
+        self.connection_dialog.send_command(str(command) + '\r\n')
         
     def checkIntervallButton_clicked(self):
         startEvent = self.ui.startEventLineEdit.text()
         endEvent = self.ui.endEventLineEdit.text()
         command = {
             "command": "check_message_interval",
-            "start" : startEvent,
+            "start": startEvent,
             "end": endEvent
         }
-        self.connection_dialog.send_command(command)
+        # added new line else java would recognize the send command
+        self.connection_dialog.send_command(str(command) + '\r\n')
 
 
     def getStatsButton_clicked(self):
@@ -71,7 +73,8 @@ class MainWindow(QMainWindow):
             "command": "get_statistics"
             
         }
-        self.connection_dialog.send_command(command)
+        # added new line else java would recognize the send command
+        self.connection_dialog.send_command(str(command) + '\r\n')
         data = self.connection_dialog.client_socket.recv(1024)
         print(data)
 

@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import BlockchainImplementation.Blockchain.Blocks.SubBlock;
 import ProducerDummy.Client.AbstractClient;
 import ProducerDummy.Messages.Message;
 import ProducerDummy.Persistence.NullObjectPersistenceStrategy;
@@ -22,6 +23,7 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
 
 import BlockchainImplementation.Blockchain.BlockchainIntSequenceAPI;
+import org.json.JSONObject;
 
 public class Consumer extends AbstractClient {
 
@@ -87,35 +89,41 @@ public class Consumer extends AbstractClient {
     }
 
     public void listen() throws IOException {
-        ServerSocket serverSocket = new ServerSocket(6868);
+        ServerSocket serverSocket = new ServerSocket( 6868);
+        System.out.println("Local IP: " + serverSocket.getInetAddress().toString());
+        System.out.println("Accepting Connections now");
+        Socket socket = serverSocket.accept();
+        System.out.println("Client connected");
+        InputStream input = socket.getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+
+        // Placeholder for the Blockchain
+        BlockchainIntSequenceAPI blockchain = new BlockchainIntSequenceAPI<>("src/test/resources/testOutput/", 50);
         while(true){
             try {
-                System.out.println("Accepting Connections now");
-                Socket socket = serverSocket.accept();
-                System.out.println("Client connected");
-                byte[] buffer = new byte[1024]; // a read buffer of 5KiB
-                byte[] redData;
-                StringBuilder clientData = new StringBuilder();
-                String redDataText;
-                int data;
-                StringBuilder message_from_client = new StringBuilder();
-                while ((data = socket.getInputStream().read(buffer)) > -1) {
-                    redData = new byte[data];
-                    System.arraycopy(buffer, 0, redData, 0, data);
-                    redDataText = new String(redData,"UTF-8"); // data ist UTF-8 encoded
-                    if(redDataText.contains("END")){
-                        String message_to_be_interpreted = message_from_client.toString();
-                        System.out.println("message recieved:" + message_to_be_interpreted);
-                        OutputStream output = socket.getOutputStream();
-                        PrintWriter writer = new PrintWriter(output);
-                        writer.println(message_to_be_interpreted);
-                        writer.flush();
-                        message_from_client = new StringBuilder();
-                        //TODO here is your part, create the methods to communicate with the Blockchain. Communicate with Francesco about it
-                    }else{
-                        message_from_client.append(redDataText);
-                    }
+                //converting the String into an JSON object
+                JSONObject jsonObject = new JSONObject(reader.readLine());
+                //switch case over 'command' field
+                switch (jsonObject.get("command").toString()){
+                    case "check_single_message":
+                        final String check_single_message = blockchain.getTemperedMessageIfAnyAsString(Integer.parseInt(jsonObject.get("number").toString()));
+                        jsonObject.append("check_single_message", check_single_message);
+                        break;
+                    case "check_message_interval":
+                        final String check_message_interval = blockchain.getTemperedMessageIfAnyAsString(Integer.parseInt(jsonObject.get("start").toString()), Integer.parseInt(jsonObject.get("end").toString()));
+                        jsonObject.append("check_message_interval", check_message_interval);
+                        break;
+                    case "get_statistics":
+                        jsonObject.append("amountDataRecords", blockchain.getBytesSize());
+                        jsonObject.append("amountFilesCreated", blockchain.getNumberOfFiles());
+                        jsonObject.append("currentSize", blockchain.getSize());
+                        break;
                 }
+
+                //send back JSOnObject
+                DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
+                dOut.writeUTF(jsonObject.toString());
+                dOut.flush();
             }
             catch(SocketException e){
              System.out.println("Client disconnected");

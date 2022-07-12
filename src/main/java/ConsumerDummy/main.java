@@ -40,7 +40,8 @@ public class main {
         StreamClient client = new StreamClient(HOST,PORT,USER,PASSWORD);
         client.setChannel(channel);
 
-        client.start();
+        //client.start();
+        client.listen();
         return;
     }
 
