@@ -25,11 +25,7 @@ class ConnectionDialog(QDialog):
         # TODO change to ip
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_socket.connect(("127.0.0.1", 6868))
-        for i in range(0,5):
-            time.sleep(5)
-            self.client_socket.send("Hello World".encode('utf-8'))
-        a = self.client_socket.recv(1024)
-        print(a)
+
 
     def send_command(self,command):
         print(command)
