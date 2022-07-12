@@ -104,6 +104,7 @@ public class Consumer extends AbstractClient {
                 try {
                     //converting the String into an JSON object
                     JSONObject jsonObject = new JSONObject(reader.readLine());
+                    System.out.println("Request: " + jsonObject.toString());
                     //switch case over 'command' field
                     switch (jsonObject.get("command").toString()) {
                         case "check_single_message":
@@ -123,12 +124,16 @@ public class Consumer extends AbstractClient {
 
                     //send back JSOnObject
                     DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
+                    System.out.println("Answer: " + jsonObject.toString());
                     dOut.writeUTF(jsonObject.toString());
                     dOut.flush();
                 } catch (SocketException e) {
                     System.out.println("Client disconnected");
                     serverSocket.close();
                     break;
+                }catch (Exception e){
+                    System.out.println("Error inside the Blockchain");
+                    System.out.println(e.getMessage());
                 }
             }
         }
