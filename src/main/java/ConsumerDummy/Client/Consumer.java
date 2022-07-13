@@ -1,14 +1,18 @@
 package ConsumerDummy.Client;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import BlockchainImplementation.Blockchain.Blocks.SubBlock;
 import ProducerDummy.Client.AbstractClient;
 import ProducerDummy.Messages.Message;
 import ProducerDummy.Persistence.NullObjectPersistenceStrategy;
@@ -17,6 +21,9 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
+
+import BlockchainImplementation.Blockchain.BlockchainIntSequenceAPI;
+import org.json.JSONObject;
 
 public class Consumer extends AbstractClient {
 
@@ -81,18 +88,54 @@ public class Consumer extends AbstractClient {
         this.listen();
     }
 
-    public void listen() throws IOException {
-        // TODO bind ip else it just works on the pc 0.0.0.0:6868
-        ServerSocket serverSocket = new ServerSocket(44556);
-        while(true){
+      public void listen() throws IOException {
+        while(true) {
+            ServerSocket serverSocket = new ServerSocket(6868);
+            System.out.println("Local IP: " + serverSocket.getInetAddress().toString());
             System.out.println("Accepting Connections now");
             Socket socket = serverSocket.accept();
             System.out.println("Client connected");
             InputStream input = socket.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-            String line = reader.readLine();
-            System.out.println(line);
-            // here is your part, create the methods to communicate with the Blockchain. Communicate with Francesco about it
+
+            // Placeholder for the Blockchain
+            BlockchainIntSequenceAPI blockchain = new BlockchainIntSequenceAPI<>("src/test/resources/testOutput/", 50);
+            while (true) {
+                try {
+                    //converting the String into an JSON object
+                    JSONObject jsonObject = new JSONObject(reader.readLine());
+                    System.out.println("Request: " + jsonObject.toString());
+                    //switch case over 'command' field
+                    switch (jsonObject.get("command").toString()) {
+                        case "check_single_message":
+                            final String check_single_message = blockchain.getTemperedMessageIfAnyAsString(Integer.parseInt(jsonObject.get("number").toString()));
+                            jsonObject.append("check_single_message", check_single_message);
+                            break;
+                        case "check_message_interval":
+                            final String check_message_interval = blockchain.getTemperedMessageIfAnyAsString(Integer.parseInt(jsonObject.get("start").toString()), Integer.parseInt(jsonObject.get("end").toString()));
+                            jsonObject.append("check_message_interval", check_message_interval);
+                            break;
+                        case "get_statistics":
+                            jsonObject.append("amountDataRecords", blockchain.getBytesSize());
+                            jsonObject.append("amountFilesCreated", blockchain.getNumberOfFiles());
+                            jsonObject.append("currentSize", blockchain.getSize());
+                            break;
+                    }
+
+                    //send back JSOnObject
+                    DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
+                    System.out.println("Answer: " + jsonObject.toString());
+                    dOut.writeUTF(jsonObject.toString());
+                    dOut.flush();
+                } catch (SocketException e) {
+                    System.out.println("Client disconnected");
+                    serverSocket.close();
+                    break;
+                }catch (Exception e){
+                    System.out.println("Error inside the Blockchain");
+                    System.out.println(e.getMessage());
+                }
+            }
         }
     }
 

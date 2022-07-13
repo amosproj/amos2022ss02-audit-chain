@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
@@ -19,6 +20,8 @@ import ProducerDummy.Messages.Message;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.DeliverCallback;
+
+import BlockchainImplementation.Blockchain.BlockchainIntSequenceAPI;
 
 
 /**
@@ -45,8 +48,9 @@ public class Client extends Consumer {
                 InputStream input = socket.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(input));
                 String line = reader.readLine();
+
                 System.out.println(line); 
-            }
+             }
         
     }
 }
