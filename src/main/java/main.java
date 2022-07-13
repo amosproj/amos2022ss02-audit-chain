@@ -73,7 +73,6 @@ public class main {
                 }
             }
         });
-
         Thread t2 = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -87,6 +86,9 @@ public class main {
                 }
             }
         });
+
+        // switch case: BOTH, ONLY PRODUCER, ONLY CONSUMER
+
         t1.start();
         t2.start();
 
