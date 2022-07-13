@@ -19,6 +19,8 @@ import org.json.JSONObject;
 
 public class Consumer extends AbstractClient {
 
+    protected int gui_port = 6868;
+
     /**
      * Constructor for Client.AbstractClient. Initializes the filepath, the file reader and set information for the
      * connection factory. Call {@link #initFactory()} to initialize the connection factory.
@@ -30,8 +32,9 @@ public class Consumer extends AbstractClient {
      * @throws IOException if the file cannot be read
      */
 
-    public Consumer(String host, int port, String username, String password) {
+    public Consumer(String host, int port, String username, String password,int gui_port) {
         super(host, port, username, password);
+        this.gui_port = gui_port;
     }
 
     public static Object deserialize(byte[] bytes) throws IOException, ClassNotFoundException {
@@ -82,7 +85,7 @@ public class Consumer extends AbstractClient {
 
     public void listen() throws IOException {
         while (true) {
-            ServerSocket serverSocket = new ServerSocket(6868);
+            ServerSocket serverSocket = new ServerSocket(this.gui_port);
             System.out.println("Local IP: " + serverSocket.getInetAddress().toString());
             System.out.println("Accepting Connections now");
             Socket socket = serverSocket.accept();
