@@ -45,15 +45,15 @@ public class main {
         String KEY = "0123456";
         String ALGORITHM = "HmacSHA256";
         String base_path = Paths.get(System.getProperty("user.dir"), filepath).toString();
-        String queue_name = "HELLO_WORLD";
+        String queue_name = "TEST";
 
 
 
         PersistenceStrategy filePersistenceStrategy = new NullObjectPersistenceStrategy(base_path, "last_messages.txt");
-        RabbitMQChannel channel = new QuorumQueues(queue_name);
+        RabbitMQChannel channel = new Stream(queue_name);
 
 
-        Consumer client = new Consumer(HOST, PORT, USER, PASSWORD);
+        Consumer client = new StreamClient(HOST, PORT, USER, PASSWORD);
         client.setPersistenceStrategy(filePersistenceStrategy);
         client.setChannel(channel);
         client.start();

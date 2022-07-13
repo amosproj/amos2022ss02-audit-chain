@@ -1,12 +1,15 @@
 package ConsumerDummy.Client;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.concurrent.TimeoutException;
 
 import ProducerDummy.Client.AbstractClient;
+import ProducerDummy.Messages.Hmac_Message;
 import ProducerDummy.Messages.Message;
 
 import com.rabbitmq.client.*;
@@ -39,14 +42,13 @@ public class Consumer extends AbstractClient {
 
     }
 
-    public ConnectionFactory getFactory(){
+    public ConnectionFactory getFactory() {
         return this.factory;
     }
 
     public Channel getChannel() throws IOException, TimeoutException {
         return this.channel.createChannel(this.factory);
     }
-
 
 
     /***
@@ -63,22 +65,23 @@ public class Consumer extends AbstractClient {
                 false, // Autoack no
                 (consumerTag, delivery) -> {
                     try {
-                       ArrayList<Message> messages = this.consumeDelivery(delivery.getBody());
-                       //store the last message
-                       this.persistenceStrategy.StoreMessage( messages.get(messages.size()-1));
+                        ArrayList<Message> messages = this.consumeDelivery(delivery.getBody());
+                        //store the last message
+                        //this.persistenceStrategy.StoreMessage( messages.get(messages.size()-1));
                     } catch (ClassNotFoundException e) {
                         throw new RuntimeException(e);
                     }
                     channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
                 },
-                consumerTag -> { });
+                consumerTag -> {
+                });
 
 
         this.listen();
     }
 
-      public void listen() throws IOException {
-        while(true) {
+    public void listen() throws IOException {
+        while (true) {
             ServerSocket serverSocket = new ServerSocket(6868);
             System.out.println("Local IP: " + serverSocket.getInetAddress().toString());
             System.out.println("Accepting Connections now");
@@ -120,7 +123,7 @@ public class Consumer extends AbstractClient {
                     System.out.println("Client disconnected");
                     serverSocket.close();
                     break;
-                }catch (Exception e){
+                } catch (Exception e) {
                     System.out.println("Error inside the Blockchain");
                     System.out.println(e.getMessage());
                 }
@@ -128,23 +131,21 @@ public class Consumer extends AbstractClient {
         }
     }
 
-    public void RecoverOffset(){
-        ArrayList<Message> messages = this.persistenceStrategy.ReadLastMessage();
-        Message message = messages.get(messages.size()-1);
-
-
-
-
-    }
-
-
 
     // TODO Consumer Sort the Message
     public ArrayList<Message> consumeDelivery(byte[] delivery) throws IOException, ClassNotFoundException {
-
         ArrayList<Message> messages = (ArrayList<Message>) Consumer.deserialize(delivery);
-        messages.forEach(message ->
-                System.out.println(String.format(" [%d] Received %s'", message.getSequence_number(), message.getMessage())));
+
+        for (Message message : messages) {
+            if(message instanceof Hmac_Message){
+                System.out.println(String.format("Nachricht erhalten:\nEvent:%d\nMessage:%s\nMAC:%s",message.getSequence_number(),message.getMessage(),((Hmac_Message) message).getHmac()));
+            }else if(message instanceof Message){
+                System.out.println(String.format("Nachricht erhalten:\nEvent:%d\nMessage:%s",message.getSequence_number(),message.getMessage()));
+            }
+
+
+        }
+
 
         return messages;
     }

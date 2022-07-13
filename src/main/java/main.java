@@ -1,13 +1,8 @@
-import ConsumerDummy.Client.Consumer;
-import ConsumerDummy.Client.StreamClient;
-import ProducerDummy.ChannelSelection.QuorumQueues;
+import ConsumerDummy.Client.Client;
 import ProducerDummy.ChannelSelection.RabbitMQChannel;
-import ProducerDummy.ChannelSelection.StandardQueue;
 import ProducerDummy.ChannelSelection.Stream;
-import ProducerDummy.Client.AbstractClient;
-import ProducerDummy.Client.Client;
 import ProducerDummy.DataGeneration.DataGenerator;
-import ProducerDummy.DataGeneration.FileDataReader;
+import ProducerDummy.DataGeneration.DynamicDataGenerator;
 import ProducerDummy.Persistence.NullObjectPersistenceStrategy;
 import ProducerDummy.Persistence.PersistenceStrategy;
 
@@ -16,6 +11,7 @@ import java.net.Socket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class main {
@@ -41,31 +37,37 @@ public class main {
         int PORT = Integer.parseInt(p.getProperty("PORT"));
         String USER = p.getProperty("USERNAME");
         String PASSWORD = p.getProperty("PASSWORD");
-        String queue_name = "HERE2";
+        String queue_name = "TEST";
 
-        RabbitMQChannel producer_channel = new QuorumQueues(queue_name);
-        RabbitMQChannel consumer_channel = new QuorumQueues(queue_name);
+        RabbitMQChannel consumer_channel = new Stream(queue_name);
+        RabbitMQChannel producer_channel = new Stream(queue_name);
 
-        DataGenerator dataGenerator = new FileDataReader(System.getProperty("user.dir")+ "\\src\\main\\java\\ProducerDummy","household_power_consumption.txt");
+        DataGenerator dataGenerator = new DynamicDataGenerator();
         PersistenceStrategy persistenceStrategy = new NullObjectPersistenceStrategy("","");
 
 
 
-        Consumer consumer = new ConsumerDummy.Client.Client(HOST,PORT,USER,PASSWORD);
-        Client producer = new Client(HOST,PORT,USER,PASSWORD);
+        ConsumerDummy.Client.Client consumer = new Client(HOST,PORT,USER,PASSWORD);
+        ProducerDummy.Client.Client producer = new ProducerDummy.Client.Client(HOST,PORT,USER,PASSWORD);
 
         producer.setDataGenerator(dataGenerator);
-        //consumer.setDataGenerator(dataGenerator);
         producer.setPersistenceStrategy(persistenceStrategy);
+        producer.setChannel(producer_channel);
+
         consumer.setPersistenceStrategy(new NullObjectPersistenceStrategy("",""));
-        producer.setChannel(producer_channel);Thread t1 = new Thread(new Runnable() {
+        consumer.setChannel(consumer_channel);
+
+
+        Thread t1 = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     producer.start();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
-                } catch (TimeoutException | InterruptedException e) {
+                } catch (TimeoutException e) {
+                    throw new RuntimeException(e);
+                } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -84,10 +86,9 @@ public class main {
                 }
             }
         });
-        //t1.start();
+        t1.start();
         t2.start();
 
-        consumer.setChannel(consumer_channel);
 
 
 
