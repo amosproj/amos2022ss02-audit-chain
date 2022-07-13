@@ -44,40 +44,15 @@ public class main {
         String PASSWORD = p.getProperty("PASSWORD");
         String KEY = "0123456";
         String ALGORITHM = "HmacSHA256";
-
         String base_path = Paths.get(System.getProperty("user.dir"), filepath).toString();
-
         String queue_name = "HELLO_WORLD";
-        // create components for Client
-        DataGenerator dataGenerator = new DynamicDataGenerator();
+
+
+
         PersistenceStrategy filePersistenceStrategy = new NullObjectPersistenceStrategy(base_path, "last_messages.txt");
         RabbitMQChannel channel = new QuorumQueues(queue_name);
 
 
-      //  String base_path = Paths.get(System.getProperty("user.dir"), filepath).toString();
-      //  String filepath = Paths.get("src", "main", "resources","ConsumerDummy").toString();
-      //  String filename = "config.properties";
-      //  Path config_path = Paths.get(System.getProperty("user.dir"), filepath, filename);
-        // Properties p = new Properties();
-        //FileReader reader = new FileReader(config_path.toString());
-        //p.load(reader);
-
-       // String HOST = p.getProperty("HOST");
-       // int PORT = Integer.parseInt(p.getProperty("PORT"));
-       // String USER = p.getProperty("USERNAME");
-       // String PASSWORD = p.getProperty("PASSWORD");
-       // String queue_name = "ds";
-
-     //   RabbitMQChannel channel = new Stream(queue_name);
-
-       // StreamClient client = new StreamClient(HOST,PORT,USER,PASSWORD);
-        //client.setChannel(channel);
-
-        //client.start();
-        //client.listen();
-        //return;
-
-        //Consumer client = new Client(HOST, PORT, USER, PASSWORD,KEY,ALGORITHM);
         Consumer client = new Consumer(HOST, PORT, USER, PASSWORD);
         client.setPersistenceStrategy(filePersistenceStrategy);
         client.setChannel(channel);

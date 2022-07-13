@@ -1,26 +1,15 @@
 package ConsumerDummy.Client;
-
 import java.io.*;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import BlockchainImplementation.Blockchain.Blocks.SubBlock;
 import ProducerDummy.Client.AbstractClient;
 import ProducerDummy.Messages.Message;
-import ProducerDummy.Persistence.NullObjectPersistenceStrategy;
-import ProducerDummy.Persistence.PersistenceStrategy;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.DeliverCallback;
+
+import com.rabbitmq.client.*;
 
 import BlockchainImplementation.Blockchain.BlockchainIntSequenceAPI;
 import org.json.JSONObject;
@@ -74,9 +63,9 @@ public class Consumer extends AbstractClient {
                 false, // Autoack no
                 (consumerTag, delivery) -> {
                     try {
-                        ArrayList<Message> messages = (ArrayList<Message>) Consumer.deserialize(delivery.getBody());
-                        messages.forEach(message ->
-                                System.out.println(String.format(" [%d] Received %s'", message.getSequence_number(), message.getMessage())));
+                       ArrayList<Message> messages = this.consumeDelivery(delivery.getBody());
+                       //store the last message
+                       this.persistenceStrategy.StoreMessage( messages.get(messages.size()-1));
                     } catch (ClassNotFoundException e) {
                         throw new RuntimeException(e);
                     }
@@ -138,5 +127,27 @@ public class Consumer extends AbstractClient {
             }
         }
     }
+
+    public void RecoverOffset(){
+        ArrayList<Message> messages = this.persistenceStrategy.ReadLastMessage();
+        Message message = messages.get(messages.size()-1);
+
+
+
+
+    }
+
+
+
+    // TODO Consumer Sort the Message
+    public ArrayList<Message> consumeDelivery(byte[] delivery) throws IOException, ClassNotFoundException {
+
+        ArrayList<Message> messages = (ArrayList<Message>) Consumer.deserialize(delivery);
+        messages.forEach(message ->
+                System.out.println(String.format(" [%d] Received %s'", message.getSequence_number(), message.getMessage())));
+
+        return messages;
+    }
+
 
 }
