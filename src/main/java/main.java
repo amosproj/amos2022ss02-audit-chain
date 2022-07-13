@@ -51,26 +51,21 @@ public class main {
 
 
 
-        AbstractClient consumer = new ConsumerDummy.Client.Client(HOST,PORT,USER,PASSWORD);
+        Consumer consumer = new ConsumerDummy.Client.Client(HOST,PORT,USER,PASSWORD);
         Client producer = new Client(HOST,PORT,USER,PASSWORD);
 
         producer.setDataGenerator(dataGenerator);
+        //consumer.setDataGenerator(dataGenerator);
         producer.setPersistenceStrategy(persistenceStrategy);
         consumer.setPersistenceStrategy(new NullObjectPersistenceStrategy("",""));
-        producer.setChannel(producer_channel);
-        consumer.setChannel(consumer_channel);
-
-
-        Thread t1 = new Thread(new Runnable() {
+        producer.setChannel(producer_channel);Thread t1 = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     producer.start();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
-                } catch (TimeoutException e) {
-                    throw new RuntimeException(e);
-                } catch (InterruptedException e) {
+                } catch (TimeoutException | InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -84,7 +79,7 @@ public class main {
                     consumer.start();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
-                } catch (TimeoutException | InterruptedException e) {
+                } catch (TimeoutException e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -92,8 +87,7 @@ public class main {
         //t1.start();
         t2.start();
 
-
-
+        consumer.setChannel(consumer_channel);
 
 
 

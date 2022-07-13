@@ -1,18 +1,28 @@
 package ConsumerDummy;
 
-import ConsumerDummy.Client.Client;
 import ConsumerDummy.Client.Consumer;
 import ConsumerDummy.Client.StreamClient;
+//import ConsumerDummy.Client.Client;
+//import ConsumerDummy.DataGeneration.DataGenerator;
+//import ConsumerDummy.DataGeneration.DynamicDataGenerator;
 import ProducerDummy.ChannelSelection.QuorumQueues;
 import ProducerDummy.ChannelSelection.RabbitMQChannel;
 import ProducerDummy.ChannelSelection.StandardQueue;
 import ProducerDummy.ChannelSelection.Stream;
 import ProducerDummy.Client.AbstractClient;
+import ProducerDummy.Client.Client;
+import ProducerDummy.Client.Producer;
+import ProducerDummy.DataGeneration.DataGenerator;
+import ProducerDummy.DataGeneration.DynamicDataGenerator;
+import ProducerDummy.Persistence.NullObjectPersistenceStrategy;
+import ProducerDummy.Persistence.PersistenceStrategy;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
 import java.util.concurrent.TimeoutException;
 
@@ -20,28 +30,59 @@ import java.util.concurrent.TimeoutException;
 
 public class main {
 
-    public static void main(String[] args) throws IOException, TimeoutException {
-
+    public static void main(String[] args) throws IOException, TimeoutException, InterruptedException, ClassNotFoundException, NoSuchAlgorithmException, InvalidKeyException {
         String filepath = Paths.get("src", "main", "resources","ConsumerDummy").toString();
         String filename = "config.properties";
+
         Path config_path = Paths.get(System.getProperty("user.dir"), filepath, filename);
         Properties p = new Properties();
         FileReader reader = new FileReader(config_path.toString());
         p.load(reader);
-
         String HOST = p.getProperty("HOST");
         int PORT = Integer.parseInt(p.getProperty("PORT"));
         String USER = p.getProperty("USERNAME");
         String PASSWORD = p.getProperty("PASSWORD");
-        String queue_name = "ds";
+        String KEY = "0123456";
+        String ALGORITHM = "HmacSHA256";
 
-        RabbitMQChannel channel = new Stream(queue_name);
+        String base_path = Paths.get(System.getProperty("user.dir"), filepath).toString();
 
-        StreamClient client = new StreamClient(HOST,PORT,USER,PASSWORD);
-        client.setChannel(channel);
+        String queue_name = "HELLO_WORLD";
+        // create components for Client
+        DataGenerator dataGenerator = new DynamicDataGenerator();
+        PersistenceStrategy filePersistenceStrategy = new NullObjectPersistenceStrategy(base_path, "last_messages.txt");
+        RabbitMQChannel channel = new QuorumQueues(queue_name);
+
+
+      //  String base_path = Paths.get(System.getProperty("user.dir"), filepath).toString();
+      //  String filepath = Paths.get("src", "main", "resources","ConsumerDummy").toString();
+      //  String filename = "config.properties";
+      //  Path config_path = Paths.get(System.getProperty("user.dir"), filepath, filename);
+        // Properties p = new Properties();
+        //FileReader reader = new FileReader(config_path.toString());
+        //p.load(reader);
+
+       // String HOST = p.getProperty("HOST");
+       // int PORT = Integer.parseInt(p.getProperty("PORT"));
+       // String USER = p.getProperty("USERNAME");
+       // String PASSWORD = p.getProperty("PASSWORD");
+       // String queue_name = "ds";
+
+     //   RabbitMQChannel channel = new Stream(queue_name);
+
+       // StreamClient client = new StreamClient(HOST,PORT,USER,PASSWORD);
+        //client.setChannel(channel);
 
         //client.start();
-        client.listen();
+        //client.listen();
+        //return;
+
+        //Consumer client = new Client(HOST, PORT, USER, PASSWORD,KEY,ALGORITHM);
+        Consumer client = new Consumer(HOST, PORT, USER, PASSWORD);
+        client.setPersistenceStrategy(filePersistenceStrategy);
+        client.setChannel(channel);
+        client.start();
+
         return;
     }
 
