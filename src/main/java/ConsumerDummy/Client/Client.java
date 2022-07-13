@@ -34,8 +34,8 @@ public class Client extends Consumer {
      *
      * @throws IOException if the file cannot be read
      */
-    public Client(String host, int port, String username, String password) throws IOException {
-        super(host, port, username, password);
+    public Client(String host, int port, String username, String password,int gui_port) throws IOException {
+        super(host, port, username, password,gui_port);
     }
 
 }

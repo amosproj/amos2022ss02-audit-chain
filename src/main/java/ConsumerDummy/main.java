@@ -46,6 +46,7 @@ public class main {
         String ALGORITHM = "HmacSHA256";
         String base_path = Paths.get(System.getProperty("user.dir"), filepath).toString();
         String queue_name = "TEST";
+        int gui_port = 6868;
 
 
 
@@ -53,7 +54,7 @@ public class main {
         RabbitMQChannel channel = new Stream(queue_name);
 
 
-        Consumer client = new StreamClient(HOST, PORT, USER, PASSWORD);
+        Consumer client = new StreamClient(HOST, PORT, USER, PASSWORD,gui_port);
         client.setPersistenceStrategy(filePersistenceStrategy);
         client.setChannel(channel);
         client.start();

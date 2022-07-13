@@ -23,8 +23,8 @@ public class StreamClient extends Consumer{
      * @param password
      * @throws IOException if the file cannot be read
      */
-    public StreamClient(String host, int port, String username, String password) throws IOException {
-        super(host, port, username, password);
+    public StreamClient(String host, int port, String username, String password, int gui_port) throws IOException {
+        super(host, port, username, password,gui_port);
     }
     public void start() throws IOException, TimeoutException {
         this.RecoverOffset();

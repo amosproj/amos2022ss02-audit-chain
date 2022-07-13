@@ -38,6 +38,7 @@ public class main {
         String USER = p.getProperty("USERNAME");
         String PASSWORD = p.getProperty("PASSWORD");
         String queue_name = "TEST";
+        int gui_port = 6868;
 
         RabbitMQChannel consumer_channel = new Stream(queue_name);
         RabbitMQChannel producer_channel = new Stream(queue_name);
@@ -47,7 +48,7 @@ public class main {
 
 
 
-        ConsumerDummy.Client.Client consumer = new Client(HOST,PORT,USER,PASSWORD);
+        ConsumerDummy.Client.Client consumer = new Client(HOST,PORT,USER,PASSWORD,gui_port);
         ProducerDummy.Client.Client producer = new ProducerDummy.Client.Client(HOST,PORT,USER,PASSWORD);
 
         producer.setDataGenerator(dataGenerator);
