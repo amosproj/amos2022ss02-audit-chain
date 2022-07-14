@@ -53,21 +53,21 @@ public class main {
         PersistenceStrategy filePersistenceStrategy = new NullObjectPersistenceStrategy("","");
         RabbitMQChannel channel = new Stream(queue_name);
 
-        /**
-        Consumer consumer;
-        PersistenceStrategy filePersistenceStrategy;
-        RabbitMQChannel channel;
 
-        consumer = new StreamClient("",9,"","",9); // steam client is only for Queue=Stream
-        consumer = new Client("",9,"","",9); //stand queue and qurom queue
+        Consumer consumer;
+        //PersistenceStrategy filePersistenceStrategy;
+        //RabbitMQChannel channel;
+
+        consumer = new StreamClient("",9,"","",9); // Steam client is only for Queue_Stream
+        consumer = new Client("",9,"","",9); //Standard queue and quorum queue
         PersistenceStrategy persistenceStrategy;
 
         persistenceStrategy = new AggregateMessageFilePersistence("",""); // I don´t know if we actually need it
-        persistenceStrategy = new FilePersistenceStrategy("",""); // used in Stream
-        persistenceStrategy = new NullObjectPersistenceStrategy("",""); // standard PersitenceStrategy
+        persistenceStrategy = new FilePersistenceStrategy("",""); // Used in Stream
+        persistenceStrategy = new NullObjectPersistenceStrategy("",""); // Standard PersistenceStrategy
 
         RabbitMQChannel rabbitMQChannel;
-        rabbitMQChannel = new Stream("46556465"); // ONLY WORKS WITH STREAMCLIENT
+        rabbitMQChannel = new Stream("46556465"); // ONLY WORKS WITH STREAM_CLIENT
         rabbitMQChannel = new QuorumQueues("46556465"); // NORMAL CLIENT
         rabbitMQChannel = new StandardQueue("46556465"); // NORMAL CLIENT
 
@@ -77,17 +77,19 @@ public class main {
         String QUEUE_TYPE = null;
         String CLIENT_TYPE = null;
 
-        if(!(QUEUE_TYPE.equals("STREAM") && CLIENT_TYPE.equals("STREAMCLIENT"))){
-            System.out.println("Stream need a StreamClient");
+        // it was not necessary that's why I commented
+        /**
+        if(!(QUEUE_TYPE.equals("STREAM") && CLIENT_TYPE.equals("STREAM_CLIENT"))){
+            System.out.println("Stream needs a StreamClient..sorry :( ");
             return;
         }
 
-        if(  (QUEUE_TYPE.equals("STAND_QUEUE") || QUEUE_TYPE.equals("QUROU_QUE")) && CLIENT_TYPE.equals("CLIENT") ){
-            System.out.println("Normal Client only works with Standard_que or quroum_que");
+        if(QUEUE_TYPE.equals("STAND_QUEUE") && CLIENT_TYPE.equals("CLIENT")){
+            System.out.println("Normal Client only works with Standard_queue or Quorum_que!");
             return;
         }
-**/
-        //same with persistence strategy
+        **/
+        //Same with persistence strategy
         Consumer client = new StreamClient(HOST, PORT, USER, PASSWORD,gui_port);
         client.setPersistenceStrategy(filePersistenceStrategy);
         client.setChannel(channel);
