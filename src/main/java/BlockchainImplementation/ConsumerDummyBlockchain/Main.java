@@ -27,7 +27,8 @@ public class Main {
         int PORT = Integer.parseInt(p.getProperty("PORT"));
         String USER = p.getProperty("USERNAME");
         String PASSWORD = p.getProperty("PASSWORD");
-        String queue_name = "HELLO_WORLD";
+
+        String queue_name = p.getProperty("QUEUE_NAME");
 
         AbstractClient client = new ConsumerClientBlockchain(HOST,PORT,USER,PASSWORD, "src/test/resources/testOutput/", Long.MAX_VALUE);
         client.setChannel(new QuorumQueues(queue_name));
