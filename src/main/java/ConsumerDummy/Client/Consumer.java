@@ -3,22 +3,23 @@ package ConsumerDummy.Client;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
+import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Map;
+import java.util.Iterator;
 import java.util.concurrent.TimeoutException;
 
 import ProducerDummy.Client.AbstractClient;
+import ProducerDummy.Messages.Hmac_Message;
 import ProducerDummy.Messages.Message;
-import ProducerDummy.Persistence.NullObjectPersistenceStrategy;
-import ProducerDummy.Persistence.PersistenceStrategy;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.DeliverCallback;
+
+import com.rabbitmq.client.*;
+
+import BlockchainImplementation.Blockchain.BlockchainIntSequenceAPI;
+import org.json.JSONObject;
 
 public class Consumer extends AbstractClient {
+
+    protected int gui_port = 6868;
 
     /**
      * Constructor for Client.AbstractClient. Initializes the filepath, the file reader and set information for the
@@ -31,8 +32,9 @@ public class Consumer extends AbstractClient {
      * @throws IOException if the file cannot be read
      */
 
-    public Consumer(String host, int port, String username, String password) {
+    public Consumer(String host, int port, String username, String password,int gui_port) {
         super(host, port, username, password);
+        this.gui_port = gui_port;
     }
 
     public static Object deserialize(byte[] bytes) throws IOException, ClassNotFoundException {
@@ -43,14 +45,13 @@ public class Consumer extends AbstractClient {
 
     }
 
-    public ConnectionFactory getFactory(){
+    public ConnectionFactory getFactory() {
         return this.factory;
     }
 
     public Channel getChannel() throws IOException, TimeoutException {
         return this.channel.createChannel(this.factory);
     }
-
 
 
     /***
@@ -67,33 +68,90 @@ public class Consumer extends AbstractClient {
                 false, // Autoack no
                 (consumerTag, delivery) -> {
                     try {
-                        ArrayList<Message> messages = (ArrayList<Message>) Consumer.deserialize(delivery.getBody());
-                        messages.forEach(message ->
-                                System.out.println(String.format(" [%d] Received %s'", message.getSequence_number(), message.getMessage())));
+                        ArrayList<Message> messages = this.consumeDelivery(delivery.getBody());
+                        //store the last message
+                        //this.persistenceStrategy.StoreMessage( messages.get(messages.size()-1));
                     } catch (ClassNotFoundException e) {
                         throw new RuntimeException(e);
                     }
                     channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
                 },
-                consumerTag -> { });
+                consumerTag -> {
+                });
 
 
         this.listen();
     }
 
     public void listen() throws IOException {
-        // TODO bind ip else it just works on the pc 0.0.0.0:6868
-        ServerSocket serverSocket = new ServerSocket(44556);
-        while(true){
+        while (true) {
+            ServerSocket serverSocket = new ServerSocket(this.gui_port);
+            System.out.println("Local IP: " + serverSocket.getInetAddress().toString());
             System.out.println("Accepting Connections now");
             Socket socket = serverSocket.accept();
             System.out.println("Client connected");
             InputStream input = socket.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-            String line = reader.readLine();
-            System.out.println(line);
-            // here is your part, create the methods to communicate with the Blockchain. Communicate with Francesco about it
+
+            // Placeholder for the Blockchain
+            BlockchainIntSequenceAPI blockchain = new BlockchainIntSequenceAPI<>("src/test/resources/testOutput/", 50);
+            while (true) {
+                try {
+                    //converting the String into an JSON object
+                    JSONObject jsonObject = new JSONObject(reader.readLine());
+                    System.out.println("Request: " + jsonObject.toString());
+                    //switch case over 'command' field
+                    switch (jsonObject.get("command").toString()) {
+                        case "check_single_message":
+                            final String check_single_message = blockchain.getTemperedMessageIfAnyAsString(Integer.parseInt(jsonObject.get("number").toString()));
+                            jsonObject.append("check_single_message", check_single_message);
+                            break;
+                        case "check_message_interval":
+                            final String check_message_interval = blockchain.getTemperedMessageIfAnyAsString(Integer.parseInt(jsonObject.get("start").toString()), Integer.parseInt(jsonObject.get("end").toString()));
+                            jsonObject.append("check_message_interval", check_message_interval);
+                            break;
+                        case "get_statistics":
+                            jsonObject.append("amountDataRecords", blockchain.getBytesSize());
+                            jsonObject.append("amountFilesCreated", blockchain.getNumberOfFiles());
+                            jsonObject.append("currentSize", blockchain.getSize());
+                            break;
+                    }
+
+                    //send back JSOnObject
+                    DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
+                    System.out.println("Answer: " + jsonObject.toString());
+                    dOut.writeUTF(jsonObject.toString());
+                    dOut.flush();
+                } catch (SocketException e) {
+                    System.out.println("Client disconnected");
+                    serverSocket.close();
+                    break;
+                } catch (Exception e) {
+                    System.out.println("Error inside the Blockchain");
+                    System.out.println(e.getMessage());
+                }
+            }
         }
     }
+
+
+    // TODO Consumer Sort the Message
+    public ArrayList<Message> consumeDelivery(byte[] delivery) throws IOException, ClassNotFoundException {
+        ArrayList<Message> messages = (ArrayList<Message>) Consumer.deserialize(delivery);
+
+        for (Message message : messages) {
+            if(message instanceof Hmac_Message){
+                System.out.println(String.format("Nachricht erhalten:\nEvent:%d\nMessage:%s\nMAC:%s",message.getSequence_number(),message.getMessage(),((Hmac_Message) message).getHmac()));
+            }else if(message instanceof Message){
+                System.out.println(String.format("Nachricht erhalten:\nEvent:%d\nMessage:%s",message.getSequence_number(),message.getMessage()));
+            }
+
+
+        }
+
+
+        return messages;
+    }
+
 
 }

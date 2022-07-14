@@ -15,6 +15,8 @@ public class SecurityClient extends Client{
 
     public SecurityClient(String host, int port, String username, String password,String key, String algorithm, int desired_payload_in_byte)throws IOException {
         super(host, port, username, password);
+        this.key = key;
+        this.algorithm = algorithm;
         this.DESIRED_PAYLOAD_IN_BYTE = desired_payload_in_byte;
     }
     public SecurityClient(String host, int port, String username, String password,String key, String algorithm) throws IOException {

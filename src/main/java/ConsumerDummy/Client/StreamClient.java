@@ -1,6 +1,7 @@
 package ConsumerDummy.Client;
 
 import ProducerDummy.Messages.Message;
+import ProducerDummy.Messages.SimpleMessage;
 import com.rabbitmq.client.Channel;
 
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.util.concurrent.TimeoutException;
 
 public class StreamClient extends Consumer{
 
+    private int current_offset = 0;
 
     /**
      * Constructor for Client.AbstractClient. Initializes the filepath, the file reader and set information for the
@@ -21,23 +23,23 @@ public class StreamClient extends Consumer{
      * @param password
      * @throws IOException if the file cannot be read
      */
-    public StreamClient(String host, int port, String username, String password) throws IOException {
-        super(host, port, username, password);
+    public StreamClient(String host, int port, String username, String password, int gui_port) throws IOException {
+        super(host, port, username, password,gui_port);
     }
-
     public void start() throws IOException, TimeoutException {
+        this.RecoverOffset();
         Channel channel = this.getChannel();
         channel.basicQos(1);
-
         channel.basicConsume(
                 this.channel.getQueueName(),
                 false,
-                Collections.singletonMap("x-stream-offset", "first"), // From which offset to read (= which Message)
+                Collections.singletonMap("x-stream-offset", this.current_offset ), // From which offset to read (= which Message)
                 (consumerTag, delivery) -> {
                     try {
-                        ArrayList<Message> messages = (ArrayList<Message>) Consumer.deserialize(delivery.getBody());
-                        messages.forEach(message ->
-                        System.out.println(String.format(" [%d] Received %s'", message.getSequence_number(), message.getMessage())));
+                        ArrayList<Message> messages =  this.consumeDelivery(delivery.getBody());
+
+
+                        this.persistenceStrategy.StoreMessage(new SimpleMessage(this.current_offset++,"Current Offset"));
                     } catch (ClassNotFoundException e) {
                         throw new RuntimeException(e);
                     }
@@ -46,5 +48,18 @@ public class StreamClient extends Consumer{
                 consumerTag -> { });
         this.listen();
     }
+
+
+    public void RecoverOffset() {
+        try{
+            ArrayList<Message> messages = this.persistenceStrategy.ReadLastMessage();
+            this.current_offset = messages.get(messages.size()-1).getSequence_number();
+        }catch(Exception e){
+            System.out.println("Could not restore Consumers last Offset, starting from Zero");
+            // if something goes wrong we start from the beginning
+            this.current_offset = 0;
+        }
+    }
+
 
 }

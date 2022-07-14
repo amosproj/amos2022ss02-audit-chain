@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>773</width>
+    <width>686</width>
     <height>602</height>
    </rect>
   </property>
@@ -33,7 +33,7 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_2">
             <item>
-             <widget class="QLabel" name="label_3">
+             <widget class="QLabel" name="messageCheckLabel">
               <property name="font">
                <font>
                 <pointsize>16</pointsize>
@@ -45,12 +45,12 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit"/>
+             <widget class="QLineEdit" name="messageCheckLineEdit"/>
             </item>
            </layout>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton">
+           <widget class="QPushButton" name="checkMessageButton">
             <property name="text">
              <string>CheckMessage</string>
             </property>
@@ -59,7 +59,7 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout">
             <item>
-             <widget class="QLabel" name="label_2">
+             <widget class="QLabel" name="messageCheckResLabel">
               <property name="font">
                <font>
                 <pointsize>16</pointsize>
@@ -77,7 +77,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QTextBrowser" name="textBrowser"/>
+             <widget class="QTextBrowser" name="messageCheck_textB"/>
             </item>
            </layout>
           </item>
@@ -95,7 +95,7 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_5">
             <item>
-             <widget class="QLabel" name="label_6">
+             <widget class="QLabel" name="startEventButton">
               <property name="font">
                <font>
                 <pointsize>16</pointsize>
@@ -107,14 +107,14 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit_3"/>
+             <widget class="QLineEdit" name="startEventLineEdit"/>
             </item>
            </layout>
           </item>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_4">
             <item>
-             <widget class="QLabel" name="label_4">
+             <widget class="QLabel" name="endEventButton">
               <property name="font">
                <font>
                 <pointsize>16</pointsize>
@@ -126,12 +126,12 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit_2"/>
+             <widget class="QLineEdit" name="endEventLineEdit"/>
             </item>
            </layout>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_2">
+           <widget class="QPushButton" name="checkIntervallButton">
             <property name="text">
              <string>CheckMessage</string>
             </property>
@@ -140,7 +140,7 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_4">
             <item>
-             <widget class="QLabel" name="label_5">
+             <widget class="QLabel" name="checkIntervalResLabel">
               <property name="font">
                <font>
                 <pointsize>16</pointsize>
@@ -158,7 +158,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QTextBrowser" name="textBrowser_2"/>
+             <widget class="QTextBrowser" name="messageCheckInterval_textB"/>
             </item>
            </layout>
           </item>
@@ -174,7 +174,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_7">
           <item>
-           <widget class="QLabel" name="label">
+           <widget class="QLabel" name="dataRecordsLabel">
             <property name="font">
              <font>
               <pointsize>14</pointsize>
@@ -186,14 +186,14 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_4"/>
+           <widget class="QLineEdit" name="dataRecordsLineEdit"/>
           </item>
          </layout>
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_8">
           <item>
-           <widget class="QLabel" name="label_7">
+           <widget class="QLabel" name="filesLabel">
             <property name="font">
              <font>
               <pointsize>14</pointsize>
@@ -205,14 +205,14 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_5"/>
+           <widget class="QLineEdit" name="filesLineEdit"/>
           </item>
          </layout>
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_9">
           <item>
-           <widget class="QLabel" name="label_8">
+           <widget class="QLabel" name="sizeLabel">
             <property name="font">
              <font>
               <pointsize>14</pointsize>
@@ -224,14 +224,14 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_6"/>
+           <widget class="QLineEdit" name="sizeLineEdit"/>
           </item>
          </layout>
         </item>
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
-           <widget class="QPushButton" name="pushButton_3">
+           <widget class="QPushButton" name="getStatsButton">
             <property name="minimumSize">
              <size>
               <width>120</width>
@@ -262,8 +262,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>773</width>
-     <height>21</height>
+     <width>686</width>
+     <height>18</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSettings">

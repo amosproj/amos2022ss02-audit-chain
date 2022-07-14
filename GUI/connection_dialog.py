@@ -37,9 +37,6 @@ class Ui_connection_dialog(object):
         self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.pushButton = QtWidgets.QPushButton(connection_dialog)
-        self.pushButton.setObjectName("pushButton")
-        self.horizontalLayout.addWidget(self.pushButton)
         self.pushButton_2 = QtWidgets.QPushButton(connection_dialog)
         self.pushButton_2.setObjectName("pushButton_2")
         self.horizontalLayout.addWidget(self.pushButton_2)
@@ -52,7 +49,6 @@ class Ui_connection_dialog(object):
         connection_dialog.setWindowTitle(QtWidgets.QApplication.translate("connection_dialog", "Connection Configuration", None, -1))
         self.label.setText(QtWidgets.QApplication.translate("connection_dialog", "Consumer IP", None, -1))
         self.label_2.setText(QtWidgets.QApplication.translate("connection_dialog", "Consumer Port", None, -1))
-        self.pushButton.setText(QtWidgets.QApplication.translate("connection_dialog", "confirm", None, -1))
         self.pushButton_2.setText(QtWidgets.QApplication.translate("connection_dialog", "connect", None, -1))
         self.pushButton_2.clicked.connect(connection_dialog.pushButton_2_conn_clicked)
         

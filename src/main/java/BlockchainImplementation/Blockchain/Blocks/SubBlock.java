@@ -10,7 +10,7 @@ import BlockchainImplementation.Blockchain.Hashing.Hasher;
  * @param <R> The type of the information contained in the SubBlock.
  */
 
-public class SubBlock<T,R> extends AbstractBlock<R>{
+public class SubBlock<T, R> extends AbstractBlock<R>{
 
     private final T meta_data; /** contains the meta data of the message */
 

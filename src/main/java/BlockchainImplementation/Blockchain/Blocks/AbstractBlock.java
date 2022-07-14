@@ -6,15 +6,15 @@ import BlockchainImplementation.Blockchain.Hashing.Hasher;
  * Abstract class for all type of blocks that belong to a blockchain. It is characterized by the fact that carries the
  * transaction data and the hash of the previous block.
  *
- * @param <T> The type of the transaction data.
+ * @param <R> The type of the transaction data.
  */
-public abstract class AbstractBlock<T> {
+public abstract class AbstractBlock<R> {
 
     private final String previousHashBlock; /** contains the hash of the previous block */
     protected String hashBlock; /** contains the hash of the current block */
-    protected final T transaction; /** contains the transaction data */
+    protected final R transaction; /** contains the transaction data */
 
-    public AbstractBlock(String previousHashBlock, T transaction) {
+    public AbstractBlock(String previousHashBlock, R transaction) {
         this.previousHashBlock = previousHashBlock;
         this.transaction = transaction;
 
@@ -38,7 +38,7 @@ public abstract class AbstractBlock<T> {
 
     public String getPreviousHashBlock () { return previousHashBlock; }
 
-    public T getTransaction () { return transaction; }
+    public R getTransaction () { return transaction; }
 
     public String calcHmacData () {
         return Hasher.hashSHA256(transaction.toString());
