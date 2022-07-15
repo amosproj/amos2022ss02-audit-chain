@@ -1,7 +1,6 @@
 package BlockchainImplementation.Blockchain;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.util.List;
 
 import BlockchainImplementation.Blockchain.Blocks.Block;
@@ -31,10 +30,16 @@ public interface BlockchainInterface<T,R> {
 
     public List<SubBlock<T, R>> getTemperedMessageFromABlockIfAny (String path);
 
+    public void loadPreviousPartBlockchain ();
+
+    public void loadNextPartBlockchain ();
+
     public void blockchainToJson(long limitByteSize);
 
     public void blockchainToJson();
 
-    public void jsonToBlockchain();
+    public void restoreBlockchainFromJson();
+
+    public void restoreBlockchainFromJson(int nBlockchain);
 
 }

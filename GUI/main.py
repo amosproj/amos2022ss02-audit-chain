@@ -1,6 +1,7 @@
 import socket
 import sys
 import json
+import time
 
 from PySide2.QtWidgets import QApplication, QMainWindow,QDialog
 from mainwindow import Ui_MainWindow
@@ -29,8 +30,7 @@ class ConnectionDialog(QDialog):
     def send_command(self,command):
         print(command)
         self.client_socket.send(str(command).encode('utf-8'))
-
-
+    
 
 
 class MainWindow(QMainWindow):
@@ -43,31 +43,39 @@ class MainWindow(QMainWindow):
             
 
 
-    def pushButton_clicked(self):
-        eventNum = self.ui.lineEdit.text()
+    def checkMessageButton_clicked(self):
+        eventNum = self.ui.messageCheckLineEdit.text()
         command = {
             "command": "check_single_message",
-            "number":eventNum
+            "number": eventNum
         }
-        self.connection_dialog.send_command(command)
-    def pushButton_2_clicked(self):
-        startEvent = self.ui.lineEdit_3.text()
-        endEvent = self.ui.lineEdit_2.text()
+        # added new line else java wouldn't recognize the send command
+        self.connection_dialog.send_command(str(command) + '\r\n')
+        
+    def checkIntervallButton_clicked(self):
+        startEvent = self.ui.startEventLineEdit.text()
+        endEvent = self.ui.endEventLineEdit.text()
         command = {
             "command": "check_message_interval",
-            "start" : startEvent,
+            "start": startEvent,
             "end": endEvent
         }
-        self.connection_dialog.send_command(command)
+        # added new line else java wouldn't recognize the send command
+        self.connection_dialog.send_command(str(command) + '\r\n')
 
 
-    def pushButton_3_clicked(self):
+    def getStatsButton_clicked(self):
         command = {
             "command": "get_statistics"
+            
         }
-        self.connection_dialog.send_command(command)
+        # added new line else java wouldn't recognize the send command
+        self.connection_dialog.send_command(str(command) + '\r\n')
+        data = self.connection_dialog.client_socket.recv(1024)
+        print(data)
 
 
+      
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MainWindow()

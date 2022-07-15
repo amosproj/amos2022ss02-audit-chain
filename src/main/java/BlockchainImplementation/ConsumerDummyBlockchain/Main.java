@@ -27,16 +27,18 @@ public class Main {
         int PORT = Integer.parseInt(p.getProperty("PORT"));
         String USER = p.getProperty("USERNAME");
         String PASSWORD = p.getProperty("PASSWORD");
-
         String queue_name = p.getProperty("QUEUE_NAME");
+=======
+        int gui_port = 6868;
 
-        AbstractClient client = new ConsumerClientBlockchain(HOST,PORT,USER,PASSWORD, "src/test/resources/testOutput/", Long.MAX_VALUE);
+        AbstractClient client = new ConsumerClientBlockchain(HOST,PORT,USER,PASSWORD, "src/test/resources/testOutput/", 1000,gui_port);
         client.setChannel(new QuorumQueues(queue_name));
         try {
             client.start();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+
         return;
 
     }
