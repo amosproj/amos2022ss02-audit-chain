@@ -55,7 +55,9 @@ Listed, are the next steps that we are further developing:
 In the following list you can see the projects underlying technology stack. To be more accurate, it displays the programming language chosen, front- and back-end frameworks, software applications and the chosen version control system.
 
 ### 1. Programming Languages:
-**Java** (Backend): Java is an object-oriented programming language which consists of a development tool for creating code and a runtime environment to run code
+**Java** (Backend): Java is an object-oriented programming language which consists of a development tool for creating code and a runtime environment to run code.
+<br />
+**Python**:  It is a computer programming language often used to build websites and software, automate tasks, and conduct data analysis. Its purpose here is to create a simple graphical user interface (GUI) that works across multiple platforms and can be complicated.
 ### 2. Version Control Software:
 **Git**: Git is a distributed version control system with the aim to help our group to develop the software together. <br />
 **GitHub**: GitHub is the place where our repository lays. It is a provider for hosting software development and version control using Git.
@@ -65,6 +67,8 @@ An open source message broker software.
 **Docker Engine**: Docker is for isolation of an application using containers.
 <br />
 **Docker CLI**: It is the Command Line Interface using Docker.
+<br />
+**GUI**: It is a graphics-based operating system interface that uses icons, menus and a mouse to manage interaction with the system.
 ### 5 . JUnit Tests:
 JUnit is a unit testing open-source framework for the Java programming language. We use this framework to write and execute automated tests. However, in Java, there are test cases that must be re-executed every time a new code is added. This is done to make sure that nothing in the code is broken. We have JUnit Tests for the following cases:
 - JUnit Tests Producer Dummy
@@ -96,7 +100,7 @@ JUnit is a unit testing open-source framework for the Java programming language.
 
 - Credentials used for rabbitmq in the project,
   ```
-  username: guest
+  username:guest
   password:guest
   ```
 - create a network by the name rabbitmq-cluster:
