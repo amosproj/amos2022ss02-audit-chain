@@ -96,7 +96,7 @@ JUnit is a unit testing open-source framework for the Java programming language.
 
 - Credentials used for rabbitmq in the project,
   ```
-  username: guest
+  username:guest
   password:guest
   ```
 - create a network by the name rabbitmq-cluster:
