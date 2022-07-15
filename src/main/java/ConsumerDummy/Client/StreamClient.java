@@ -12,6 +12,9 @@ import java.util.concurrent.TimeoutException;
 public class StreamClient extends Consumer{
 
     private int current_offset = 0;
+    // Since in most cases we want to receive a certain amount of messages/bytes we store them in a member while waiting for new ones to arrive
+    protected ArrayList<Message> received_messages;
+    protected int current_payload = 0;
 
     /**
      * Constructor for Client.AbstractClient. Initializes the filepath, the file reader and set information for the
@@ -26,27 +29,37 @@ public class StreamClient extends Consumer{
     public StreamClient(String host, int port, String username, String password, int gui_port) throws IOException {
         super(host, port, username, password,gui_port);
     }
-    public void start() throws IOException, TimeoutException {
+
+    public StreamClient(String host, int port, String username, String password, int gui_port, String key, String algorithm) {
+        super(host, port, username, password,gui_port,key,algorithm);
+    }
+
+        public void start() throws IOException, TimeoutException {
         this.RecoverOffset();
         Channel channel = this.getChannel();
         channel.basicQos(1);
         channel.basicConsume(
                 this.channel.getQueueName(),
                 false,
-                Collections.singletonMap("x-stream-offset", this.current_offset ), // From which offset to read (= which Message)
+                Collections.singletonMap("x-stream-offset", 0 ), // From which offset to read (= which Message)
                 (consumerTag, delivery) -> {
+                    ArrayList<Message> messages;
                     try {
-                        ArrayList<Message> messages =  this.consumeDelivery(delivery.getBody());
-
-
-                        this.persistenceStrategy.StoreMessage(new SimpleMessage(this.current_offset++,"Current Offset"));
+                        messages =  this.consumeDelivery(delivery.getBody());
                     } catch (ClassNotFoundException e) {
                         throw new RuntimeException(e);
                     }
+                    this.BeforeACK(messages);
                     channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
+                    this.AfterACK(messages);
                 },
                 consumerTag -> { });
         this.listen();
+    }
+
+    @Override
+    public void BeforeACK(ArrayList<Message> messages){
+        return;
     }
 
 
@@ -55,10 +68,11 @@ public class StreamClient extends Consumer{
             ArrayList<Message> messages = this.persistenceStrategy.ReadLastMessage();
             this.current_offset = messages.get(messages.size()-1).getSequence_number();
         }catch(Exception e){
-            System.out.println("Could not restore Consumers last Offset, starting from Zero");
-            // if something goes wrong we start from the beginning
+            // no file means there is no offset
             this.current_offset = 0;
+            return;
         }
+        System.out.println(String.format("Restored Current Offset to: %d",this.current_offset));
     }
 
 

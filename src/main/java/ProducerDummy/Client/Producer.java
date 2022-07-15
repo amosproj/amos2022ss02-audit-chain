@@ -89,7 +89,7 @@ public class Producer extends AbstractClient {
 
     protected void updatePayloadSize(Message message){
         //just an estimation, also overhead of object/arraylist does not matter
-        this.current_payload += message.getMessage().getBytes().length + message.getSequence_number() + 8 * 32;
+        this.current_payload += message.getPayloadSize();
     }
 
 

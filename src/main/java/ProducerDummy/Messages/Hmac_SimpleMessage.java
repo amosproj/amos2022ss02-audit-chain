@@ -1,5 +1,6 @@
 package ProducerDummy.Messages;
 
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
@@ -47,6 +48,11 @@ public class Hmac_SimpleMessage extends SimpleMessage implements Hmac_Message {
     public String calculateMac(String algorithm ,String key) {
         String data = this.toString();
         return new HmacUtils(algorithm,key).hmacHex(data);
+    }
+
+    @Override
+    public int getPayloadSize() {
+        return this.getMessage().getBytes(StandardCharsets.UTF_8).length + String.valueOf(this.getSequence_number()).getBytes(StandardCharsets.UTF_8).length + this.getHmac().getBytes(StandardCharsets.UTF_8).length;
     }
 
 }

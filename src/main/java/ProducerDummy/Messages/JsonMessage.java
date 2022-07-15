@@ -2,6 +2,8 @@ package ProducerDummy.Messages;
 
 import com.google.gson.JsonObject;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * Implementation of the Message interface in JSON Form. Not yet supported
  */
@@ -30,6 +32,10 @@ public class JsonMessage implements Message {
     public void setSequence_number(int sequence_number) {
         this.json_message.addProperty(SEQUENCE_NUMBER, sequence_number);
     }
+
+    @Override
+    public int getPayloadSize() {
+        return this.getMessage().getBytes(StandardCharsets.UTF_8).length + String.valueOf(this.getSequence_number()).getBytes(StandardCharsets.UTF_8).length;    }
 
     @Override
     public String getMessage() {

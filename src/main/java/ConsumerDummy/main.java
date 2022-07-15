@@ -34,66 +34,102 @@ public class main {
 
     public static void main(String[] args) throws IOException, TimeoutException, InterruptedException, ClassNotFoundException, NoSuchAlgorithmException, InvalidKeyException {
         String filepath = Paths.get("src", "main", "resources","ConsumerDummy").toString();
-        String filename = "config.properties";
-
+        String filename = "config.properties"; // in current folder or in ressources is a valid place for this file
         Path config_path = Paths.get(System.getProperty("user.dir"), filepath, filename);
+        String base_path = Paths.get(System.getProperty("user.dir")).toString();
+
+        FileReader reader;
+        try{
+            reader = new FileReader(config_path.toString());
+        }catch (IOException e){
+            //if we could not found it this folder we check the current one
+            reader = new FileReader(Paths.get(System.getProperty("user.dir"),filename).toString());
+        }
         Properties p = new Properties();
-        FileReader reader = new FileReader(config_path.toString());
         p.load(reader);
+        // get values out of the file
         String HOST = p.getProperty("HOST");
         int PORT = Integer.parseInt(p.getProperty("PORT"));
         String USER = p.getProperty("USERNAME");
         String PASSWORD = p.getProperty("PASSWORD");
-        String KEY = "0123456";
-        String ALGORITHM = "HmacSHA256";
-        String base_path = Paths.get(System.getProperty("user.dir"), filepath).toString();
-        String queue_name = "TEST";
-        int gui_port = 6868;
-
-        PersistenceStrategy filePersistenceStrategy = new NullObjectPersistenceStrategy("","");
-        RabbitMQChannel channel = new Stream(queue_name);
-
-
+        String QUEUE_TYPE = p.getProperty("QUEUE_TYPE");
+        String PERSISTENCE_STRATEGY_TYPE = p.getProperty("PERSISTENCE-STRATEGY_TYPE");
+        String KEY = p.getProperty("KEY");
+        String ALGORITHM = p.getProperty("ALGORITHM");
+        String QUEUE_NAME = p.getProperty("QUEUE_NAME");
+        String CLIENT_TYPE = p.getProperty("CLIENT_TYPE");
+        int GUI_PORT = Integer.parseInt(p.getProperty("GUI_PORT"));
+        //
         Consumer consumer;
-        //PersistenceStrategy filePersistenceStrategy;
-        //RabbitMQChannel channel;
+        PersistenceStrategy filePersistenceStrategy;
+        RabbitMQChannel channel;
 
-        consumer = new StreamClient("",9,"","",9); // Steam client is only for Queue_Stream
-        consumer = new Client("",9,"","",9); //Standard queue and quorum queue
-        PersistenceStrategy persistenceStrategy;
 
-        persistenceStrategy = new AggregateMessageFilePersistence("",""); // I don´t know if we actually need it
-        persistenceStrategy = new FilePersistenceStrategy("",""); // Used in Stream
-        persistenceStrategy = new NullObjectPersistenceStrategy("",""); // Standard PersistenceStrategy
+        switch (CLIENT_TYPE){
+            case "standard":
+                if(KEY != null && ALGORITHM != null){
+                    consumer = new Client(HOST,PORT,USER,PASSWORD,GUI_PORT,KEY,ALGORITHM);
+                }else{
+                    consumer = new Client(HOST,PORT,USER,PASSWORD,GUI_PORT);
+                }
 
-        RabbitMQChannel rabbitMQChannel;
-        rabbitMQChannel = new Stream("46556465"); // ONLY WORKS WITH STREAM_CLIENT
-        rabbitMQChannel = new QuorumQueues("46556465"); // NORMAL CLIENT
-        rabbitMQChannel = new StandardQueue("46556465"); // NORMAL CLIENT
-
-        consumer.setPersistenceStrategy(persistenceStrategy);
-        consumer.setChannel(rabbitMQChannel);
-
-        String QUEUE_TYPE = null;
-        String CLIENT_TYPE = null;
-
-        // it was not necessary that's why I commented
-        /**
-        if(!(QUEUE_TYPE.equals("STREAM") && CLIENT_TYPE.equals("STREAM_CLIENT"))){
-            System.out.println("Stream needs a StreamClient..sorry :( ");
-            return;
+                break;
+            case "stream":
+                if(KEY != null && ALGORITHM != null){
+                    consumer = new StreamClient(HOST,PORT,USER,PASSWORD,GUI_PORT,KEY,ALGORITHM);
+                }else{
+                    consumer = new StreamClient(HOST,PORT,USER,PASSWORD,GUI_PORT);
+                }
+                break;
+            default:
+                throw new RuntimeException("No Valid Client Value selected.");
         }
 
-        if(QUEUE_TYPE.equals("STAND_QUEUE") && CLIENT_TYPE.equals("CLIENT")){
-            System.out.println("Normal Client only works with Standard_queue or Quorum_que!");
-            return;
+        switch (QUEUE_TYPE){
+            case "standard":
+                channel = new StandardQueue(QUEUE_NAME);
+                break;
+            case "stream":
+                channel = new Stream(QUEUE_NAME);
+                break;
+            case "quorum":
+                channel = new QuorumQueues(QUEUE_NAME);
+                break;
+            default:
+                throw new RuntimeException("No Valid Channel Value selected.");
         }
-        **/
-        //Same with persistence strategy
-        Consumer client = new StreamClient(HOST, PORT, USER, PASSWORD,gui_port);
-        client.setPersistenceStrategy(filePersistenceStrategy);
-        client.setChannel(channel);
-        client.start();
+
+        switch (QUEUE_TYPE){
+            case "standard":
+                channel = new StandardQueue(QUEUE_NAME);
+                break;
+            case "stream":
+                channel = new Stream(QUEUE_NAME);
+                break;
+            case "quorum":
+                channel = new QuorumQueues(QUEUE_NAME);
+                break;
+            default:
+                throw new RuntimeException("No Valid Channel Value selected.");
+        }
+
+        switch (PERSISTENCE_STRATEGY_TYPE){
+            case "aggregate-message":
+                filePersistenceStrategy = new AggregateMessageFilePersistence(base_path,filename);
+                break;
+            case "file":
+                filePersistenceStrategy = new FilePersistenceStrategy(base_path,filename);
+                break;
+            case "nullobject":
+                filePersistenceStrategy = new NullObjectPersistenceStrategy(base_path,filename);
+                break;
+            default:
+                throw new RuntimeException("No Valid Persistence Strategy Value selected.");
+        }
+
+        consumer.setPersistenceStrategy(filePersistenceStrategy);
+        consumer.setChannel(channel);
+        consumer.start();
 
         return;
     }

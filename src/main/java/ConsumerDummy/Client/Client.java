@@ -38,4 +38,8 @@ public class Client extends Consumer {
         super(host, port, username, password,gui_port);
     }
 
+    public Client(String host, int port, String username, String password, int gui_port, String key, String algorithm) {
+        super(host, port, username, password,gui_port,key,algorithm);
+    }
+
 }
