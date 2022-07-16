@@ -13,7 +13,7 @@ class ClientTest {
     @DisplayName("Testing constructor")
     void constructor() {
         try {
-            Client c = new Client("localhost", 5672, "shouldn't be", "set in factory");
+            Client c = new Client("localhost", 5672, "shouldn't be", "set in factory", 0);
             assertNotNull(c);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -23,7 +23,7 @@ class ClientTest {
     @Test
     @DisplayName("Test functionallity")
     void start() throws IOException {
-        Client c = new Client("localhost", 5672, "shouldn't be", "set in factory");
+        Client c = new Client("localhost", 5672, "shouldn't be", "set in factory", 0);
         assertDoesNotThrow(() -> c.start());
     }
 
