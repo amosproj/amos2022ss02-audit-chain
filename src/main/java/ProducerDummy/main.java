@@ -55,7 +55,7 @@ public class main {
             PASSWORD = cmd.getOptionValue("password");
         } catch (ParseException e) {
             System.out.println(e.getMessage());
-            formatter.printHelp("java -jar target/AuditChain-ProducerDummy.jar -host 127.0.0.1 -port 5672 -username admin -password admin", options);
+            formatter.printHelp("java -jar target/AuditChain-ProducerDummy.jar --host 127.0.0.1 --port 5672 --username admin --password admin", options);
             System.exit(1);
         }
 
