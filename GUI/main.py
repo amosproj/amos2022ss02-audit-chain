@@ -3,6 +3,7 @@ import sys
 import json
 import time
 
+
 from PySide2.QtWidgets import QApplication, QMainWindow,QDialog
 from mainwindow import Ui_MainWindow
 from connection_dialog import Ui_connection_dialog
@@ -51,6 +52,10 @@ class MainWindow(QMainWindow):
         }
         # added new line else java wouldn't recognize the send command
         self.connection_dialog.send_command(str(command) + '\r\n')
+        a = self.connection_dialog.client_socket.recv(1024)
+        json_string = json.dumps(a.decode("utf-8"))
+        self.ui.messageCheck_textB.setText(json_string) 
+
         
     def checkIntervallButton_clicked(self):
         startEvent = self.ui.startEventLineEdit.text()
@@ -62,6 +67,9 @@ class MainWindow(QMainWindow):
         }
         # added new line else java wouldn't recognize the send command
         self.connection_dialog.send_command(str(command) + '\r\n')
+        a = self.connection_dialog.client_socket.recv(1024)
+        json_string = json.dumps(a.decode("utf-8"))
+        self.ui.messageCheckInterval_textB.setText(json_string) 
 
 
     def getStatsButton_clicked(self):
@@ -71,11 +79,19 @@ class MainWindow(QMainWindow):
         }
         # added new line else java wouldn't recognize the send command
         self.connection_dialog.send_command(str(command) + '\r\n')
-        data = self.connection_dialog.client_socket.recv(1024)
-        print(data)
+        a = self.connection_dialog.client_socket.recv(1024)
+        json_string = json.dumps(a.decode("utf-8"))
+        """
+        #Initial idea for json parse
+        json_acceptable_string = json_string.replace("\"", "'")
 
+        print(json_string)
+        print(json_acceptable_string)
+        
+        data = json.load(json_acceptable_string)
+        print(data['amountDataRecords'])
+        """
 
-      
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MainWindow()
