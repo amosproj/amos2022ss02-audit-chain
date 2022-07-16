@@ -159,9 +159,6 @@ public class main {
 
             return;
         }
-        if(Paths.get(System.getProperty("user.dir"), filepath, filename).isAbsolute()) {
-
-        }
         else{
             System.out.println("config.properties not found at " + filepath );
         }
