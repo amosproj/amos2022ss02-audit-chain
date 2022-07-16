@@ -4,22 +4,22 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.concurrent.TimeoutException;
 
 import ProducerDummy.Client.AbstractClient;
 import ProducerDummy.Messages.Hmac_Message;
 import ProducerDummy.Messages.Message;
-
 import com.rabbitmq.client.*;
-
 import BlockchainImplementation.Blockchain.BlockchainIntSequenceAPI;
 import org.json.JSONObject;
 
 public class Consumer extends AbstractClient {
 
-    protected int gui_port = 6868;
+    protected int gui_port;
+    private String key = null;
+    private String algorithm = null;
 
     /**
      * Constructor for Client.AbstractClient. Initializes the filepath, the file reader and set information for the
@@ -29,13 +29,20 @@ public class Consumer extends AbstractClient {
      * @param port
      * @param username
      * @param password
-     * @throws IOException if the file cannot be read
      */
 
-    public Consumer(String host, int port, String username, String password,int gui_port) {
+    public Consumer(String host, int port, String username, String password, int gui_port) {
         super(host, port, username, password);
         this.gui_port = gui_port;
     }
+
+    public Consumer(String host, int port, String username, String password, int gui_port, String key, String algorithm) {
+        super(host, port, username, password);
+        this.gui_port = gui_port;
+        this.key = key;
+        this.algorithm = algorithm;
+    }
+
 
     public static Object deserialize(byte[] bytes) throws IOException, ClassNotFoundException {
         ByteArrayInputStream byteStream = new ByteArrayInputStream(bytes);
@@ -67,14 +74,15 @@ public class Consumer extends AbstractClient {
                 this.channel.getQueueName(), // set Queue Name
                 false, // Autoack no
                 (consumerTag, delivery) -> {
+                    ArrayList<Message> messages;
                     try {
-                        ArrayList<Message> messages = this.consumeDelivery(delivery.getBody());
-                        //store the last message
-                        //this.persistenceStrategy.StoreMessage( messages.get(messages.size()-1));
+                        messages = this.consumeDelivery(delivery.getBody());
                     } catch (ClassNotFoundException e) {
                         throw new RuntimeException(e);
                     }
+                    this.BeforeACK(messages);
                     channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
+                    this.AfterACK(messages);
                 },
                 consumerTag -> {
                 });
@@ -86,7 +94,6 @@ public class Consumer extends AbstractClient {
     public void listen() throws IOException {
         while (true) {
             ServerSocket serverSocket = new ServerSocket(this.gui_port);
-            System.out.println("Local IP: " + serverSocket.getInetAddress().toString());
             System.out.println("Accepting Connections now");
             Socket socket = serverSocket.accept();
             System.out.println("Client connected");
@@ -120,7 +127,7 @@ public class Consumer extends AbstractClient {
                     //send back JSOnObject
                     DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
                     System.out.println("Answer: " + jsonObject.toString());
-                    dOut.writeUTF(jsonObject.toString());
+                    dOut.write(jsonObject.toString().getBytes(StandardCharsets.UTF_8));
                     dOut.flush();
                 } catch (SocketException e) {
                     System.out.println("Client disconnected");
@@ -134,24 +141,38 @@ public class Consumer extends AbstractClient {
         }
     }
 
-
-    // TODO Consumer Sort the Message
     public ArrayList<Message> consumeDelivery(byte[] delivery) throws IOException, ClassNotFoundException {
         ArrayList<Message> messages = (ArrayList<Message>) Consumer.deserialize(delivery);
-
         for (Message message : messages) {
-            if(message instanceof Hmac_Message){
-                System.out.println(String.format("Nachricht erhalten:\nEvent:%d\nMessage:%s\nMAC:%s",message.getSequence_number(),message.getMessage(),((Hmac_Message) message).getHmac()));
-            }else if(message instanceof Message){
-                System.out.println(String.format("Nachricht erhalten:\nEvent:%d\nMessage:%s",message.getSequence_number(),message.getMessage()));
+            if (message instanceof Hmac_Message) {
+                if (key != null) {
+                    if (((Hmac_Message) message).verifyMAC(this.algorithm, this.key)) {
+                        System.out.println("Message Mac was verified and the result is: Message is valid");
+                    } else {
+                        System.out.println("Message Mac was verified and the result is: MAC does not fit to Message");
+                    }
+                }
+                System.out.println(String.format("Nachricht erhalten:\nEvent:%d\nMessage:%s\nMAC:%s", message.getSequence_number(), message.getMessage(), ((Hmac_Message) message).getHmac()));
+            } else if (message instanceof Message) {
+                System.out.println(String.format("Nachricht erhalten:\nEvent:%d\nMessage:%s", message.getSequence_number(), message.getMessage()));
             }
-
-
         }
-
-
         return messages;
     }
+
+    public void BeforeACK(ArrayList<Message> messages){
+        // call this function if you want to do anything with the messages BEFORE sending the ACK that the Message was received
+
+
+        return;
+    }
+
+
+    public void AfterACK(ArrayList<Message> messages){
+        // call this function if you want to do anything with the messages AFTER sending the ACK that the Message was received
+        return;
+    }
+
 
 
 }

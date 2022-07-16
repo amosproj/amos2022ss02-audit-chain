@@ -1,5 +1,9 @@
 package ProducerDummy.Messages;
 
+import ProducerDummy.ChannelSelection.Stream;
+
+import java.nio.charset.StandardCharsets;
+
 /**
  * Implementation of the Message interface in it´s most simple Form
  */
@@ -21,6 +25,12 @@ public class SimpleMessage implements Message {
     public Message toSimpleFormat() {
         return this;
     }
+
+    @Override
+    public int getPayloadSize() {
+        return this.getMessage().getBytes(StandardCharsets.UTF_8).length + String.valueOf(this.getSequence_number()).getBytes(StandardCharsets.UTF_8).length;
+    }
+
 
     public String getMessage() {
         return this.message;

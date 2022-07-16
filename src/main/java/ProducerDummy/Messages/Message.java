@@ -19,4 +19,6 @@ public interface Message extends Serializable {
     // the SimpleFormat is how Messages are stored external
     public Message toSimpleFormat();
 
+    public int getPayloadSize();
+
 }

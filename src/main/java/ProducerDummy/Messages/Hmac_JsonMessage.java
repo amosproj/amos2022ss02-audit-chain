@@ -1,5 +1,6 @@
 package ProducerDummy.Messages;
 
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
@@ -44,6 +45,10 @@ public class Hmac_JsonMessage extends JsonMessage implements Hmac_Message {
         return new HmacUtils(algorithm,key).hmacHex(data);
     }
 
+    @Override
+    public int getPayloadSize() {
+        return this.getMessage().getBytes(StandardCharsets.UTF_8).length + String.valueOf(this.getSequence_number()).getBytes(StandardCharsets.UTF_8).length + this.getHmac().getBytes(StandardCharsets.UTF_8).length;
+    }
     @Override
     public Message toSimpleFormat() {
         return new Hmac_SimpleMessage(this.getSequence_number(),this.getMessage(),this.getHmac());

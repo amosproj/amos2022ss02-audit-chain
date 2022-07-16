@@ -28,7 +28,6 @@ public class Main {
         String USER = p.getProperty("USERNAME");
         String PASSWORD = p.getProperty("PASSWORD");
         String queue_name = p.getProperty("QUEUE_NAME");
-=======
         int gui_port = 6868;
 
         AbstractClient client = new ConsumerClientBlockchain(HOST,PORT,USER,PASSWORD, "src/test/resources/testOutput/", 1000,gui_port);
