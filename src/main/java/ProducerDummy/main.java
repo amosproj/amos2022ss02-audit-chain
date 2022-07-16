@@ -1,5 +1,6 @@
 package ProducerDummy;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -64,8 +65,9 @@ public class main {
         String filepath = Paths.get("src", "main", "resources","ProducerDummy").toString();
         String filename = "config.properties";
 
-        if(Paths.get(System.getProperty("user.dir"), filepath, filename).isAbsolute()) {
-            Path config_path = Paths.get(System.getProperty("user.dir"), filepath, filename);
+        Path config_path = Paths.get(System.getProperty("user.dir"), filepath, filename);
+        File file = new File(String.valueOf(config_path));
+        if(file.exists() && !file.isDirectory()) {
             Properties p = new Properties();
             FileReader reader = new FileReader(config_path.toString());
             p.load(reader);
@@ -156,6 +158,9 @@ public class main {
             client.start();
 
             return;
+        }
+        if(Paths.get(System.getProperty("user.dir"), filepath, filename).isAbsolute()) {
+
         }
         else{
             System.out.println("config.properties not found at " + filepath );
