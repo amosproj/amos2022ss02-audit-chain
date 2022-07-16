@@ -25,41 +25,39 @@ import ProducerDummy.Persistence.PersistenceStrategy;
 
 public class main {
 
-    public static void main(String[] args) throws IOException, TimeoutException, InterruptedException, ClassNotFoundException, NoSuchAlgorithmException, InvalidKeyException {
+    public static void main(String[] args) throws IOException, TimeoutException, InterruptedException, ClassNotFoundException, NoSuchAlgorithmException, InvalidKeyException, ParseException{
 
         Options options = new Options();
-        Option host = new Option( "host", false, "host ip");
-        host.setRequired(false);
+        Option host = new Option( "h","host", false, "host ip");
+        host.setRequired(true);
         options.addOption(host);
-        Option port = new Option("port", false, "port");
+        Option port = new Option("p","port", false, "port");
         port.setRequired(false);
         options.addOption(port);
-        Option username = new Option("username", true, "username for the broker(rabbitmq)");
+        Option username = new Option("u","username", true, "username of rabbitmq");
         username.setRequired(false);
         options.addOption(username);
-        Option password = new Option("password", true, "password for the broker(rabbitmq)");
+        Option password = new Option("pw","password", true, "password of rabbitmq");
         password.setRequired(false);
         options.addOption(password);
 
+        CommandLine cmd;
         HelpFormatter formatter = new HelpFormatter();
         CommandLineParser parser = new DefaultParser();
 
-        CommandLine cmd = null;
+        String HOST = null, PORT = null, USER = null, PASSWORD = null;
 
         try {
             cmd = parser.parse(options, args);
+            HOST = cmd.getOptionValue("host");
+            PORT = cmd.getOptionValue("port");
+            USER = cmd.getOptionValue("username");
+            PASSWORD = cmd.getOptionValue("password");
         } catch (ParseException e) {
             System.out.println(e.getMessage());
             formatter.printHelp("ProducerDummy -host 127.0.0.1 -port 5672 -username admin -password admin", options);
             System.exit(1);
         }
-
-        String HOST, PORT, USER, PASSWORD;
-
-        HOST = cmd.getOptionValue("host");
-        PORT = cmd.getOptionValue("port");
-        USER = cmd.getOptionValue("username");
-        PASSWORD = cmd.getOptionValue("password");
 
         Path path = Paths.get(System.getProperty("user.dir"));
         String filepath = Paths.get("src", "main", "resources","ProducerDummy").toString();
@@ -142,7 +140,6 @@ public class main {
                     break;
             }
 
-
             Producer client;
             String client_type = p.getProperty("CLIENT_TYPE");
             int DESIRED_PAYLOAD_IN_BYTE = Integer.parseInt(p.getProperty("DESIRED_PAYLOAD_IN_BYTE"));
@@ -157,17 +154,11 @@ public class main {
                     client = new Client(HOST, Integer.parseInt(PORT), USER, PASSWORD, DESIRED_PAYLOAD_IN_BYTE);
                     break;
             }
-
             client.setDataGenerator(dataGenerator);
             client.setPersistenceStrategy(filePersistenceStrategy);
             client.setChannel(channel);
             client.start();
-
-            return;
         }
-        else{
-            System.out.println("config.properties not found at " + filepath );
-        }
+        return;
     }
-
 }
