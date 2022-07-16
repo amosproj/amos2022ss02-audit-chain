@@ -64,12 +64,18 @@ public class main {
         Path path = Paths.get(System.getProperty("user.dir"));
         String filepath = Paths.get("src", "main", "resources","ProducerDummy").toString();
         String filename = "config.properties";
-
         Path config_path = Paths.get(System.getProperty("user.dir"), filepath, filename);
+
         File file = new File(String.valueOf(config_path));
         if(file.exists() && !file.isDirectory()) {
+            FileReader reader;
+            try{
+                reader = new FileReader(config_path.toString());
+            }catch (IOException e){
+                //if we could not found it this folder we check the current one
+                reader = new FileReader(Paths.get(System.getProperty("user.dir"),filename).toString());
+            }
             Properties p = new Properties();
-            FileReader reader = new FileReader(config_path.toString());
             p.load(reader);
 
             if (HOST == null) {
