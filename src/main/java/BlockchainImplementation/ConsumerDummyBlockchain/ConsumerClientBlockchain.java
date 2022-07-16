@@ -1,6 +1,10 @@
 package BlockchainImplementation.ConsumerDummyBlockchain;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
 
@@ -13,11 +17,16 @@ import ConsumerDummy.Client.Consumer;
 import ProducerDummy.Messages.Hmac_Message;
 import ProducerDummy.Messages.Message;
 
+import static java.nio.file.StandardOpenOption.CREATE;
+import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
+
 public class ConsumerClientBlockchain extends Consumer {
 
     private BlockchainIntSequence<String> blockchain;
     private static String KEY = "0123456";
     private static String ALGORITHM = "HmacSHA256";
+
+    private String path;
 
     /**
      * Constructor for AbstractClient. Initializes the filepath, the file reader and set information for the
@@ -29,7 +38,7 @@ public class ConsumerClientBlockchain extends Consumer {
 
         super(host, port, username, password,gui_port);
         this.blockchain = new BlockchainIntSequence<>(path, maxSizeByte);
-
+        this.path = path;
     }
 
     /***
@@ -79,6 +88,14 @@ public class ConsumerClientBlockchain extends Consumer {
 
                 if (!hmac_message.verifyMAC(ALGORITHM, KEY)) {
                     // store it in a file Message HMAC is wrong: tempered messages
+
+                    String content = "Log of Failed HMAC Check Messages. Timestamp: " + System.currentTimeMillis() + "\n";
+                    content += hmac_message.toString();
+
+                    Path path1 = Paths.get(path + "/TemperedMessage.txt");
+                    Files.writeString(path1, content, StandardCharsets.UTF_8, CREATE, TRUNCATE_EXISTING);
+
+
                     throw new RuntimeException("Authentication of the message failed!");
                 }
             }
