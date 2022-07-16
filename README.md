@@ -130,13 +130,19 @@ JUnit is a unit testing open-source framework for the Java programming language.
   https://user-images.githubusercontent.com/104498986/171228527-b9953e5c-cffa-414a-bd9a-7ca58bb34c0b.mp4
 - To run the blockchain module
   ```
-      mvn clean compile exec:java@Blockchain
+  mvn clean compile exec:java@Blockchain
+  ```
+  
+- Generate executable Jars (one for ProducerDummy, another one for ConsumerDummy and another for the Blockchain).
+
+  ```
+  mvn clean package
   ```
 
 - Generate JAVADOC (then you can find it at /target/site/apidocs/index.html).
 
   ```
-  mvn javadoc:javadoc
+  mvn clean javadoc:javadoc
   ```
 
 

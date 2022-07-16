@@ -27,7 +27,7 @@ import BlockchainImplementation.Blockchain.BlockchainIntSequenceAPI;
 /**
  * Consumerclient implementation
  */
-public class Client extends Consumer {
+public class  Client extends Consumer {
     /**
      * Constructor for Client.AbstractClient. Initializes the filepath, the file reader and set information for the
      * connection factory. Call {@link #initFactory()} to initialize the connection factory.
