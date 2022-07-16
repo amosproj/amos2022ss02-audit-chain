@@ -42,7 +42,7 @@ public class main {
             String USER = p.getProperty("USERNAME");
             String PASSWORD = p.getProperty("PASSWORD");
 
-            String base_path = Paths.get(System.getProperty("user.dir"), filepath).toString();
+            String base_path = Paths.get(System.getProperty("user.dir")).toString();
             String queue_name = p.getProperty("QUEUE_NAME");
 
             // create components for Client
