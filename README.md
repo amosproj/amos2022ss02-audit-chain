@@ -82,7 +82,7 @@ JUnit is a unit testing open-source framework for the Java programming language.
 - Java SDK 16
 - Docker
 
-### Clone the repository from from GitHub:
+### Clone the repository from GitHub:
 - Clone via HTTPS:
   ```
   git clone https://github.com/amosproj/amos2022ss02-audit-chain.git
