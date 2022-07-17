@@ -127,7 +127,7 @@ public class BlockchainIntSequence<R> extends Blockchain<Integer, R>{
 
         List<SubBlock<Integer, R>> temperedMessage = new ArrayList<>();
 
-        if(seq_start < seq_end)
+        if(seq_start > seq_end)
             throw new IllegalArgumentException("The interval is not valid; " + seq_start + " appears before in the blockchain" +
                     "than " + seq_end);
 
