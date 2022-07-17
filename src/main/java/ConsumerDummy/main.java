@@ -27,12 +27,45 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
 import java.util.concurrent.TimeoutException;
-
+import org.apache.commons.cli.*;
 
 
 public class main {
 
     public static void main(String[] args) throws IOException, TimeoutException, InterruptedException, ClassNotFoundException, NoSuchAlgorithmException, InvalidKeyException {
+
+        Options options = new Options();
+        Option host = new Option( "h","host", false, "host ip");
+        host.setRequired(false);
+        options.addOption(host);
+        Option port = new Option("p","port", false, "port");
+        port.setRequired(false);
+        options.addOption(port);
+        Option username = new Option("u","username", true, "username of rabbitmq");
+        username.setRequired(false);
+        options.addOption(username);
+        Option password = new Option("pw","password", true, "password of rabbitmq");
+        password.setRequired(false);
+        options.addOption(password);
+
+        CommandLine cmd;
+        HelpFormatter formatter = new HelpFormatter();
+        CommandLineParser parser = new DefaultParser();
+
+        String HOST = null, PORT = null, USER = null, PASSWORD = null;
+
+        try {
+            cmd = parser.parse(options, args);
+            HOST = cmd.getOptionValue("host");
+            PORT = cmd.getOptionValue("port");
+            USER = cmd.getOptionValue("username");
+            PASSWORD = cmd.getOptionValue("password");
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
+            formatter.printHelp("java -jar target/AuditChain-ConsumerDummy.jar --host 127.0.0.1 --port 5672 --username admin --password admin", options);
+            System.exit(1);
+        }
+
         String filepath = Paths.get("src", "main", "resources","ConsumerDummy").toString();
         String filename = "config.properties"; // in current folder or in ressources is a valid place for this file
         Path config_path = Paths.get(System.getProperty("user.dir"), filepath, filename);
@@ -48,10 +81,18 @@ public class main {
         Properties p = new Properties();
         p.load(reader);
         // get values out of the file
-        String HOST = p.getProperty("HOST");
-        int PORT = Integer.parseInt(p.getProperty("PORT"));
-        String USER = p.getProperty("USERNAME");
-        String PASSWORD = p.getProperty("PASSWORD");
+        if (HOST == null) {
+            HOST = p.getProperty("HOST");
+        }
+        if (PORT == null) {
+            PORT = p.getProperty("PORT");
+        }
+        if (USER == null) {
+            USER = p.getProperty("USERNAME");
+        }
+        if (PASSWORD == null) {
+            PASSWORD = p.getProperty("PASSWORD");
+        }
         String QUEUE_TYPE = p.getProperty("QUEUE_TYPE");
         String PERSISTENCE_STRATEGY_TYPE = p.getProperty("PERSISTENCE-STRATEGY_TYPE");
         String KEY = p.getProperty("KEY");
@@ -68,17 +109,17 @@ public class main {
         switch (CLIENT_TYPE){
             case "standard":
                 if(KEY != null && ALGORITHM != null){
-                    consumer = new Client(HOST,PORT,USER,PASSWORD,GUI_PORT,KEY,ALGORITHM);
+                    consumer = new Client(HOST,Integer.parseInt(PORT),USER,PASSWORD,GUI_PORT,KEY,ALGORITHM);
                 }else{
-                    consumer = new Client(HOST,PORT,USER,PASSWORD,GUI_PORT);
+                    consumer = new Client(HOST,Integer.parseInt(PORT),USER,PASSWORD,GUI_PORT);
                 }
 
                 break;
             case "stream":
                 if(KEY != null && ALGORITHM != null){
-                    consumer = new StreamClient(HOST,PORT,USER,PASSWORD,GUI_PORT,KEY,ALGORITHM);
+                    consumer = new StreamClient(HOST,Integer.parseInt(PORT),USER,PASSWORD,GUI_PORT,KEY,ALGORITHM);
                 }else{
-                    consumer = new StreamClient(HOST,PORT,USER,PASSWORD,GUI_PORT);
+                    consumer = new StreamClient(HOST,Integer.parseInt(PORT),USER,PASSWORD,GUI_PORT);
                 }
                 break;
             default:
