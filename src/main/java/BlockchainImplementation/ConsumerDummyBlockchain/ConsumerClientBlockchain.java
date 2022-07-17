@@ -17,8 +17,7 @@ import ConsumerDummy.Client.Consumer;
 import ProducerDummy.Messages.Hmac_Message;
 import ProducerDummy.Messages.Message;
 
-import static java.nio.file.StandardOpenOption.CREATE;
-import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
+import static java.nio.file.StandardOpenOption.*;
 
 public class ConsumerClientBlockchain extends Consumer {
 
@@ -89,12 +88,11 @@ public class ConsumerClientBlockchain extends Consumer {
                 if (!hmac_message.verifyMAC(ALGORITHM, KEY)) {
                     // store it in a file Message HMAC is wrong: tempered messages
 
-                    String content = "Log of Failed HMAC Check Messages. Timestamp: " + System.currentTimeMillis() + "\n";
-                    content += hmac_message.toString();
+                    String content = "Timestamp: " + System.currentTimeMillis() + "\n";
+                    content += hmac_message + "\n";
 
-                    Path path1 = Paths.get(path + "/TemperedMessage.txt");
-                    Files.writeString(path1, content, StandardCharsets.UTF_8, CREATE, TRUNCATE_EXISTING);
-
+                    Path path1 = Paths.get(path + "/LogTemperedMessage.txt");
+                    Files.writeString(path1, content, StandardCharsets.UTF_8, CREATE, APPEND);
 
                     throw new RuntimeException("Authentication of the message failed!");
                 }
