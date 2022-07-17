@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
 
@@ -88,8 +89,9 @@ public class ConsumerClientBlockchain extends Consumer {
                 if (!hmac_message.verifyMAC(ALGORITHM, KEY)) {
                     // store it in a file Message HMAC is wrong: tempered messages
 
-                    String content = "Timestamp: " + System.currentTimeMillis() + "\n";
-                    content += hmac_message + "\n";
+                    Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                    String content = "Timestamp: " + timestamp + "\n";
+                    content += "Tempered Message: " + hmac_message + "\n\n";
 
                     Path path1 = Paths.get(path + "/LogTemperedMessage.txt");
                     Files.writeString(path1, content, StandardCharsets.UTF_8, CREATE, APPEND);
