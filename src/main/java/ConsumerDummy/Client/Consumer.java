@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
 
@@ -126,7 +127,7 @@ public class Consumer extends AbstractClient {
                     //send back JSOnObject
                     DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
                     System.out.println("Answer: " + jsonObject.toString());
-                    dOut.writeUTF(jsonObject.toString());
+                    dOut.write(jsonObject.toString().getBytes(StandardCharsets.UTF_8));
                     dOut.flush();
                 } catch (SocketException e) {
                     System.out.println("Client disconnected");

@@ -52,9 +52,19 @@ class MainWindow(QMainWindow):
         }
         # added new line else java wouldn't recognize the send command
         self.connection_dialog.send_command(str(command) + '\r\n')
+<<<<<<< HEAD
         a = self.connection_dialog.client_socket.recv(1024)
         json_string = json.dumps(a.decode("utf-8"))
         self.ui.messageCheck_textB.setText(json_string) 
+=======
+        returned_data = self.connection_dialog.client_socket.recv(1024)
+        json_string = returned_data.decode("utf-8").replace("'",'"').strip()
+        json_object = json.loads(json_string)
+        for i in json_object.keys():
+            print(i)
+        print("done")
+
+>>>>>>> 53b7164689b0ee920f6eeefdaf8d3284a06656e9
 
         
     def checkIntervallButton_clicked(self):
