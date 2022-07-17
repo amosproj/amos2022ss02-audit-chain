@@ -28,8 +28,13 @@ public class Block<T,R> extends AbstractBlock<Map<String, SubBlock<T,R>>>{
      *
      * @param meta_data Array meta_data(s) of the information in a SubBlock.
      * @param content Array of the information of the SubBlock.
+     *
+     * @throws IllegalArgumentException If the length of the meta_data and the content arrays are not equal.
      */
     private void putData(T[] meta_data, R[] content) {
+
+        if(meta_data.length != content.length)
+            throw new IllegalArgumentException("There is one or more either meta_data or content of the message missing");
 
         String previousHash = "0";
 
