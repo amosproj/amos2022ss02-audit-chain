@@ -44,7 +44,8 @@ class Ui_MainWindow(object):
         self.messageCheckLabel.setFont(font)
 
         self.horizontalLayout_2.addWidget(self.messageCheckLabel)
-
+        
+   
         self.messageCheckLineEdit = QLineEdit(self.tab)
         self.messageCheckLineEdit.setObjectName(u"messageCheckLineEdit")
 
@@ -241,6 +242,7 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Audit Chain Blockchain App", None))
         self.action_connect.setText(QCoreApplication.translate("MainWindow", u"config Connection", None))
         self.actiontest.setText(QCoreApplication.translate("MainWindow", u"test", None))
+        
         self.messageCheckLabel.setText(QCoreApplication.translate("MainWindow", u"Insert Event Number", None))
         self.checkMessageButton.setText(QCoreApplication.translate("MainWindow", u"CheckMessage", None))
         self.messageCheckResLabel.setText(QCoreApplication.translate("MainWindow", u"Result", None))
