@@ -10,6 +10,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
 import java.util.concurrent.TimeoutException;
 import org.apache.commons.cli.*;
+
 import ProducerDummy.ChannelSelection.QuorumQueues;
 import ProducerDummy.ChannelSelection.RabbitMQChannel;
 import ProducerDummy.ChannelSelection.StandardQueue;
@@ -29,7 +30,7 @@ public class main {
 
         Options options = new Options();
         Option host = new Option( "h","host", false, "host ip");
-        host.setRequired(true);
+        host.setRequired(false);
         options.addOption(host);
         Option port = new Option("p","port", false, "port");
         port.setRequired(false);
