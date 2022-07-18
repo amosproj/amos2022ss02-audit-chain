@@ -140,26 +140,12 @@ public class main {
                 throw new RuntimeException("No Valid Channel Value selected.");
         }
 
-        switch (QUEUE_TYPE){
-            case "standard":
-                channel = new StandardQueue(QUEUE_NAME);
-                break;
-            case "stream":
-                channel = new Stream(QUEUE_NAME);
-                break;
-            case "quorum":
-                channel = new QuorumQueues(QUEUE_NAME);
-                break;
-            default:
-                throw new RuntimeException("No Valid Channel Value selected.");
-        }
-
         switch (PERSISTENCE_STRATEGY_TYPE){
             case "aggregate-message":
-                filePersistenceStrategy = new AggregateMessageFilePersistence(base_path,filename);
+                filePersistenceStrategy = new AggregateMessageFilePersistence(base_path,"consumer_last_messages.txt");
                 break;
             case "file":
-                filePersistenceStrategy = new FilePersistenceStrategy(base_path,filename);
+                filePersistenceStrategy = new FilePersistenceStrategy(base_path,"consumer_last_message.txt");
                 break;
             case "nullobject":
                 filePersistenceStrategy = new NullObjectPersistenceStrategy(base_path,filename);

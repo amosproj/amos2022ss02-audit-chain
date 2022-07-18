@@ -50,18 +50,18 @@ public class Client extends Producer {
         Channel channel = this.getChannel();
         ArrayList<Message> messageVector = this.persistenceStrategy.ReadLastMessage();
         this.RecoverCurrentPayloadSize(messageVector);
-        if(messageVector.size()>=1 && this.isReadyToSend())
-
         // check if the Message(s) in the file shall be sent to rabbitmq
         if (messageVector.size() > 0) {
             if (isReadyToSend()) {
                 System.out.println("Found Message(s) in the Persistence Storage which are ready to send, they will now be send");
                 this.getAcknowledgment(channel, messageVector);
+                this.sequence_number = messageVector.get(messageVector.size() - 1).getSequence_number() + 1;
                 this.persistenceStrategy.cleanFile();
+                messageVector.clear();
+            }else{
+                // Persistence Storage has Message (s), we can recover the current event Number
+                this.sequence_number = messageVector.get(messageVector.size() - 1).getSequence_number() + 1;
             }
-            // Persistence Storage has Message (s), we can recover the current even Number
-            this.sequence_number = messageVector.get(messageVector.size() - 1).getSequence_number() + 1;
-            messageVector.clear();
         }
         // Step One (maybe) sending Messages which were stored in the Persistence Mechanism is done.
         // Now go back to the normal behaviour and create/receive events and send these to the queue

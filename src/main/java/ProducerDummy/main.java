@@ -111,11 +111,11 @@ public class main {
 
             switch (persistence_strategy_type) {
                 case "aggregate-message":
-                    filePersistenceStrategy = new AggregateMessageFilePersistence(base_path, "last_messages.txt");
+                    filePersistenceStrategy = new AggregateMessageFilePersistence(base_path, "producer_last_messages.txt");
                     break;
 
                 case "file":
-                    filePersistenceStrategy = new FilePersistenceStrategy(base_path, "last_messages.txt");
+                    filePersistenceStrategy = new FilePersistenceStrategy(base_path, "producer_last_message.txt");
                     break;
 
                 default:
