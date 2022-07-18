@@ -4,6 +4,7 @@ from sqlite3 import connect
 import sys
 import json
 import time
+from tkinter.tix import INTEGER
 
 
 from PySide2.QtWidgets import QApplication, QMainWindow,QDialog, QMessageBox
@@ -19,16 +20,15 @@ class ConnectionDialog(QDialog):
         self.ui.pushButton_2.clicked.connect(self.create_connection)
 
     def pushButton_2_conn_clicked(self):
-        self.ui.lineEdit.setText("connection was")
-        self.ui.lineEdit_2.setText("created")
+        self.ui.pushButton_2.setText("Connected")
 
     def create_connection(self):
         ip = self.ui.lineEdit.text()
         port = self.ui.lineEdit_2.text()
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        #Remove the comment and comment the next line to not use the hardcoded values anymore
-        #self.client_socket.connect((ip, port))
-        self.client_socket.connect(("127.0.0.1", 6868))
+        self.client_socket.connect((""+ip, int(port)))
+        #These were the hardcoded values for running purposes
+        #self.client_socket.connect(("127.0.0.1", 6868))
 
 
     def send_command(self,command):
@@ -51,7 +51,6 @@ class MainWindow(QMainWindow):
         msgBox.exec()
 
     def checkMessageButton_clicked(self):
-        
         eventNum = self.ui.messageCheckLineEdit.text()
         command = {
             "command": "check_single_message",
@@ -66,8 +65,7 @@ class MainWindow(QMainWindow):
         output += '\n'.join(str(e) for e in json_object["check_single_message"])
         
         self.ui.messageCheck_textB.setText(output)
-    
-        
+
     def checkIntervallButton_clicked(self):
         startEvent = self.ui.startEventLineEdit.text()
         endEvent = self.ui.endEventLineEdit.text()
@@ -85,7 +83,6 @@ class MainWindow(QMainWindow):
         output += '\n'.join(str(e) for e in json_object["check_message_interval"])
         
         self.ui.messageCheckInterval_textB.setText(output)
-    
 
     def getStatsButton_clicked(self):
         command = {
