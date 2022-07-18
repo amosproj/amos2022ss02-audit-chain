@@ -25,8 +25,9 @@ class ConnectionDialog(QDialog):
     def create_connection(self):
         ip = self.ui.lineEdit.text()
         port = self.ui.lineEdit_2.text()
-        # TODO change to ip
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        #Remove the comment and comment the next line to not use the hardcoded values anymore
+        #self.client_socket.connect((ip, port))
         self.client_socket.connect(("127.0.0.1", 6868))
 
 
