@@ -57,7 +57,7 @@ public class Consumer extends AbstractClient {
     }
 
     public Channel getChannel() throws IOException, TimeoutException {
-        return this.channel.createChannel(this.factory);
+        return this.channel == null ? null : this.channel.createChannel(this.factory);
     }
 
 
@@ -162,8 +162,6 @@ public class Consumer extends AbstractClient {
 
     public void BeforeACK(ArrayList<Message> messages){
         // call this function if you want to do anything with the messages BEFORE sending the ACK that the Message was received
-
-
         return;
     }
 

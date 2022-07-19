@@ -1,7 +1,6 @@
 package ConsumerDummy.Client;
 
 import ProducerDummy.Messages.Message;
-import ProducerDummy.Messages.SimpleMessage;
 import com.rabbitmq.client.Channel;
 
 import java.io.IOException;
