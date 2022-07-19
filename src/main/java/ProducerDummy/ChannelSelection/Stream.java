@@ -25,6 +25,7 @@ public class Stream extends RabbitMQChannel{
         this.setStreamProperties();
     }
 
+
     private void setStreamProperties(){
         this.durable = true;
         this.autoDelete = false;

@@ -15,6 +15,15 @@ public class QuorumQueues extends RabbitMQChannel {
         this.durable = true;
     }
 
+    public QuorumQueues(String name,boolean durable,boolean exclusive,boolean autoDelete){
+        super(name,durable,exclusive,autoDelete);
+        if(durable){
+        }else{
+            throw new RuntimeException("a QuorumQueues must be durable");
+        }
+    }
+
+
     @Override
     public Channel createChannel(ConnectionFactory factory) throws IOException, TimeoutException {
         Connection connection = factory.newConnection();

@@ -14,8 +14,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>15</maven.compiler.source>
-        <maven.compiler.target>15</maven.compiler.target>
+        <maven.compiler.source>16</maven.compiler.source>
+        <maven.compiler.target>16</maven.compiler.target>
         <jacoco.version>0.8.7</jacoco.version>
     </properties>
 
@@ -68,7 +68,13 @@
             <artifactId>amqp-client</artifactId>
             <version>5.14.2</version>
         </dependency>
-
+        <!-- RabbitMq Mock -->
+        <dependency>
+            <groupId>com.github.fridujo</groupId>
+            <artifactId>rabbitmq-mock</artifactId>
+            <version>1.1.1</version>
+            <scope>test</scope>
+        </dependency>
         <!-- JSon -->
         <dependency>
             <groupId>org.json</groupId>
@@ -269,6 +275,37 @@
                             </filters>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>Producer_Consumer</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <outputFile>target/${project.artifactId}-Producer_Consumer.jar</outputFile>
+                            <transformers>
+                                <!-- add Main-Class to manifest file -->
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>main</mainClass>
+                                </transformer>
+                            </transformers>
+                            <createDependencyReducedPom>
+                                false
+                            </createDependencyReducedPom>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+
                     <execution>
                         <id>Blockchain</id>
                         <phase>package</phase>

@@ -167,6 +167,7 @@ public class main {
         });
 
         t1.start();
+        Thread.sleep(2000);
         t2.start();
 
     }
