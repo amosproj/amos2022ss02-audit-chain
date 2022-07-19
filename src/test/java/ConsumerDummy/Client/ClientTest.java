@@ -4,7 +4,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.concurrent.TimeoutException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,6 +18,17 @@ class ClientTest {
             throw new RuntimeException(e);
         }
     }
+
+    @DisplayName("Testing constructor")
+    void constructorLong() {
+        try {
+            Client c = new Client("localhost", 5672, "shouldn't be", "set in factory", 0, "key", "algorithm");
+            assertNotNull(c);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 
 }
