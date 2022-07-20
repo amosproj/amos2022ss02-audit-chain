@@ -24,10 +24,10 @@ public class Main {
     public static void main(String[] args) throws IOException, TimeoutException {
 
         Options options = new Options();
-        Option host = new Option( "h","host", false, "host ip");
+        Option host = new Option( "h","host", true, "host ip");
         host.setRequired(false);
         options.addOption(host);
-        Option port = new Option("p","port", false, "port");
+        Option port = new Option("p","port", true, "port");
         port.setRequired(false);
         options.addOption(port);
         Option username = new Option("u","username", true, "username of rabbitmq");
