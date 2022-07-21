@@ -10,8 +10,8 @@ import java.util.concurrent.TimeoutException;
 
 public class Stream extends RabbitMQChannel {
 
-    int MAXIMUM_STREAM_SIZE = 1_000_000_000; // 1 GB
-    int STREAM_SEGMENT_SIZE = 1_000_000; // 100 MB
+    private int MAXIMUM_STREAM_SIZE = 1_000_000_000; // 1 GB
+    private int STREAM_SEGMENT_SIZE = 1_000_000; // 100 MB
 
     public Stream(String name) {
         super(name);

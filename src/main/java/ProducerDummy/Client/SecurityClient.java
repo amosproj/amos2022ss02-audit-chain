@@ -7,8 +7,8 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 public class SecurityClient extends Client{
-    String key = null;
-    String algorithm = null;
+    private String key = null;
+    private String algorithm = null;
 
     public SecurityClient(String host, int port, String username, String password,String key, String algorithm, int desired_payload_in_byte)throws IOException {
         super(host, port, username, password);

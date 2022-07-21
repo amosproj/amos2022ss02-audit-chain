@@ -18,8 +18,8 @@ import org.json.JSONObject;
 public class Consumer extends AbstractClient {
 
     protected int gui_port;
-    private String key = null;
-    private String algorithm = null;
+    protected String key = null;
+    protected String algorithm = null;
 
     /**
      * Constructor for Client.AbstractClient. Initializes the filepath, the file reader and set information for the
@@ -52,12 +52,9 @@ public class Consumer extends AbstractClient {
 
     }
 
-    public ConnectionFactory getFactory() {
-        return this.factory;
-    }
 
     public Channel getChannel() throws IOException, TimeoutException {
-        return this.channel == null ? null : this.channel.createChannel(this.factory);
+        return this.channel.createChannel(this.factory);
     }
 
 

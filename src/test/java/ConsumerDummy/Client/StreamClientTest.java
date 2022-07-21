@@ -20,9 +20,4 @@ class StreamClientTest {
         assertDoesNotThrow(() -> s.BeforeACK(null));
     }
 
-    @Test
-    void recoverOffset() throws IOException {
-        StreamClient s = new StreamClient("localhost", 5672, "guest", "guest",9999);
-        assertDoesNotThrow(() -> s.RecoverOffset());
-    }
 }

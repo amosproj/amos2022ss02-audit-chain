@@ -15,7 +15,6 @@ public class Producer extends AbstractClient {
 
     // Data Generator is the Component which generates the Data for the RabbitMQ. See DataGeneration Folder
     protected DataGenerator dataGenerator;
-    static int START_NUMBER = 0;
     protected int sequence_number;
     protected int DESIRED_PAYLOAD_IN_BYTE = 1024;
     protected int current_payload = 0;

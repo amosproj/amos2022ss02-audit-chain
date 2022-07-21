@@ -1,6 +1,7 @@
 package ConsumerDummy.Client;
 
 import ProducerDummy.Messages.Message;
+import ProducerDummy.Messages.SimpleMessage;
 import com.rabbitmq.client.Channel;
 
 import java.io.IOException;
@@ -12,7 +13,6 @@ public class StreamClient extends Consumer{
 
     private int current_offset = 0;
 
-    protected int current_payload = 0;
 
     /**
      * Constructor for Client.AbstractClient. Initializes the filepath, the file reader and set information for the
@@ -47,6 +47,8 @@ public class StreamClient extends Consumer{
                     } catch (ClassNotFoundException e) {
                         throw new RuntimeException(e);
                     }
+                    // set next offset
+                    this.persistenceStrategy.StoreMessage(new SimpleMessage(++this.current_offset,"last offset"));
                     this.BeforeACK(messages);
                     channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
                     this.AfterACK(messages);
@@ -55,13 +57,7 @@ public class StreamClient extends Consumer{
         this.listen();
     }
 
-    @Override
-    public void BeforeACK(ArrayList<Message> messages){
-        return;
-    }
-
-
-    public void RecoverOffset() {
+    private void RecoverOffset() {
         try{
             ArrayList<Message> messages = this.persistenceStrategy.ReadLastMessage();
             this.current_offset = messages.get(messages.size()-1).getSequence_number();
