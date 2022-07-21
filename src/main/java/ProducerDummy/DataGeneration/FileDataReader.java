@@ -15,9 +15,6 @@ public class FileDataReader implements DataGenerator {
     /**
      * path of the file were the data are stored
      */
-
-    private static final String path = Paths.get("src", "main", "java", "ProducerDummy").toString();
-    private static final String file_name = "household_power_consumption.txt";
     public BufferedReader br;
 
     /**
@@ -27,7 +24,7 @@ public class FileDataReader implements DataGenerator {
      */
     public FileDataReader(String path, String filename) throws FileNotFoundException {
 
-        String file_path = Paths.get(path, file_name).toString();
+        String file_path = Paths.get(path, filename).toString();
         File file = new File(file_path);
         FileReader fr = new FileReader(file);
         this.br = new BufferedReader(fr);

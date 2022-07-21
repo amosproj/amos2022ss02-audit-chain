@@ -38,7 +38,7 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
      *
      * @throws IOException if the filepath is not valid
      */
-    public FilePersistenceStrategy(String path, String fileName) throws IOException {
+    public FilePersistenceStrategy(String path, String fileName) {
         this.filepath = Paths.get(path, fileName);
         this.CreatePersistenceMechanism();
     }
