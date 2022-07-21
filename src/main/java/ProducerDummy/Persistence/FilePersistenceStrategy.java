@@ -59,7 +59,7 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
 
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             throw new NullPointerException();
         }
 
@@ -110,11 +110,11 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
                 // if there is a Hmac key we know it is a Hmac Message else it is just a normal Message
                 try {
                     String hmac = jsonObject.getAsJsonPrimitive(Hmac_JsonMessage.HMAC_KEY).getAsString();
-                    return new ArrayList<Message>(){{
-                        add(new Hmac_SimpleMessage(sequence_number,message_string,hmac));
+                    return new ArrayList<Message>() {{
+                        add(new Hmac_SimpleMessage(sequence_number, message_string, hmac));
                     }};
                 } catch (NullPointerException e) {
-                    return new ArrayList<Message>(){{
+                    return new ArrayList<Message>() {{
                         add(new SimpleMessage(sequence_number, message_string));
                     }};
                 }
@@ -122,7 +122,7 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IllegalStateException e) {
-            //thats means there is no message inside
+            //that means there is no message inside
             return new ArrayList<Message>(0);
         }
 
@@ -141,8 +141,8 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
             this.fileWriter.close();
         } catch (IOException e) {
             System.out.println("Already Closed");
-        }catch (NullPointerException e){
-            //happens iw storeMessage was never called --> File is closed
+        } catch (NullPointerException e) {
+            //happens if storeMessage was never called --> File is closed
         }
 
         try {

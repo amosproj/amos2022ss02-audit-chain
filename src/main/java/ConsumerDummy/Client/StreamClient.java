@@ -11,8 +11,7 @@ import java.util.concurrent.TimeoutException;
 public class StreamClient extends Consumer{
 
     private int current_offset = 0;
-    // Since in most cases we want to receive a certain amount of messages/bytes we store them in a member while waiting for new ones to arrive
-    protected ArrayList<Message> received_messages;
+
     protected int current_payload = 0;
 
     /**

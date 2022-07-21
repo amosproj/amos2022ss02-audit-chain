@@ -1,6 +1,6 @@
 package ProducerDummy.DataGeneration;
 
-public class NullObjectDataReader implements DataGenerator{
+public class NullObjectDataReader implements DataGenerator {
 
     @Override
     public String getData() {
@@ -11,5 +11,5 @@ public class NullObjectDataReader implements DataGenerator{
     public String getData(int sequence_number) {
         return "Please Change DataGenerator";
     }
-    
+
 }

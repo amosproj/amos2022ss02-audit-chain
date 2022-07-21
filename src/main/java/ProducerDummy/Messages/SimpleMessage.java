@@ -44,8 +44,8 @@ public class SimpleMessage implements Message {
         this.message = message;
     }
 
-    public String toString(){
-        return Integer.toString(this.getSequence_number())+this.getMessage();
+    public String toString() {
+        return Integer.toString(this.getSequence_number()) + this.getMessage();
     }
 
 }

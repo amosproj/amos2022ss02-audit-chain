@@ -3,6 +3,7 @@ package ProducerDummy.Persistence;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+
 import ProducerDummy.Messages.Message;
 
 /***
@@ -11,7 +12,7 @@ import ProducerDummy.Messages.Message;
  */
 
 public class NullObjectPersistenceStrategy implements PersistenceStrategy {
-    public NullObjectPersistenceStrategy(String filepath,String fileName){
+    public NullObjectPersistenceStrategy(String filepath, String fileName) {
         return;
     }
 

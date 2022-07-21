@@ -11,6 +11,7 @@ import ProducerDummy.DataGeneration.FileDataReader;
 import ProducerDummy.Persistence.AggregateMessageFilePersistence;
 import ProducerDummy.Persistence.FilePersistenceStrategy;
 import ProducerDummy.Persistence.NullObjectPersistenceStrategy;
+
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -35,11 +36,11 @@ public class main {
         String base_path = Paths.get(System.getProperty("user.dir")).toString();
 
         FileReader reader;
-        try{
+        try {
             reader = new FileReader(config_path.toString());
-        }catch (IOException e){
+        } catch (IOException e) {
             //if we could not found it this folder we check the current one
-            reader = new FileReader(Paths.get(System.getProperty("user.dir"),filename).toString());
+            reader = new FileReader(Paths.get(System.getProperty("user.dir"), filename).toString());
         }
         Properties p = new Properties();
         p.load(reader);
@@ -65,67 +66,66 @@ public class main {
         Producer producer;
 
 // to be honest not the best solution, but don't want to rewrite it
-        switch (CLIENT_TYPE){
+        // Also I know it would be better to make an own file with static members to makes changes easier/faster
+        switch (CLIENT_TYPE) {
             case "security_client":
-                if(DESIRED_PAYLOAD_IN_BYTE != null){
-                    producer = new SecurityClient(HOST,PORT,USER,PASSWORD,KEY,ALGORITHM,Integer.parseInt(DESIRED_PAYLOAD_IN_BYTE));
-                }else{
-                    producer = new SecurityClient(HOST,PORT,USER,PASSWORD,KEY,ALGORITHM);
+                if (DESIRED_PAYLOAD_IN_BYTE != null) {
+                    producer = new SecurityClient(HOST, PORT, USER, PASSWORD, KEY, ALGORITHM, Integer.parseInt(DESIRED_PAYLOAD_IN_BYTE));
+                } else {
+                    producer = new SecurityClient(HOST, PORT, USER, PASSWORD, KEY, ALGORITHM);
                 }
                 // consumer part cares about Stream or queue that´s why check it in queue part
-            break;
+                break;
             case "client":
-                if(DESIRED_PAYLOAD_IN_BYTE != null){
-                    producer = new Client(HOST,PORT,USER,PASSWORD,Integer.parseInt(DESIRED_PAYLOAD_IN_BYTE));
-                }else{
-                    producer = new Client(HOST,PORT,USER,PASSWORD);
+                if (DESIRED_PAYLOAD_IN_BYTE != null) {
+                    producer = new Client(HOST, PORT, USER, PASSWORD, Integer.parseInt(DESIRED_PAYLOAD_IN_BYTE));
+                } else {
+                    producer = new Client(HOST, PORT, USER, PASSWORD);
                 }
                 break;
             default:
-                throw new RuntimeException("No Valid Client Value selected.");
+                throw new RuntimeException("No Valid Client Value selected. client or security_client");
         }
 
 
-
-
-        switch (QUEUE_TYPE){
+        switch (QUEUE_TYPE) {
             case "standard":
                 // if property Key/Algo does not exist it means that key is null and this case is covered in the consumer itself
                 // and even if they exist but normal client was selected it does not matter, since Consumer will then receive only non Hmac Messages
-                consumer = new ConsumerDummy.Client.Client(HOST,PORT,USER,PASSWORD,GUI_PORT,KEY,ALGORITHM);
+                consumer = new ConsumerDummy.Client.Client(HOST, PORT, USER, PASSWORD, GUI_PORT, KEY, ALGORITHM);
                 consumer.setChannel(new StandardQueue(QUEUE_NAME));
                 producer.setChannel(new StandardQueue(QUEUE_NAME));
                 break;
             case "quorum":
-                consumer = new ConsumerDummy.Client.Client(HOST,PORT,USER,PASSWORD,GUI_PORT,KEY,ALGORITHM);
+                consumer = new ConsumerDummy.Client.Client(HOST, PORT, USER, PASSWORD, GUI_PORT, KEY, ALGORITHM);
                 consumer.setChannel(new QuorumQueues(QUEUE_NAME));
                 producer.setChannel(new QuorumQueues(QUEUE_NAME));
                 break;
             case "stream":
-                consumer = new StreamClient(HOST,PORT,USER,PASSWORD,GUI_PORT,KEY,ALGORITHM);
+                consumer = new StreamClient(HOST, PORT, USER, PASSWORD, GUI_PORT, KEY, ALGORITHM);
                 consumer.setChannel(new Stream(QUEUE_NAME));
-                producer.setChannel(new Stream(QUEUE_NAME,STREAM_SIZE,SEGMENT_SIZE));
+                producer.setChannel(new Stream(QUEUE_NAME, STREAM_SIZE, SEGMENT_SIZE));
                 break;
             default:
-                throw new RuntimeException("No Valid Channel Value selected.");
+                throw new RuntimeException("No Valid Channel Value selected. standard,quorum or stream");
         }
 
 
-        switch (PERSISTENCE_STRATEGY_TYPE){
+        switch (PERSISTENCE_STRATEGY_TYPE) {
             case "aggregate-message":
-                consumer.setPersistenceStrategy(new AggregateMessageFilePersistence(base_path,"consumer_last_messages.txt"));
-                producer.setPersistenceStrategy(new AggregateMessageFilePersistence(base_path,"producer_last_messages.txt"));
+                consumer.setPersistenceStrategy(new AggregateMessageFilePersistence(base_path, "consumer_last_messages.txt"));
+                producer.setPersistenceStrategy(new AggregateMessageFilePersistence(base_path, "producer_last_messages.txt"));
                 break;
             case "file":
-                consumer.setPersistenceStrategy(new FilePersistenceStrategy(base_path,"consumer_last_message.txt"));
-                producer.setPersistenceStrategy(new FilePersistenceStrategy(base_path,"producer_last_message.txt"));
+                consumer.setPersistenceStrategy(new FilePersistenceStrategy(base_path, "consumer_last_message.txt"));
+                producer.setPersistenceStrategy(new FilePersistenceStrategy(base_path, "producer_last_message.txt"));
                 break;
             case "nullobject":
-                consumer.setPersistenceStrategy(new NullObjectPersistenceStrategy(base_path,filename));
-                producer.setPersistenceStrategy(new NullObjectPersistenceStrategy(base_path,filename));
+                consumer.setPersistenceStrategy(new NullObjectPersistenceStrategy(base_path, filename));
+                producer.setPersistenceStrategy(new NullObjectPersistenceStrategy(base_path, filename));
                 break;
             default:
-                throw new RuntimeException("No Valid Persistence Strategy Value selected.");
+                throw new RuntimeException("No Valid Persistence Strategy Value selected. aggregate-message,file or nullobject ");
         }
 
         switch (DATA_GENERATOR_TYPE) {
@@ -137,17 +137,12 @@ public class main {
         }
 
 
-
         Thread t1 = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     producer.start();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                } catch (TimeoutException e) {
-                    throw new RuntimeException(e);
-                } catch (InterruptedException e) {
+                } catch (IOException  | TimeoutException | InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -158,9 +153,7 @@ public class main {
 
                 try {
                     consumer.start();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                } catch (TimeoutException e) {
+                } catch (IOException  | TimeoutException e) {
                     throw new RuntimeException(e);
                 }
             }

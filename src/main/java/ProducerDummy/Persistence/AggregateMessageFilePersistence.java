@@ -50,7 +50,7 @@ public class AggregateMessageFilePersistence extends FilePersistenceStrategy {
             fileWriter.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             throw new NullPointerException();
         }
 
@@ -63,14 +63,14 @@ public class AggregateMessageFilePersistence extends FilePersistenceStrategy {
 
         try {
             // modify the file so gson can parse it
-            JsonElement jsonElement = JsonParser.parseString("["+Files.readString(getFilePath()).replaceAll(",$","") + "]");
+            JsonElement jsonElement = JsonParser.parseString("[" + Files.readString(getFilePath()).replaceAll(",$", "") + "]");
             if (jsonElement.isJsonArray()) {
                 //more than one Objects
                 JsonArray jsonArray = jsonElement.getAsJsonArray();
                 // last index is always zero, adjust index in loop
                 for (int i = 1; i < jsonArray.size(); i++) {
 
-                    JsonObject jsonObject = jsonArray.get(i-1).getAsJsonObject();
+                    JsonObject jsonObject = jsonArray.get(i - 1).getAsJsonObject();
 
                     String message_string = jsonObject.getAsJsonPrimitive(JsonMessage.MESSAGE_KEY).getAsString();
                     int sequence_number = jsonObject.getAsJsonPrimitive(JsonMessage.SEQUENCE_NUMBER).getAsInt();
@@ -91,7 +91,7 @@ public class AggregateMessageFilePersistence extends FilePersistenceStrategy {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             throw new NullPointerException();
         }
 

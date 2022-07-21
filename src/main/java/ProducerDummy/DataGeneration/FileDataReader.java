@@ -12,9 +12,11 @@ import java.nio.file.Paths;
  */
 public class FileDataReader implements DataGenerator {
 
-    /** path of the file were the data are stored */
+    /**
+     * path of the file were the data are stored
+     */
 
-    private static final String path = Paths.get("src", "main", "java","ProducerDummy").toString();
+    private static final String path = Paths.get("src", "main", "java", "ProducerDummy").toString();
     private static final String file_name = "household_power_consumption.txt";
     public BufferedReader br;
 
@@ -22,10 +24,10 @@ public class FileDataReader implements DataGenerator {
      * Prepare the object file to be read and set a (buffered) reader to it.
      *
      * @throws FileNotFoundException if no file with the path specified is found
-     * */
-    public FileDataReader(String path,String filename) throws FileNotFoundException {
+     */
+    public FileDataReader(String path, String filename) throws FileNotFoundException {
 
-        String file_path = Paths.get(path,file_name).toString();
+        String file_path = Paths.get(path, file_name).toString();
         File file = new File(file_path);
         FileReader fr = new FileReader(file);
         this.br = new BufferedReader(fr);
@@ -65,7 +67,7 @@ public class FileDataReader implements DataGenerator {
         }
 
         return line;
-        
+
     }
 
 }

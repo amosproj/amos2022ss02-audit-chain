@@ -3,13 +3,12 @@ package ProducerDummy.ChannelSelection;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
-import org.testng.annotations.Factory;
 
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
-public class Stream extends RabbitMQChannel{
+public class Stream extends RabbitMQChannel {
 
     int MAXIMUM_STREAM_SIZE = 1_000_000_000; // 1 GB
     int STREAM_SEGMENT_SIZE = 1_000_000; // 100 MB
@@ -18,6 +17,7 @@ public class Stream extends RabbitMQChannel{
         super(name);
         this.setStreamProperties();
     }
+
     public Stream(String name, int stream_size, int segment_size) {
         super(name);
         this.MAXIMUM_STREAM_SIZE = stream_size;
@@ -26,12 +26,11 @@ public class Stream extends RabbitMQChannel{
     }
 
 
-    private void setStreamProperties(){
+    private void setStreamProperties() {
         this.durable = true;
         this.autoDelete = false;
         this.exclusive = false;
     }
-
 
 
     public Channel createChannel(ConnectionFactory factory) throws IOException, TimeoutException {

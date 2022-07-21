@@ -1,7 +1,4 @@
 package ProducerDummy.Client;
-
-import ProducerDummy.Messages.Hmac_JsonMessage;
-import ProducerDummy.Messages.Hmac_Message;
 import ProducerDummy.Messages.Hmac_SimpleMessage;
 import ProducerDummy.Messages.Message;
 

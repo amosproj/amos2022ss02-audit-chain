@@ -7,7 +7,7 @@ import ProducerDummy.Messages.Message;
 
 /**
  * Interface for the Persistence strategy Mechanism
- * */
+ */
 public interface PersistenceStrategy {
 
     /***

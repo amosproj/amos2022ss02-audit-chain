@@ -1,6 +1,7 @@
 package ProducerDummy.Messages;
 
 import com.google.gson.JsonObject;
+import org.apache.commons.lang3.NotImplementedException;
 
 import java.nio.charset.StandardCharsets;
 
@@ -14,7 +15,10 @@ public class JsonMessage implements Message {
     public static String SEQUENCE_NUMBER = "sequence_number";
 
     public JsonMessage(int sequence_number, String json_message) {
-        this.formatMessage(sequence_number, json_message);
+
+        throw new NotImplementedException("Json Message won´t work. Serialize/deserialize and adapter type for gson I think must be implemented for it");
+
+        //this.formatMessage(sequence_number, json_message);
     }
 
 
@@ -35,7 +39,8 @@ public class JsonMessage implements Message {
 
     @Override
     public int getPayloadSize() {
-        return this.getMessage().getBytes(StandardCharsets.UTF_8).length + String.valueOf(this.getSequence_number()).getBytes(StandardCharsets.UTF_8).length;    }
+        return this.getMessage().getBytes(StandardCharsets.UTF_8).length + String.valueOf(this.getSequence_number()).getBytes(StandardCharsets.UTF_8).length;
+    }
 
     @Override
     public String getMessage() {
@@ -50,7 +55,7 @@ public class JsonMessage implements Message {
 
     @Override
     public Message toSimpleFormat() {
-        return new SimpleMessage(this.getSequence_number(),this.getMessage());
+        return new SimpleMessage(this.getSequence_number(), this.getMessage());
     }
 
     public String toString() {

@@ -2,14 +2,12 @@ package ProducerDummy.Client;
 
 import ProducerDummy.DataGeneration.DataGenerator;
 import ProducerDummy.Messages.Message;
-import ProducerDummy.Persistence.PersistenceStrategy;
 import com.rabbitmq.client.Channel;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Vector;
 import java.util.concurrent.TimeoutException;
 
 public class Producer extends AbstractClient {
@@ -36,11 +34,13 @@ public class Producer extends AbstractClient {
         super(host, port, username, password);
         this.DESIRED_PAYLOAD_IN_BYTE = desired_payload_in_byte;
     }
+
     // A normal Producer which sends every Message to RabbitMQ
     public Producer(String host, int port, String username, String password) {
         super(host, port, username, password);
         this.DESIRED_PAYLOAD_IN_BYTE = 0; // we don´t care, we send every Message instantly
     }
+
     // Data Generator is the Component which generates the Data for the RabbitMQ. See DataGeneration Folder
     public void setDataGenerator(DataGenerator dataGenerator) {
         this.dataGenerator = dataGenerator;
@@ -76,7 +76,7 @@ public class Producer extends AbstractClient {
         return false;
     }
 
-    protected void RecoverCurrentPayloadSize(ArrayList<Message> messages){
+    protected void RecoverCurrentPayloadSize(ArrayList<Message> messages) {
         // if desired is 0 we can save the time
         if (DESIRED_PAYLOAD_IN_BYTE == 0) {
             return;
@@ -87,7 +87,7 @@ public class Producer extends AbstractClient {
         }
     }
 
-    protected void updatePayloadSize(Message message){
+    protected void updatePayloadSize(Message message) {
         //just an estimation, also overhead of object/arraylist does not matter
         this.current_payload += message.getPayloadSize();
     }
