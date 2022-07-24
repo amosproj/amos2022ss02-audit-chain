@@ -60,7 +60,13 @@ public class Main {
 
         Path config_path = Paths.get(System.getProperty("user.dir"), filepath, filename);
         Properties p = new Properties();
-        FileReader reader = new FileReader(config_path.toString());
+        FileReader reader;
+        try {
+            reader = new FileReader(config_path.toString());
+        } catch (IOException e) {
+            //if we could not found it this folder we check the current one
+            reader = new FileReader(Paths.get(System.getProperty("user.dir"), filename).toString());
+        }
         p.load(reader);
 
         if (HOST == null) {
@@ -79,9 +85,24 @@ public class Main {
         int gui_port = Integer.parseInt(p.getProperty("GUI_PORT"));
         String PATH = p.getProperty("PATH_BLOCKCHAIN_FILES");
         int MAX_BYTE = Integer.parseInt(p.getProperty("MAX_BYTE_PER_FILE"));
-
+        String QUEUE_TYPE = p.getProperty("QUEUE_TYPE");
         AbstractClient client = new ConsumerClientBlockchain(HOST,Integer.parseInt(PORT),USER,PASSWORD, PATH, MAX_BYTE,gui_port);
-        client.setChannel(new QuorumQueues(queue_name));
+
+
+        switch (QUEUE_TYPE) {
+            case "standard":
+                client.setChannel(new StandardQueue(queue_name));
+                break;
+            case "quorum":
+                client.setChannel(new QuorumQueues(queue_name));
+                break;
+            case "stream":
+                client.setChannel(new Stream(queue_name));
+                break;
+            default:
+                throw new RuntimeException("No Valid Channel Value selected. standard,quorum or stream");
+        }
+
         try {
             client.start();
         } catch (InterruptedException e) {
