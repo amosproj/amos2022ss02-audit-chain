@@ -55,12 +55,12 @@ public class Client extends Producer {
             if (isReadyToSend()) {
                 System.out.println("Found Message(s) in the Persistence Storage which are ready to send, they will now be send");
                 this.getAcknowledgment(channel, messageVector);
-                this.sequence_number = messageVector.get(messageVector.size() - 1).getSequence_number() + 1;
+                this.sequence_number = messageVector.get(messageVector.size() - 1).getSequence_number() + 2;
                 this.persistenceStrategy.cleanFile();
                 messageVector.clear();
             }else{
-                // Persistence Storage has Message (s), we can recover the current event Number
-                this.sequence_number = messageVector.get(messageVector.size() - 1).getSequence_number() + 1;
+                // Persistence Storage has Messages (s), we can recover the current event Number
+                this.sequence_number = messageVector.get(messageVector.size() - 1).getSequence_number() + 2;
             }
         }
         // Step One (maybe) sending Messages which were stored in the Persistence Mechanism is done.

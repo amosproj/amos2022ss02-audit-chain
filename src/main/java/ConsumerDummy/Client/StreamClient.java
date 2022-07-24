@@ -39,7 +39,7 @@ public class StreamClient extends Consumer{
         channel.basicConsume(
                 this.channel.getQueueName(),
                 false,
-                Collections.singletonMap("x-stream-offset", 0 ), // From which offset to read (= which Message)
+                Collections.singletonMap("x-stream-offset", this.current_offset ), // From which offset to read (= which Message)
                 (consumerTag, delivery) -> {
                     ArrayList<Message> messages;
                     try {
