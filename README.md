@@ -17,8 +17,8 @@ Erlangen-Nürnberg](https://www.fau.de).
 First of all, the project is developed following a dependency structure, typical of the audit chain module.
 
 The main idea is that events of any kind, like IoT, file systems and measurement loggers should be transmitted securely via the network.
-There is a central event queue, which records these events and uses them for further steps that would involve third parties, so consumers.
-There is a central event queue, which records events and uses them for further actions. Consumers can approach the queue, in order to get the events and work with them accordingly. Events are recorded serially and the central event queue is transmitted via the network queue. In order to define terms, we could define three main characters:
+There is a central event queue, which records these events and uses them for further steps and actions that would involve third parties, like consumers.
+Consumers can approach the queue, in order to get the events and work with them accordingly. Events are recorded serially and the central event queue is transmitted via the network queue. In order to define terms, we could define three main characters:
 - *the producer*: who is the creator and sender of the events
 - *the queue*: the middle ground where events are stored and safely shared
 - *the consumer*: who takes events from the queue in order to perform further actions with them (that are not of interest in our application). <br />
