@@ -20,7 +20,6 @@ class ConsumerTest {
     @Test
     void initFactory() {
         Consumer c = new Consumer("localhost", 5672, "shouldn't be", "set in factory",9999);
-        ConnectionFactory factory = c.getFactory();
         assertAll(
                 () -> assertEquals("localhost", c.factory.getHost()),
                 () -> assertEquals(5672, c.factory.getPort()),
@@ -45,12 +44,6 @@ class ConsumerTest {
         Consumer consumer = new Consumer("",9,"","",123);
         SimpleMessage mDeserialized = (SimpleMessage) consumer.deserialize(bytecode); //deserialization
         assertEquals(mDeserialized.getMessage(), "Test 12345");
-    }
-
-    @Test
-    void getFactory() {
-        Consumer c = new Consumer("localhost", 5672, "guest", "guest",9999);
-        assertNotNull(c.getFactory());
     }
 
     @Test
