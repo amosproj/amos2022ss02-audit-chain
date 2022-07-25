@@ -112,6 +112,13 @@ In these situations, using the trial-and-error method would be advantageous. So 
 
 - Finally, we should make plans for the future after following the successful implementation of our blockchain protocol. We can start working on some things that may need to be improved. Basically, we'd have to assess the blockchain network to ensure that it remains relevant for our company's future growth. Change is the one constant in life, as we all know. The blockchain sector will continue to evolve and improve over time, and we must also engage in continual improvement, no matter how modest.
 
+
+## Code
+
+![UMLScheme](https://i.imgur.com/EMF71Nf.png)
+
+Example of a possible code implementation of the blockchain [here](/BlockChain.java).  
+
 ## Current Work
 
 First of all, we created the code of the blockchainIn  in a separate branch. In consultation with our industry partner, we started the implementation and editing of Blockchain. Each block now contains a hashmap of messages. Furthermore, we tested roughly all its component and saved the received messages in the blockchain. At the same time, we ensured the right sequence of incoming messages and the consistent message flow. Some of the features that we implemented are the following:
@@ -124,13 +131,13 @@ First of all, we created the code of the blockchainIn  in a separate branch. In 
 - Added the feature that the blockchain checks if there is a specific block given by a File or a Path in the blockchain and if it contains tempered messages,
 
 - Added the feature that the blockchain (given a range of blocks) checks automatically itself to see if some messages stored in a range have been tempered.
-<br/>
-Furthermore, we created the JUnittest for the blockchain with which we Test it using a direct channel between producer dummy and consumer without the queue.
-<br/>
-Some of the difficulties that we faced is to understand how the method to find tempered message needs to be implemented and the creation of the JUnittest.
+  <br/>
+  Furthermore, we created the JUnittest for the blockchain with which we Test it using a direct channel between producer dummy and consumer without the queue.
+  <br/>
+  Some of the difficulties that we faced is to understand how the method to find tempered message needs to be implemented and the creation of the JUnittest.
 
-## Code
+## Current UML
 
-![UMLScheme](https://i.imgur.com/EMF71Nf.png)
+![UMLScheme](UMLBlockchain.jpg)
 
-Example of a possible code implementation of the blockchain [here](/BlockChain.java).  
+Actual implementation, after several modifications, of the blockchain in this project
