@@ -4,7 +4,6 @@ from sqlite3 import connect
 import sys
 import json
 import time
-from tkinter.tix import INTEGER
 
 
 from PySide2.QtWidgets import QApplication, QMainWindow,QDialog, QMessageBox
