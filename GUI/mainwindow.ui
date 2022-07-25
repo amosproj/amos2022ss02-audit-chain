@@ -102,7 +102,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Insert Event Number Start</string>
+               <string>Insert Event Number End</string>
               </property>
              </widget>
             </item>
@@ -121,7 +121,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Insert Event Number End</string>
+               <string>Insert Event Number Start</string>
               </property>
              </widget>
             </item>
