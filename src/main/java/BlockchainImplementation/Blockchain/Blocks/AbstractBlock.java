@@ -40,10 +40,6 @@ public abstract class AbstractBlock<R> {
 
     public R getTransaction () { return transaction; }
 
-    public String calcHmacData () {
-        return Hasher.hashSHA256(transaction.toString());
-    }
-
     /**
      * Checks if the current block has been tempered or instead if it is still authentic.
      * It does it checking if the saved hash of the block still corresponds to the one evaluated.

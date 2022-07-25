@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
 
 import BlockchainImplementation.Blockchain.BlockchainIntSequence;
-import ProducerDummy.Messages.SimpleMessage;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.DeliverCallback;
 
@@ -66,7 +65,7 @@ public class ConsumerClientBlockchain extends Consumer {
     }
 
     @Override
-    public ArrayList<Message> consumeDelivery(byte[] delivery) throws IOException, ClassNotFoundException {
+        public ArrayList<Message> consumeDelivery(byte[] delivery) throws IOException, ClassNotFoundException {
 
         ArrayList<Message> messages = null;
 
