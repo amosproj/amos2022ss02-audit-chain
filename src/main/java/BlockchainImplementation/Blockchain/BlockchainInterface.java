@@ -1,10 +1,6 @@
 package BlockchainImplementation.Blockchain;
 
-import java.io.File;
-import java.util.List;
-
 import BlockchainImplementation.Blockchain.Blocks.Block;
-import BlockchainImplementation.Blockchain.Blocks.SubBlock;
 
 /**
  * Interface for a Blockchain which stores two type of information: meta data of transaction, content of transaction.

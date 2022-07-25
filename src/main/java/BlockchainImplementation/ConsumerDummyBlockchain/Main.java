@@ -8,16 +8,10 @@ import java.util.Properties;
 import java.util.concurrent.TimeoutException;
 import org.apache.commons.cli.*;
 
-import ConsumerDummy.Client.StreamClient;
 import ProducerDummy.ChannelSelection.QuorumQueues;
-import ProducerDummy.ChannelSelection.RabbitMQChannel;
 import ProducerDummy.ChannelSelection.StandardQueue;
 import ProducerDummy.ChannelSelection.Stream;
 import ProducerDummy.Client.AbstractClient;
-import ProducerDummy.Persistence.AggregateMessageFilePersistence;
-import ProducerDummy.Persistence.FilePersistenceStrategy;
-import ProducerDummy.Persistence.NullObjectPersistenceStrategy;
-import ProducerDummy.Persistence.PersistenceStrategy;
 
 public class Main {
 
