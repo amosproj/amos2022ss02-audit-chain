@@ -98,11 +98,12 @@ JUnit is a unit testing open-source framework for the Java programming language.
 
   **Open the project in your favorite IDE. We use IntellJ for demos**
 
-- Credentials used for rabbitmq in the project,
+- Credentials used for rabbitmq in this project,
   ```
-  username:guest
-  password:guest
+  username:admin
+  password:admin
   ```
+- To change the credential, update RABBITMQ_DEFAULT_USER, RABBITMQ_DEFAULT_PASS in docker-compose.yml file
 - create a network by the name rabbitmq-cluster:
   ```
   docker network create rabbitmq-cluster 
@@ -111,33 +112,52 @@ JUnit is a unit testing open-source framework for the Java programming language.
   ```
   docker-compose up -d
   ```
-  https://user-images.githubusercontent.com/104498986/171229907-b865ec51-0488-4892-b9a9-155b550f6f70.mp4
-
-- **Note: Remember to edit the [config.properties](https://github.com/amosproj/amos2022ss02-audit-chain/blob/main/src/main/resources/ProducerDummy/config.properties) of the ProducerDummy with default username and password of rabbitmq**  <br />
-  <br />
-
-- To run the producer-dummy module
-  ```
-  mvn clean compile exec:java@ProducerDummy
-  ```
-- **Note: Remember to edit the [config.properties](https://github.com/amosproj/amos2022ss02-audit-chain/blob/main/src/main/resources/ConsumerDummy/config.properties) of the ConsumerDummy with default username and password of rabbitmq**  <br />
-  <br />
-
-- To run the consumer-dummy module
-  ```
-  mvn clean compile exec:java@ConsumerDummy
-  ```
-  https://user-images.githubusercontent.com/104498986/171228527-b9953e5c-cffa-414a-bd9a-7ca58bb34c0b.mp4
-- To run the blockchain module
-  ```
-  mvn clean compile exec:java@Blockchain
-  ```
   
 - Generate executable Jars (one for ProducerDummy, another one for ConsumerDummy and another for the Blockchain).
-
   ```
   mvn clean package
   ```
+  
+  https://user-images.githubusercontent.com/104498986/171229907-b865ec51-0488-4892-b9a9-155b550f6f70.mp4
+
+- All the modules can be run using 4 optional arguments, <br>
+  ```
+   -h,  --host <arg>          host ip of docker (127.0.0.1) <br>
+   -p,  --port <arg>          port (5672) <br>
+   -pw, --password <arg>      password of rabbitmq <br>
+   -u,  --username <arg>      username of rabbitmq <br>
+ 
+  ```
+  
+- To run the producer-dummy module
+  ```
+  java -jar target/AuditChain-ProducerDummy.jar --host 127.0.0.1 --port 5672 --username admin --password admin
+  ```
+  
+- **Note: Remember to use username and password of rabbitmq as arguments or the edit the [config.properties](https://github.com/amosproj/amos2022ss02-audit-chain/blob/main/src/main/resources/ProducerDummy/config.properties) of the ProducerDummy**  <br />
+  <br />
+   
+- To run the consumer-dummy module
+
+  ```
+  java -jar target/AuditChain-ConsumerDummy.jar --host 127.0.0.1 --port 5672 --username admin --password admin
+  ```
+  
+- **Note: Remember to use username and password of rabbitmq as arguments or the edit the [config.properties](https://github.com/amosproj/amos2022ss02-audit-chain/blob/main/src/main/resources/ConsumerDummy/config.properties) of the ConsumerDummy**  <br />
+  <br />
+
+- Or you can run the Producerdummy and Consumerdummy modules together
+
+  ```
+  java -jar target/AuditChain-Producer_Consumer.jar --host 127.0.0.1 --port 5672 --username admin --password admin
+  ```
+
+  https://user-images.githubusercontent.com/104498986/171228527-b9953e5c-cffa-414a-bd9a-7ca58bb34c0b.mp4
+- To run the blockchain module
+  ```
+  java -jar target/AuditChain-Blockchain.jar --host 127.0.0.1 --port 5672 --username admin --password admin
+  ```
+- **Note: Remember to use username and password of rabbitmq as arguments or the edit the [config.properties](https://github.com/amosproj/amos2022ss02-audit-chain/blob/main/src/main/resources/BlockchainImplementation/config.properties) of the BlockChain module**  <br />
 
 - Generate JAVADOC (then you can find it at /target/site/apidocs/index.html).
 
@@ -147,7 +167,7 @@ JUnit is a unit testing open-source framework for the Java programming language.
 
 
 ### Testing
-The applications of our project contains unittests that can be used to test the individual components. To run them locally just execute the following command:
+- The applications of our project contains unittests that can be used to test the individual components. To run them locally just execute the following command:
 
   ```
   mvn clean compile test
