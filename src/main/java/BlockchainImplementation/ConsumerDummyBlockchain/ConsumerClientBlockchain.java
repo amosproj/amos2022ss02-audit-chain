@@ -39,7 +39,6 @@ public class ConsumerClientBlockchain extends Consumer {
         this.blockchain = new BlockchainIntSequence<>(path, maxSizeByte);
         this.path = path;
 
-        System.out.println(path);
     }
 
     /***
