@@ -410,7 +410,7 @@ public class Blockchain<T,R> implements BlockchainInterface<T,R> {
             }
         } 
         catch(IOException e){
-            System.out.println("Sorry, wrong path");
+            throw new IllegalStateException("Sorry, wrong path");
         }
 
     }
