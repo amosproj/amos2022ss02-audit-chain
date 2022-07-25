@@ -35,8 +35,7 @@ Listed, are the next steps that we are further developing:
 - Uses the events from the queue to trigger further actions based on them. <br />
   <br />
 
-![code_arch _UML drawio](https://user-images.githubusercontent.com/104498986/171241927-939c92c1-a191-40fc-bdf9-b2a692686c40.png)
-
+![uml](https://user-images.githubusercontent.com/105744782/180841646-d54eab87-b50d-40b1-bea9-ed547dfd55a6.png)
 
 **We have used the component diagram to show different parts of our code solution. Our code is basically composed of 3 major components:**
 - **Producer dummy** (client): which operates through the dependencies among its 3 sub-components database, data generator, and persistence mechanism (storage buffer).
@@ -96,7 +95,7 @@ JUnit is a unit testing open-source framework for the Java programming language.
    ```
 - Or download the latest release and unzip the package from git.
 
-  **Open the project in your favorite IDE. We use IntellJ for demos**
+  **Open the project in your favorite IDE. We suggest using IntellJ**
 
 - Credentials used for rabbitmq in this project,
   ```
@@ -117,7 +116,7 @@ JUnit is a unit testing open-source framework for the Java programming language.
   ```
   mvn clean package
   ```
-  
+- **By default, all the modules use respective config.properties file from /src/main/resources/module_name (or use the config.properties in the current path) to run and you can manipulate the configuration by changing the values in config.properties. Additionally, you can also run the projects using the jar files with the optional arguments described below.**
 
 - All the modules can be run using jar files with 4 optional arguments, <br>
   ```
@@ -133,7 +132,7 @@ JUnit is a unit testing open-source framework for the Java programming language.
   java -jar target/AuditChain-ProducerDummy.jar --host 127.0.0.1 --port 5672 --username admin --password admin
   ```
   
-- **Note: Remember to use username and password of rabbitmq as arguments or the edit the [config.properties](https://github.com/amosproj/amos2022ss02-audit-chain/blob/main/src/main/resources/ProducerDummy/config.properties) of the ProducerDummy**  <br />
+- **Note: Remember to use username and password of rabbitmq as arguments or the edit the [config.properties](https://github.com/amosproj/amos2022ss02-audit-chain/blob/main/src/main/resources/ProducerDummy/config.properties) (or use the config.properties in the current path) of the ProducerDummy**  <br />
   <br />
    
 - To run the consumer-dummy module
@@ -142,7 +141,7 @@ JUnit is a unit testing open-source framework for the Java programming language.
   java -jar target/AuditChain-ConsumerDummy.jar --host 127.0.0.1 --port 5672 --username admin --password admin
   ```
   
-- **Note: Remember to use username and password of rabbitmq as arguments or the edit the [config.properties](https://github.com/amosproj/amos2022ss02-audit-chain/blob/main/src/main/resources/ConsumerDummy/config.properties) of the ConsumerDummy**  <br />
+- **Note: Remember to use username and password of rabbitmq as arguments or the edit the [config.properties](https://github.com/amosproj/amos2022ss02-audit-chain/blob/main/src/main/resources/ConsumerDummy/config.properties) (or use the config.properties in the current path) of the ConsumerDummy**  <br />
   <br />
 
 - Or you can run the Producerdummy and Consumerdummy modules together
@@ -155,7 +154,7 @@ JUnit is a unit testing open-source framework for the Java programming language.
   ```
   java -jar target/AuditChain-Blockchain.jar --host 127.0.0.1 --port 5672 --username admin --password admin
   ```
-- **Note: Remember to use username and password of rabbitmq as arguments or the edit the [config.properties](https://github.com/amosproj/amos2022ss02-audit-chain/blob/main/src/main/resources/BlockchainImplementation/config.properties) of the BlockChain module**  <br />
+- **Note: Remember to use username and password of rabbitmq as arguments or the edit the [config.properties](https://github.com/amosproj/amos2022ss02-audit-chain/blob/main/src/main/resources/BlockchainImplementation/config.properties) (or use the config.properties in the current path) of the BlockChain module**  <br />
 
 - Generate JAVADOC (then you can find it at /target/site/apidocs/index.html).
 
