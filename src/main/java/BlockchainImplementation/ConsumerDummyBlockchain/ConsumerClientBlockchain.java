@@ -38,6 +38,7 @@ public class ConsumerClientBlockchain extends Consumer {
         super(host, port, username, password,gui_port);
         this.blockchain = new BlockchainIntSequence<>(path, maxSizeByte);
         this.path = path;
+
     }
 
     /***
