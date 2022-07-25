@@ -35,8 +35,7 @@ Listed, are the next steps that we are further developing:
 - Uses the events from the queue to trigger further actions based on them. <br />
   <br />
 
-![code_arch _UML drawio](https://user-images.githubusercontent.com/104498986/171241927-939c92c1-a191-40fc-bdf9-b2a692686c40.png)
-
+![uml](https://user-images.githubusercontent.com/105744782/180841646-d54eab87-b50d-40b1-bea9-ed547dfd55a6.png)
 
 **We have used the component diagram to show different parts of our code solution. Our code is basically composed of 3 major components:**
 - **Producer dummy** (client): which operates through the dependencies among its 3 sub-components database, data generator, and persistence mechanism (storage buffer).
@@ -98,11 +97,12 @@ JUnit is a unit testing open-source framework for the Java programming language.
 
   **Open the project in your favorite IDE. We use IntellJ for demos**
 
-- Credentials used for rabbitmq in the project,
+- Credentials used for rabbitmq in this project,
   ```
-  username:guest
-  password:guest
+  username:admin
+  password:admin
   ```
+- To change the credential, update RABBITMQ_DEFAULT_USER, RABBITMQ_DEFAULT_PASS in docker-compose.yml file
 - create a network by the name rabbitmq-cluster:
   ```
   docker network create rabbitmq-cluster 
@@ -111,33 +111,50 @@ JUnit is a unit testing open-source framework for the Java programming language.
   ```
   docker-compose up -d
   ```
-  https://user-images.githubusercontent.com/104498986/171229907-b865ec51-0488-4892-b9a9-155b550f6f70.mp4
-
-- **Note: Remember to edit the [config.properties](https://github.com/amosproj/amos2022ss02-audit-chain/blob/main/src/main/resources/ProducerDummy/config.properties) of the ProducerDummy with default username and password of rabbitmq**  <br />
-  <br />
-
-- To run the producer-dummy module
-  ```
-  mvn clean compile exec:java@ProducerDummy
-  ```
-- **Note: Remember to edit the [config.properties](https://github.com/amosproj/amos2022ss02-audit-chain/blob/main/src/main/resources/ConsumerDummy/config.properties) of the ConsumerDummy with default username and password of rabbitmq**  <br />
-  <br />
-
-- To run the consumer-dummy module
-  ```
-  mvn clean compile exec:java@ConsumerDummy
-  ```
-  https://user-images.githubusercontent.com/104498986/171228527-b9953e5c-cffa-414a-bd9a-7ca58bb34c0b.mp4
-- To run the blockchain module
-  ```
-  mvn clean compile exec:java@Blockchain
-  ```
   
-- Generate executable Jars (one for ProducerDummy, another one for ConsumerDummy and another for the Blockchain).
-
+- Generate executable Jars (ProducerDummy, ConsumerDummy, Blockchain and Producer_Consumer).
   ```
   mvn clean package
   ```
+  
+
+- All the modules can be run using jar files with 4 optional arguments, <br>
+  ```
+   -h,  --host <arg>          host ip of docker (127.0.0.1) <br>
+   -p,  --port <arg>          port (5672) <br>
+   -pw, --password <arg>      password of rabbitmq <br>
+   -u,  --username <arg>      username of rabbitmq <br>
+ 
+  ```
+  
+- To run the producer-dummy module
+  ```
+  java -jar target/AuditChain-ProducerDummy.jar --host 127.0.0.1 --port 5672 --username admin --password admin
+  ```
+  
+- **Note: Remember to use username and password of rabbitmq as arguments or the edit the [config.properties](https://github.com/amosproj/amos2022ss02-audit-chain/blob/main/src/main/resources/ProducerDummy/config.properties) of the ProducerDummy**  <br />
+  <br />
+   
+- To run the consumer-dummy module
+
+  ```
+  java -jar target/AuditChain-ConsumerDummy.jar --host 127.0.0.1 --port 5672 --username admin --password admin
+  ```
+  
+- **Note: Remember to use username and password of rabbitmq as arguments or the edit the [config.properties](https://github.com/amosproj/amos2022ss02-audit-chain/blob/main/src/main/resources/ConsumerDummy/config.properties) of the ConsumerDummy**  <br />
+  <br />
+
+- Or you can run the Producerdummy and Consumerdummy modules together
+
+  ```
+  java -jar target/AuditChain-Producer_Consumer.jar --host 127.0.0.1 --port 5672 --username admin --password admin
+  ```
+
+- To run the blockchain module
+  ```
+  java -jar target/AuditChain-Blockchain.jar --host 127.0.0.1 --port 5672 --username admin --password admin
+  ```
+- **Note: Remember to use username and password of rabbitmq as arguments or the edit the [config.properties](https://github.com/amosproj/amos2022ss02-audit-chain/blob/main/src/main/resources/BlockchainImplementation/config.properties) of the BlockChain module**  <br />
 
 - Generate JAVADOC (then you can find it at /target/site/apidocs/index.html).
 
@@ -147,7 +164,7 @@ JUnit is a unit testing open-source framework for the Java programming language.
 
 
 ### Testing
-The applications of our project contains unittests that can be used to test the individual components. To run them locally just execute the following command:
+- The applications of our project contains unittests that can be used to test the individual components. To run them locally just execute the following command:
 
   ```
   mvn clean compile test
