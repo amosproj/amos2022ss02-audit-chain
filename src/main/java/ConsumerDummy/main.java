@@ -65,7 +65,6 @@ public class main {
                 PORT = cmd.getOptionValue("port");
                 USER = cmd.getOptionValue("username");
                 PASSWORD = cmd.getOptionValue("password");
-                GUI_PORT = cmd.getOptionValue("gui_port");
             } catch (ParseException e) {
                 System.out.println(e.getMessage());
                 formatter.printHelp("java -jar target/AuditChain-ConsumerDummy.jar --host 127.0.0.1 --port 5672 --username admin --password admin", options);
