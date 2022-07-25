@@ -35,8 +35,7 @@ Listed, are the next steps that we are further developing:
 - Uses the events from the queue to trigger further actions based on them. <br />
   <br />
 
-![code_arch _UML drawio](https://user-images.githubusercontent.com/104498986/171241927-939c92c1-a191-40fc-bdf9-b2a692686c40.png)
-
+![uml](https://user-images.githubusercontent.com/105744782/180841646-d54eab87-b50d-40b1-bea9-ed547dfd55a6.png)
 
 **We have used the component diagram to show different parts of our code solution. Our code is basically composed of 3 major components:**
 - **Producer dummy** (client): which operates through the dependencies among its 3 sub-components database, data generator, and persistence mechanism (storage buffer).
