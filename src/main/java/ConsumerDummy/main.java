@@ -80,8 +80,6 @@ public class main {
             // Consumer had 0 args therefore initialize with file
             return false;
         }
-
-
     }
 
 
