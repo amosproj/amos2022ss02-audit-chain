@@ -66,6 +66,10 @@ class MainWindow(QMainWindow):
         self.ui.messageCheck_textB.setText(output)
 
     def checkIntervallButton_clicked(self):
+        msgBox = QMessageBox()
+        msgBox.setWindowTitle("Connection")
+        msgBox.setText("Note that in the blockchain, the start event is a bigger number than the end event")
+        msgBox.exec()
         startEvent = self.ui.startEventLineEdit.text()
         endEvent = self.ui.endEventLineEdit.text()
         command = {
@@ -86,7 +90,7 @@ class MainWindow(QMainWindow):
     def getStatsButton_clicked(self):
         command = {
             "command": "get_statistics"
-            
+
         }
         # added new line else java wouldn't recognize the send command
         self.connection_dialog.send_command(str(command) + '\r\n')
