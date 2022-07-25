@@ -113,14 +113,13 @@ JUnit is a unit testing open-source framework for the Java programming language.
   docker-compose up -d
   ```
   
-- Generate executable Jars (one for ProducerDummy, another one for ConsumerDummy and another for the Blockchain).
+- Generate executable Jars (ProducerDummy, ConsumerDummy, Blockchain and Producer_Consumer).
   ```
   mvn clean package
   ```
   
-  https://user-images.githubusercontent.com/104498986/171229907-b865ec51-0488-4892-b9a9-155b550f6f70.mp4
 
-- All the modules can be run using 4 optional arguments, <br>
+- All the modules can be run using jar files with 4 optional arguments, <br>
   ```
    -h,  --host <arg>          host ip of docker (127.0.0.1) <br>
    -p,  --port <arg>          port (5672) <br>
@@ -152,7 +151,6 @@ JUnit is a unit testing open-source framework for the Java programming language.
   java -jar target/AuditChain-Producer_Consumer.jar --host 127.0.0.1 --port 5672 --username admin --password admin
   ```
 
-  https://user-images.githubusercontent.com/104498986/171228527-b9953e5c-cffa-414a-bd9a-7ca58bb34c0b.mp4
 - To run the blockchain module
   ```
   java -jar target/AuditChain-Blockchain.jar --host 127.0.0.1 --port 5672 --username admin --password admin
