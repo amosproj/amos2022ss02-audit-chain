@@ -47,10 +47,9 @@ Listed, are the next steps that we are further developing:
 - **Consumer dummy**: Lastly, after rabbitMQ queues events successfully, the data event moves to the consumer dummy.
 
 **The folder structure is as follows:**
-- **[producer dummy](https://github.com/amosproj/amos2022ss02-audit-chain/tree/main/src/main/java/ProducerDummy)**: is the component which produces and sends these events to the middleware.
-- **[consumer dummy](https://github.com/amosproj/amos2022ss02-audit-chain/tree/main/src/main/java/ConsumerDummy)**: is the component which consumes messages from the middleware.
-- **[middleware](https://github.com/amosproj/amos2022ss02-audit-chain/tree/main/Documentation/Middleware)**: the messaging broker, in our case RabbitMQ
-- **[blockchain](https://github.com/amosproj/amos2022ss02-audit-chain/tree/main/src/main/java/BlockchainImplementation)**: data structure chosen for the message chain: work in progress.<br />
+- **[ProducerDummy](https://github.com/amosproj/amos2022ss02-audit-chain/tree/main/src/main/java/ProducerDummy)**: is the component which produces and sends these events to the middleware.
+- **[ConsumerDummy](https://github.com/amosproj/amos2022ss02-audit-chain/tree/main/src/main/java/ConsumerDummy)**: is the component which consumes messages from the middleware.
+- **[BlockchainImplementation](https://github.com/amosproj/amos2022ss02-audit-chain/tree/main/src/main/java/BlockchainImplementation)**: data structure chosen for the message chain: work in progress.<br />
   <br />
 
 # Technology Stack:
