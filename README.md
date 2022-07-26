@@ -113,8 +113,20 @@ JUnit is a unit testing open-source framework for the Java programming language.
   ```
   docker-compose up -d
   ```
-  
-- Generate executable Jars (ProducerDummy, ConsumerDummy, Blockchain and Producer_Consumer).
+- Run the project from the IDE using the following command for the ProducerDummy:
+  ```
+  mvn clean compile exec:java@ProducerDummy
+  ```  
+  the following for the ConsumerDummy:
+  ```
+  mvn clean compile exec:java@ConsumerDummy
+  ```  
+  and this one for the Blockchain:
+  ```
+  mvn clean compile exec:java@Blockchain
+  ```  
+
+- Alternatively, generate executable Jars (ProducerDummy, ConsumerDummy, Blockchain and Producer_Consumer).
   ```
   mvn clean package
   ```
