@@ -17,10 +17,13 @@ Erlangen-Nürnberg](https://www.fau.de).
 First of all, the project is developed following a dependency structure, typical of the audit chain module.
 
 The main idea is that events of any kind, like IoT, file systems and measurement loggers should be transmitted securely via the network.
-There is a central event queue, which records these events and uses them for further steps and actions that would involve third parties, like consumers.
-Consumers can approach the queue, in order to get the events and work with them accordingly. Events are recorded serially and the central event queue is transmitted via the network queue. In order to define terms, we could define three main characters:
+There is a central event queue, which records these events and uses them for further steps and actions that would involve third parties, like consumers. 
+Consumers can approach the queue, in order to get the events and work with them accordingly. Events are recorded serially and are send to the central event queue.
+
+
+The Project contains three main parts:
 - *the producer*: who is the creator and sender of the events
-- *the queue*: the middle ground where events are stored and safely shared
+- *the queue*: the middle ground where events are stored and safely shared. 
 - *the consumer*: who takes events from the queue in order to perform further actions with them (that are not of interest in our application). <br />
   <br />
   A sample of the interaction described above could be the following: <br />
@@ -38,16 +41,15 @@ Listed, are the next steps that we are further developing:
 ![uml](https://user-images.githubusercontent.com/105744782/180841646-d54eab87-b50d-40b1-bea9-ed547dfd55a6.png)
 
 **We have used the component diagram to show different parts of our code solution. Our code is basically composed of 3 major components:**
-- **Producer dummy** (client): which operates through the dependencies among its 3 sub-components database, data generator, and persistence mechanism (storage buffer).
-  When the producer dummy is triggered, the data generator catches data events (message) from the database and then forwards it to the client session and persistence mechanism. The persistence mechanism is a contingent component that stores the last data event and gets triggered in case of any failure.
-- **RabbitMQ** (Event Queue): After the producer dummy successfully generates an event, it goes to rabbitMQ (event queue). RabbitMQ is a 3rd party program that we are using as a component for queuing events.
+- **Producer dummy** (client): which operates through the dependencies among its 3 sub-components RabbitMQChannel, data generator, and persistence mechanism.
+  When the producer dummy is triggered, depending on the used DataGenerator it creates an "event" and assigns an unique incremental Number to the newly created "event". Furthermore the currently implemented Persistence Mechanism allows to either store always the newest event or every event into a File to prevent data loss if the Message was not yet send.
+- **RabbitMQ** (Event Queue): After the producer dummy successfully generates an event, it goes to RabbitMQ (event queue). RabbitMQ is a 3rd party program that we are using as a component for queuing events.
 - **Consumer dummy**: Lastly, after rabbitMQ queues events successfully, the data event moves to the consumer dummy.
 
 **The folder structure is as follows:**
-- **[producer dummy](https://github.com/amosproj/amos2022ss02-audit-chain/tree/main/src/main/java/ProducerDummy)**: Generate JAVADOC
-- **[consumer dummy](https://github.com/amosproj/amos2022ss02-audit-chain/tree/main/src/main/java/ConsumerDummy)**: is a program which "communicates" with the rabbitMQ (Middleware) in order to receive messages
-- **[middleware](https://github.com/amosproj/amos2022ss02-audit-chain/tree/main/Documentation/Middleware)**: enables the communication between producer dummy and consumer dummy
-- **[blockchain](https://github.com/amosproj/amos2022ss02-audit-chain/tree/main/src/main/java/BlockchainImplementation)**: data structure chosen for the message chain: work in progress.<br />
+- **[ProducerDummy](https://github.com/amosproj/amos2022ss02-audit-chain/tree/main/src/main/java/ProducerDummy)**: is the component which produces and sends these events to the middleware.
+- **[ConsumerDummy](https://github.com/amosproj/amos2022ss02-audit-chain/tree/main/src/main/java/ConsumerDummy)**: is the component which consumes messages from the middleware.
+- **[BlockchainImplementation](https://github.com/amosproj/amos2022ss02-audit-chain/tree/main/src/main/java/BlockchainImplementation)**: data structure chosen for the message chain: work in progress.<br />
   <br />
 
 # Technology Stack:
@@ -56,7 +58,7 @@ In the following list you can see the projects underlying technology stack. To b
 ### 1. Programming Languages:
 **Java** (Backend): Java is an object-oriented programming language which consists of a development tool for creating code and a runtime environment to run code.
 <br />
-**Python**:  It is a computer programming language often used to build websites and software, automate tasks, and conduct data analysis. Its purpose here is to create a simple graphical user interface (GUI) that works across multiple platforms and can be complicated.
+**Python**:  It is a computer programming language often used to build scrips, automate tasks, and conduct data analysis. Its purpose here is to create in combination with PySide2 a GUI.
 ### 2. Version Control Software:
 **Git**: Git is a distributed version control system with the aim to help our group to develop the software together. <br />
 **GitHub**: GitHub is the place where our repository lays. It is a provider for hosting software development and version control using Git.
@@ -111,8 +113,20 @@ JUnit is a unit testing open-source framework for the Java programming language.
   ```
   docker-compose up -d
   ```
-  
-- Generate executable Jars (ProducerDummy, ConsumerDummy, Blockchain and Producer_Consumer).
+- Run the project from the IDE using the following command for the ProducerDummy:
+  ```
+  mvn clean compile exec:java@ProducerDummy
+  ```  
+  the following for the ConsumerDummy:
+  ```
+  mvn clean compile exec:java@ConsumerDummy
+  ```  
+  and this one for the Blockchain:
+  ```
+  mvn clean compile exec:java@Blockchain
+  ```  
+
+- Alternatively, generate executable Jars (ProducerDummy, ConsumerDummy, Blockchain and Producer_Consumer).
   ```
   mvn clean package
   ```
