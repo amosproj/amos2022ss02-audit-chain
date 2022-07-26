@@ -49,8 +49,8 @@ public class Main {
             System.exit(1);
         }
 
-        String filepath = Paths.get("/").toString();
-        String filename = "configBlockchain.properties";
+        String filepath = Paths.get("src","main","resources","BlockchainImplementation").toString();
+        String filename = "config.properties";
 
         Path config_path = Paths.get(System.getProperty("user.dir"), filepath, filename);
         Properties p = new Properties();
