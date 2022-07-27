@@ -4,7 +4,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * Implementation of a Hmac Message which extends the Message Interface to a Message which enables to detect tempering
+ * Interface of a Hmac Message which extends the Message Interface to a Message which enables to detect tempering via MAC
  */
 public interface Hmac_Message extends Message {
 

@@ -10,6 +10,10 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
 
+/**
+ * Implementation of an AbstractClient which holds basic Functionality every Producer (may) needs.
+ *
+ */
 public class Producer extends AbstractClient {
 
 
@@ -19,15 +23,7 @@ public class Producer extends AbstractClient {
     protected int DESIRED_PAYLOAD_IN_BYTE = 1024;
     protected int current_payload = 0;
 
-    /**
-     * Constructor for Client.AbstractClient. Initializes the filepath, the file reader and set information for the
-     * connection factory. Call {@link #initFactory()} to initialize the connection factory.
-     *
-     * @param host
-     * @param port
-     * @param username
-     * @param password
-     */
+
     // if you want to aggregate Messages and not sending every Message to RabbitMQ use this one. Be careful tho, the desired_payload_in_byte is just an estimation
     public Producer(String host, int port, String username, String password, int desired_payload_in_byte) {
         super(host, port, username, password);

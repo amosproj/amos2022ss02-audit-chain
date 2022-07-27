@@ -13,7 +13,7 @@ import ProducerDummy.Messages.Message;
 import ProducerDummy.Persistence.NullObjectPersistenceStrategy;
 
 /**
- * Client implementation, is using normal rabbitmq queues to publish it´s events
+ * Client implementation of a Producer which is able to send Messages to the RabbitMQ
  */
 public class Client extends Producer {
 

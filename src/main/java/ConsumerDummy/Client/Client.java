@@ -5,15 +5,10 @@ import java.io.IOException;
 
 
 /**
- * Consumerclient implementation
+ * Implementation of a Consumer. It is not really needed, but for uniformity with the Producer the Consumer also has a Client Class which should be used/extended instead of the Consumer
  */
 public class  Client extends Consumer {
-    /**
-     * Constructor for Client.AbstractClient. Initializes the filepath, the file reader and set information for the
-     * connection factory. Call {@link #initFactory()} to initialize the connection factory.
-     *
-     * @throws IOException if the file cannot be read
-     */
+
     public Client(String host, int port, String username, String password,int gui_port) throws IOException {
         super(host, port, username, password,gui_port);
     }

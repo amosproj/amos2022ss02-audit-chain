@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 
 /**
- * Implementation of a normal Message which only has a Sequence Nr (event number) and a String
+ * Interface of a normal Message which only has a Sequence Nr (event number) and a String
  */
 public interface Message extends Serializable {
 

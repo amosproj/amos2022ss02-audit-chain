@@ -9,22 +9,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.TimeoutException;
 
+
+/**
+ * Implementation of an StreamClient. Since the initiation of a Stream greatly differs and also needs a RecoverMethod to be able to read from the last offset.
+ * The Recovery is not really needed, because RabbitMQ can remember it, but that would mean more resources needed for the Server
+ */
 public class StreamClient extends Consumer{
 
     private int current_offset = 0;
 
-
-    /**
-     * Constructor for Client.AbstractClient. Initializes the filepath, the file reader and set information for the
-     * connection factory. Call {@link #initFactory()} to initialize the connection factory.
-     *
-     * @param host
-     * @param port
-     * @param username
-     * @param password
-     * @throws IOException if the file cannot be read
-     */
-    public StreamClient(String host, int port, String username, String password, int gui_port) throws IOException {
+    public StreamClient(String host, int port, String username, String password, int gui_port) {
         super(host, port, username, password,gui_port);
     }
 

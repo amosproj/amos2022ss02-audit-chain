@@ -6,6 +6,10 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
+
+/**
+ * Extension of a Client which extends a Message with a MAC in order to detect tempered Messages/Events
+ */
 public class SecurityClient extends Client{
     private String key = null;
     private String algorithm = null;

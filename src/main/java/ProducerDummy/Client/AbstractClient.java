@@ -22,8 +22,8 @@ abstract public class AbstractClient {
     // A Component which stores a Message persistently. See Persistence Folder
     protected PersistenceStrategy persistenceStrategy;
     /**
-     * Constructor for Client.AbstractClient. Initializes the filepath, the file reader and set information for the
-     * connection factory. Call {@link #initFactory()} to initialize the connection factory.
+     * Constructor for Client.AbstractClient. Initializes the values every Producer and Consumer needs in order to connect to RabbitMQ
+     * and initializes the ConnectionFactory which enables to create/connect to a Channel on RabbitMQ
      *
      * @throws IOException if the file cannot be read
      */
@@ -36,7 +36,7 @@ abstract public class AbstractClient {
     }
 
     /**
-     * Initializes the connection factory. It can be used then to send messages to a server RabbitMQ
+     * Initializes the connection factory. It is used later on to create/connect to a Channel
      */
     public void initFactory() {
 
@@ -47,6 +47,10 @@ abstract public class AbstractClient {
 
     }
 
+    /**
+     *
+     * This function should be implemented from the Producer and Consumer. It should control the behaviour of the Producer and Consumer
+     */
     public void start() throws IOException, TimeoutException, InterruptedException {
     }
 

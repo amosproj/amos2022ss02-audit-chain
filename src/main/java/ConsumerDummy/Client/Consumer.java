@@ -15,6 +15,9 @@ import com.rabbitmq.client.*;
 import BlockchainImplementation.Blockchain.BlockchainIntSequenceAPI;
 import org.json.JSONObject;
 
+/**
+ * Implementation of an AbstractClient which holds basic Functionality every Consumer (may) need.
+ */
 public class Consumer extends AbstractClient {
 
     protected int gui_port;
