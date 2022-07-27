@@ -24,16 +24,6 @@ public class Consumer extends AbstractClient {
     protected String key = null;
     protected String algorithm = null;
 
-    /**
-     * Constructor for Client.AbstractClient. Initializes the filepath, the file reader and set information for the
-     * connection factory. Call {@link #initFactory()} to initialize the connection factory.
-     *
-     * @param host
-     * @param port
-     * @param username
-     * @param password
-     */
-
     public Consumer(String host, int port, String username, String password, int gui_port) {
         super(host, port, username, password);
         this.gui_port = gui_port;

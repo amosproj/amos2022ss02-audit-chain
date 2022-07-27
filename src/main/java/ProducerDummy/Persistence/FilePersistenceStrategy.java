@@ -87,10 +87,7 @@ public class FilePersistenceStrategy implements PersistenceStrategy {
     }
 
     /**
-     * Read from the file the last sequence number and the last message, returning them as a new Message object. If there are no
-     * values in the file or the file is missing it means that we never did send a Messages.Message to the Broker
-     *
-     * @return a new Message object with the sequence number and message
+     * Read from the file the last sequence number and the last message, returning them as a new ArrayList of (hmac)Message objects.
      */
     @Override
     public ArrayList<Message> ReadLastMessage() {

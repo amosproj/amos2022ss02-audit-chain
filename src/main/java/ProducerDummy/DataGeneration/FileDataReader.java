@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 
 /***
- * This is one Implementation which reads Data from a File to construct a Messages.Message.
+ * This is one Implementation which reads Data from a File.
  */
 public class FileDataReader implements DataGenerator {
 

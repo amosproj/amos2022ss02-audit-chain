@@ -32,11 +32,6 @@ public class Client extends Producer {
         this.DESIRED_PAYLOAD_IN_BYTE = desired_payload_in_byte;
     }
 
-    /**
-     * Recover the last message stored in the persistence mechanism and use its sequence number to set the
-     * DataGenerator again to the point it was before "the interruption"
-     */
-
 
     /***
      * 1. Get Channel, 2. Get stored messages from PersistenceStrategy, 3. send these if ready to send.

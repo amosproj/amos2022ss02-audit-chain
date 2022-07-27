@@ -24,8 +24,6 @@ abstract public class AbstractClient {
     /**
      * Constructor for Client.AbstractClient. Initializes the values every Producer and Consumer needs in order to connect to RabbitMQ
      * and initializes the ConnectionFactory which enables to create/connect to a Channel on RabbitMQ
-     *
-     * @throws IOException if the file cannot be read
      */
     public AbstractClient(String host, int port, String username, String password) {
         this.HOST = host;

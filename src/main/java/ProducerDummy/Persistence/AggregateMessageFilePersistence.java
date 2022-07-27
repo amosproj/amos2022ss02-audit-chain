@@ -25,8 +25,6 @@ import ProducerDummy.Messages.SimpleMessage;
 
 public class AggregateMessageFilePersistence extends FilePersistenceStrategy {
 
-    private static final String fileName = "messages.txt";
-
     /**
      * Constructor for the FilePersistenceStrategy.
      * Set filepath to the path of the file using path and fileName variables and
